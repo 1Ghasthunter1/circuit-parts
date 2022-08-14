@@ -1,13 +1,15 @@
 import PartsLayout from "../layouts/PartsLayout";
 import { useQuery } from "react-query";
 import { fetchParts } from "../services/partsServices";
+import PartsTable from "../components/parts/PartsTable";
 
 const PartsView = () => {
-  const { data, error, isError, isLoading } = useQuery("posts", fetchParts);
-  console.log(data, error, isError, isLoading);
+  const partsQuery = useQuery("posts", fetchParts);
   return (
     <div>
-      <PartsLayout />
+      <PartsLayout tableName="2022 Robot - Parts and Assemblies">
+        <PartsTable partsQuery={partsQuery} />
+      </PartsLayout>
     </div>
   );
 };
