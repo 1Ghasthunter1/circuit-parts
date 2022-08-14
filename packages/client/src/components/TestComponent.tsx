@@ -1,4 +1,4 @@
-const TestComponent = ({ test }) => {
+const TestComponent = ({ test }: { test: String }) => {
   return (
     <div>
       <h3>This is a prop: {test}</h3>
