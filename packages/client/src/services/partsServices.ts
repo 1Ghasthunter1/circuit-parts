@@ -6,3 +6,12 @@ export async function fetchParts() {
   const { data } = await axios.get<TestPart[]>(`${partsBaseUrl}`);
   return data;
 }
+
+export const fetchPart = async (partId: string | undefined) => {
+  if (partId) {
+    const { data } = await axios.get<TestPart>(`${partsBaseUrl}/${partId}`);
+    return data;
+  }
+  const { data } = await axios.get<TestPart>(`${partsBaseUrl}/`);
+  return data;
+};

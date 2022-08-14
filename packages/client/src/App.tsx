@@ -1,9 +1,17 @@
 import React from "react";
-// import TestComponent from "./components/TestComponent";
 import PartsView from "./views/PartsView";
+import PartView from "./views/PartView";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
-  return <PartsView />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/parts" element={<PartsView />}></Route>
+        <Route path="/parts/:id" element={<PartView />}></Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

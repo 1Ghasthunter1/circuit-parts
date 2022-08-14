@@ -1,6 +1,6 @@
 import { UseQueryResult } from "react-query";
 import { TestPart } from "../../types/partsTypes";
-
+import { useNavigate } from "react-router-dom";
 interface PartsTableProps {
   partsQuery: UseQueryResult<TestPart[], unknown>;
 }
@@ -8,6 +8,7 @@ interface PartsTableProps {
 const PartsTable = ({ partsQuery }: PartsTableProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data, error, isError, isLoading } = partsQuery;
+  const navigate = useNavigate();
 
   return (
     <div className="overflow-x-auto relative sm:rounded-lg">
@@ -35,6 +36,7 @@ const PartsTable = ({ partsQuery }: PartsTableProps) => {
                 <tr
                   key={part.id}
                   className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
+                  onClick={() => navigate(part.id)}
                 >
                   <th
                     scope="row"
