@@ -1,7 +1,9 @@
 import React from "react";
-import TestComponent from "./components/TestComponent";
+// import TestComponent from "./components/TestComponent";
+import PartsView from "./views/PartsView";
+
 function App() {
-  return <TestComponent test="Howwdy!"/>;
+  return <PartsView />;
 }
 
 export default App;
