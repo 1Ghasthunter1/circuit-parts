@@ -6,7 +6,7 @@ interface PartsLayoutProps {
   children: ReactElement;
 }
 
-const PartsLayout = ({
+const HeaderButtonTableLayout = ({
   tableName,
   buttonContent,
   children,
@@ -24,4 +24,4 @@ const PartsLayout = ({
   );
 };
 
-export default PartsLayout;
+export default HeaderButtonTableLayout;

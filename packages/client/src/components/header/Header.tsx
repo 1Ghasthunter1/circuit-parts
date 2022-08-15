@@ -1,5 +1,5 @@
 import HeaderItem from "./HeaderItem";
-
+import LoginLogout from "./LoginLogout";
 const Header = () => {
   return (
     <div className="inline-flex items-center bg-gray-100 w-full">
@@ -19,7 +19,7 @@ const Header = () => {
         </li>
       </ul>
       <div className="flex ml-auto float-right mr-4">
-        <span className="font-bold text-l">Sign Out</span>
+        <LoginLogout />
       </div>
     </div>
   );

@@ -12,5 +12,5 @@ module.exports = {
       backgroundColor: ['even'],
     }
   },
-  plugins: [],
+  plugins: []
 }

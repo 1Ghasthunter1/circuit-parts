@@ -1,4 +1,4 @@
-import PartsLayout from "../layouts/PartsLayout";
+import PartsLayout from "../layouts/HeaderButtonTableLayout";
 import { useQuery } from "react-query";
 import { fetchParts } from "../services/partsServices";
 import PartsTable from "../components/parts/PartsTable";
