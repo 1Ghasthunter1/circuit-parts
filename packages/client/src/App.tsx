@@ -1,6 +1,7 @@
 import React from "react";
 import PartsView from "./views/PartsView";
 import PartView from "./views/PartView";
+import "./fontAwesome/globalInit";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
