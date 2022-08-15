@@ -1,6 +1,9 @@
 import { useParams } from "react-router";
 import { fetchPart } from "../services/partsServices";
 import { useQuery } from "react-query";
+import { TestPart } from "../types/partsTypes";
+import { ReactElement } from "react";
+import PartTable from "../components/parts/PartTable";
 
 const PartView = () => {
   let { id } = useParams();
@@ -12,12 +15,20 @@ const PartView = () => {
   const { data, error, isError, isLoading } = useQuery("parts", () =>
     fetchPart(id)
   );
-  let content = <div></div>;
-  if (data) {
-    content = <h2>{data.name}</h2>;
-  }
 
-  return content;
+  const getContent = (data: TestPart | undefined): ReactElement => {
+    if (data) {
+      return (
+        <div>
+          <h1 className="text-2xl font-bold">{data.name}</h1>
+          <PartTable part={data} />
+        </div>
+      );
+    }
+    return <h1>No Data :(</h1>;
+  };
+
+  return <div className="m-8">{getContent(data)}</div>;
 };
 
 export default PartView;

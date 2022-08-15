@@ -13,7 +13,7 @@ const PartsView = () => {
         txtColor="text-white"
         bgColor="bg-green-600"
         hoverColor="hover:bg-green-700"
-        style="mx-1"
+        style="ml-2"
       >
         New Part
       </Button>
@@ -22,7 +22,7 @@ const PartsView = () => {
         txtColor="text-white"
         bgColor="bg-green-600"
         hoverColor="hover:bg-green-700"
-        style="mx-1"
+        style="ml-2"
       >
         New Assembly
       </Button>

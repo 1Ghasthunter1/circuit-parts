@@ -19,7 +19,6 @@ const Button = ({
   children,
   style
 }: ButtonPropsTypes) => {
-  console.log(`hover:${hoverColor || "bg-pink-300"}`);
   return (
     <button
       className={`text-sm text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ${

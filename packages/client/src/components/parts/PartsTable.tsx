@@ -11,7 +11,7 @@ const PartsTable = ({ partsQuery }: PartsTableProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="overflow-x-auto relative sm:rounded-lg">
+    <div className="overflow-x-auto relative sm:rounded-md">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
           <tr>

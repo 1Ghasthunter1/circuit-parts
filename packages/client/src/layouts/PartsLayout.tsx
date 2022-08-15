@@ -12,8 +12,8 @@ const PartsLayout = ({
   children,
 }: PartsLayoutProps) => {
   return (
-    <div className="container mx-auto">
-      <div className="flow-root p-4">
+    <div className="container mx-auto p-4">
+      <div className="flow-root py-4">
         <div className="float-left">
           <h1 className="text-xl font-bold ">{tableName}</h1>
         </div>
