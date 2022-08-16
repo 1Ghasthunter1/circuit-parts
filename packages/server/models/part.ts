@@ -1,14 +1,18 @@
 import mongoose from "mongoose";
+import { Part } from "../types/partsTypes";
 
-const partSchema = new mongoose.Schema({
+const partSchema = new mongoose.Schema<Part>({
   name: {
     type: String,
     required: true,
   },
-  projectId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Project",
-    required: true,
+  parent: {
+    parentType: { type: String, required: true },
+    parentId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
   },
   partNumber: {
     type: String,
@@ -22,11 +26,11 @@ const partSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  notes: String,
-  sourceMaterial: String,
-  haveMaterial: String,
-  materialCutLength: String,
-  quantityRequired: Number,
+  notes: { type: String, default: "" },
+  sourceMaterial: { type: String, default: "" },
+  haveMaterial: { type: String, default: "" },
+  materialCutLength: { type: String, default: "" },
+  quantityRequired: { type: String, default: "" },
   priority: String,
 });
 
@@ -40,4 +44,10 @@ partSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Blog", partSchema);
+const PartModel = mongoose.model("Part", partSchema);
+
+export const build = (attr: Omit<Part, "id">) => {
+  return new PartModel(attr);
+};
+
+export default PartModel;

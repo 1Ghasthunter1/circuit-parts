@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export const statuses = [
   "design in progress",
   "materials need to be ordered",
@@ -32,11 +34,11 @@ export const isParentType = (value: string): value is ParentType => {
 };
 
 export interface Part {
-  id: string;
+  id: Types.ObjectId;
   name: string;
   parent: {
     parentType: ParentType;
-    parentId: string;
+    parentId: Types.ObjectId;
   };
   partNumber: string;
   type: EntryType;

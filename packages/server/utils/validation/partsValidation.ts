@@ -1,6 +1,6 @@
 import { Schema } from "express-validator";
 import { isParentType, isPartAssembly } from "../../types/partsTypes";
-
+import { isValidObjectId } from "mongoose";
 export const newPartSchema: Schema = {
   name: {
     isString: true,
@@ -18,10 +18,13 @@ export const newPartSchema: Schema = {
   },
 
   "parent.parentId": {
-    isUUID: true,
-    errorMessage: "Parent ID is not a valid UUID",
+    custom: {
+      options: (value: string) => {
+        return isValidObjectId(value);
+      },
+      errorMessage: "parentId is not a valid mongoose object ID",
+    },
   },
-
   type: {
     custom: {
       options: (value: string) => {
