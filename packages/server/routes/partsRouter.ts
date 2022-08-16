@@ -1,7 +1,8 @@
 import express from "express";
 import { getPartById, getParts } from "../services/partsService";
-import { checkSchema, validationResult } from "express-validator";
+import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newPartSchema } from "../utils/validation/partsValidation";
+import { NewPart } from "../types/partsTypes";
 
 // import { Logger } from "tslog";
 // const log: Logger = new Logger({ name: "myLogger" });
@@ -25,19 +26,22 @@ partsRouter.get("/:id", (req, res) => {
     .end();
 });
 
-
-
 partsRouter.post(
   "/test",
   checkSchema(newPartSchema),
-  (req: express.Request, res: express.Response) => {
+  (req: express.Request<never, never, NewPart>, res: express.Response) => {
     const errors = validationResult(req);
+
+    const validatedData = <NewPart>matchedData(req, {
+      locations: ["body"],
+      includeOptionals: true,
+    });
 
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log(typeof req.body.thing2);
-    return res.json(req.body).end();
+
+    return res.json(validatedData).end();
   }
 );
 export default partsRouter;
