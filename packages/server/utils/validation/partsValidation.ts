@@ -1,24 +1,34 @@
 import { Schema } from "express-validator";
+import { isParentType, isPartAssembly } from "../../types/partsTypes";
 
-export const newPartSchema = {
+export const newPartSchema: Schema = {
   name: {
-    errorMessage: "Name must exist",
     isString: true,
-    toString: true,
+    errorMessage: "Name must be string",
   },
 
-};
-
-export const testSchema: Schema = {
-  name: {
-    errorMessage: "Name must exist",
-    isString: true,
-  },
-  thing2: {
-    isInt: {
-      errorMessage: "Must be a number",
+  "parent.parentType": {
+    custom: {
+      options: (value: string) => {
+        console.log(value);
+        return isParentType(value);
+      },
+      errorMessage: "parent type is invalid",
     },
-    toInt: true,
+  },
+
+  "parent.parentId": {
+    isUUID: true,
+    errorMessage: "Parent ID is not a valid UUID",
+  },
+
+  type: {
+    custom: {
+      options: (value: string) => {
+        return isPartAssembly(value);
+      },
+      errorMessage: "type is not part or assembly",
+    },
   },
 };
 

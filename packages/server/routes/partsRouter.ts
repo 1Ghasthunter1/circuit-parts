@@ -1,7 +1,7 @@
 import express from "express";
 import { getPartById, getParts } from "../services/partsService";
 import { checkSchema, validationResult } from "express-validator";
-import { testSchema } from "../utils/validation/partsValidation";
+import { newPartSchema } from "../utils/validation/partsValidation";
 
 // import { Logger } from "tslog";
 // const log: Logger = new Logger({ name: "myLogger" });
@@ -25,13 +25,11 @@ partsRouter.get("/:id", (req, res) => {
     .end();
 });
 
-// partsRouter.post("/", validate({ body: userSchema }), (req, res) => {
-//   res.end();
-// });
+
 
 partsRouter.post(
   "/test",
-  checkSchema(testSchema),
+  checkSchema(newPartSchema),
   (req: express.Request, res: express.Response) => {
     const errors = validationResult(req);
 
