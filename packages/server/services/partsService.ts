@@ -1,6 +1,7 @@
 import { parts } from "../data/partsData";
 import { Part } from "../types/partsTypes";
 import PartModel from "../models/part";
+
 export const getParts = (): Part[] => {
   return parts;
 };

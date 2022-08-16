@@ -4,6 +4,9 @@ import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newPartSchema } from "../utils/validation/partsValidation";
 import { NewPart } from "../types/partsTypes";
 import { build } from "../models/part";
+import { RequestHandler } from "express";
+require("express-async-errors");
+
 // import { Logger } from "tslog";
 // const log: Logger = new Logger({ name: "myLogger" });
 
@@ -13,21 +16,14 @@ partsRouter.get("/", (_req, res) => {
   res.send(getParts()).end();
 });
 
-partsRouter.get("/:id", (req, res) => {
+partsRouter.get("/:id", (async (req, res) => {
   const partId = req.params.id;
-  getPartById(partId)
-    .then((foundPart) => {
-      if (foundPart) {
-        res.send(foundPart).end();
-        return;
-      }
-      res
-        .status(404)
-        .json({ error: `part not found with id ${partId}` })
-        .end();
-    })
-    .catch((error: Error) => console.log(error));
-});
+  const foundPart = await getPartById(partId);
+  if (foundPart) {
+    return res.status(200).send(foundPart).end();
+  }
+  return res.status(404).json({ error: `part not found with id ${partId}` });
+}) as RequestHandler);
 
 partsRouter.post(
   "/",
