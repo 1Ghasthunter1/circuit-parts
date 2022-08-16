@@ -1,5 +1,10 @@
 import express from "express";
 import { getPartById, getParts } from "../services/partsService";
+import { checkSchema, validationResult } from "express-validator";
+import { testSchema } from "../utils/validation/partsValidation";
+
+// import { Logger } from "tslog";
+// const log: Logger = new Logger({ name: "myLogger" });
 
 const partsRouter = express.Router();
 
@@ -20,4 +25,21 @@ partsRouter.get("/:id", (req, res) => {
     .end();
 });
 
+// partsRouter.post("/", validate({ body: userSchema }), (req, res) => {
+//   res.end();
+// });
+
+partsRouter.post(
+  "/test",
+  checkSchema(testSchema),
+  (req: express.Request, res: express.Response) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    console.log(typeof req.body.thing2);
+    return res.json(req.body).end();
+  }
+);
 export default partsRouter;
