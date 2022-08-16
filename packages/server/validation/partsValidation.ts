@@ -1,5 +1,5 @@
 import { Schema } from "express-validator";
-import { isParentType, isPartAssembly } from "../../types/partsTypes";
+import { isParentType, isPartAssembly } from "../types/partsTypes";
 import { isValidObjectId } from "mongoose";
 export const newPartSchema: Schema = {
   name: {

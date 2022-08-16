@@ -1,20 +1,18 @@
 import express from "express";
 import { getPartById, getParts } from "../services/partsService";
 import { checkSchema, validationResult, matchedData } from "express-validator";
-import { newPartSchema } from "../utils/validation/partsValidation";
+import { newPartSchema } from "../validation/partsValidation";
 import { NewPart } from "../types/partsTypes";
 import { build } from "../models/part";
 import { RequestHandler } from "express";
 require("express-async-errors");
 
-// import { Logger } from "tslog";
-// const log: Logger = new Logger({ name: "myLogger" });
-
 const partsRouter = express.Router();
 
-partsRouter.get("/", (_req, res) => {
-  res.send(getParts()).end();
-});
+partsRouter.get("/", (async (_req, res) => {
+  const parts = await getParts();
+  res.send(parts).status(200).end();
+}) as RequestHandler);
 
 partsRouter.get("/:id", (async (req, res) => {
   const partId = req.params.id;
