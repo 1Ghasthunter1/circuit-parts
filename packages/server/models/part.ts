@@ -10,7 +10,7 @@ const partSchema = new mongoose.Schema<Part>({
     parentType: { type: String, required: true },
     parentId: {
       type: mongoose.Types.ObjectId,
-      ref: "Project",
+      refPath: "parent.parentType",
       required: true,
     },
   },

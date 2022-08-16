@@ -10,7 +10,6 @@ export const newPartSchema: Schema = {
   "parent.parentType": {
     custom: {
       options: (value: string) => {
-        console.log(value);
         return isParentType(value);
       },
       errorMessage: "parent type is invalid",

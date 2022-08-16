@@ -5,6 +5,11 @@ import { newPartSchema } from "../validation/partsValidation";
 import { NewPart } from "../types/partsTypes";
 import { build } from "../models/part";
 import { RequestHandler } from "express";
+import ProjectModel from "../models/project";
+
+// import { Logger } from "tslog";
+// const log: Logger = new Logger({ name: "myLogger" });
+
 require("express-async-errors");
 
 const partsRouter = express.Router();
@@ -32,13 +37,37 @@ partsRouter.post(
   ) => {
     const errors = validationResult(req);
 
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const validatedData = <NewPart>matchedData(req, {
       locations: ["body"],
       includeOptionals: true,
     });
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    const parentId = validatedData.parent.parentId;
+    const parentType = validatedData.parent.parentType;
+
+    switch (parentType) {
+      case "assembly":
+        const foundAssembly = undefined;
+        if (!foundAssembly) {
+          return res.status(400).json({
+            error: `${parentType} parent with given ID does not exist`,
+          });
+        }
+        break;
+      case "project":
+        const foundProject = await ProjectModel.findById(parentId);
+        if (!foundProject) {
+          return res.status(400).json({
+            error: `${parentType} parent with given ID does not exist`,
+          });
+        }
+        break;
+      default:
+        throw new Error(`parent type "${parentType}" is invalid!`);
     }
 
     const partToDB = build({
