@@ -1,14 +1,16 @@
-import { TestPart } from "../../types/partsTypes";
+import { Part } from "../../types/partsTypes";
 import { useNavigate } from "react-router-dom";
 interface PartsTableProps {
-  data: TestPart[] | undefined;
+  data: Part[] | undefined;
 }
 
 const PartsTable = ({ data }: PartsTableProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
 
-  if (!data) return null;
+  if (data === undefined || data === null) {
+    return null;
+  }
 
   return (
     <div className="overflow-x-auto relative sm:rounded-md">
@@ -36,7 +38,7 @@ const PartsTable = ({ data }: PartsTableProps) => {
                 <tr
                   key={part.id}
                   className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
-                  onClick={() => navigate(part.id)}
+                  onClick={() => navigate(`/parts/${part.id}`)}
                 >
                   <th
                     scope="row"

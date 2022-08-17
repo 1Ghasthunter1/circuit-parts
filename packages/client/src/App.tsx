@@ -12,6 +12,7 @@ function App() {
     <Router>
       <Header />
       <Routes>
+        <Route path="/dashboard" element={<p>Dashbaoard!</p>}></Route>
         <Route path="/projects" element={<DashboardView />}></Route>
         <Route path="/projects/:id" element={<ProjectView />}></Route>
         <Route path="/parts" element={<PartsView />}></Route>

@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { fetchPart } from "../services/partsServices";
 import { useQuery } from "react-query";
-import { TestPart } from "../types/partsTypes";
+import { Part } from "../types/partsTypes";
 import { ReactElement } from "react";
 import PartTable from "../components/parts/PartTable";
 
@@ -12,11 +12,11 @@ const PartView = () => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, error, isError, isLoading } = useQuery("parts", () =>
+  const { data, error, isError, isLoading } = useQuery("part", () =>
     fetchPart(id)
   );
 
-  const getContent = (data: TestPart | undefined): ReactElement => {
+  const getContent = (data: Part | undefined): ReactElement => {
     if (data) {
       return (
         <div>

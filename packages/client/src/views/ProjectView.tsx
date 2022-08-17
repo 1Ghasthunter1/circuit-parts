@@ -6,6 +6,8 @@ import {
   fetchProjectComponents,
 } from "../services/projectsServices";
 
+import CreateProjectModal from "../components/dashboard/createProject/CreateProjectModal";
+import CreatePartModal from "../components/parts/createPartModal/CreatePartModal";
 import PartsTable from "../components/parts/PartsTable";
 import Button from "../elements/Button";
 
@@ -18,11 +20,9 @@ const ProjectView = () => {
   );
 
   const project = data;
+  const partsQuery = useQuery(`parts`, () => fetchProjectComponents(id));
 
-  const partsQuery = useQuery("parts", () => fetchProjectComponents(id), {
-    enabled: !!id,
-  });
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const buttonStuff = (
     <div>
       <Button
@@ -45,13 +45,18 @@ const ProjectView = () => {
       </Button>
     </div>
   );
+
   return (
     <div>
       <PartsLayout
         tableName={
           project ? `${project.name} - Parts and Assemblies` : "loading..."
         }
-        buttonContent={buttonStuff}
+        buttonContent={
+          <div>
+            <CreatePartModal /> <CreateProjectModal />
+          </div>
+        }
       >
         <PartsTable data={partsQuery.data} />
       </PartsLayout>
