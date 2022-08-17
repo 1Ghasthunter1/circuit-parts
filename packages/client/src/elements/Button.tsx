@@ -8,6 +8,7 @@ interface ButtonPropsTypes {
   hoverColor?: string;
   children?: string;
   style?: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,7 +18,8 @@ const Button = ({
   txtColor,
   hoverColor,
   children,
-  style
+  style,
+  onClick,
 }: ButtonPropsTypes) => {
   return (
     <button
@@ -26,6 +28,7 @@ const Button = ({
       } ${txtColor ? txtColor : "text-black"} ${
         hoverColor ? hoverColor : "hover:bg-pink-300"
       } ${style || ""}`}
+      onClick={onClick}
     >
       {iconName && <FontAwesomeIcon icon={iconName} className="pr-1" />}
       <span>{children}</span>

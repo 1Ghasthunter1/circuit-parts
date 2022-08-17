@@ -15,7 +15,7 @@ const HeaderButtonTableLayout = ({
     <div className="container mx-auto p-4">
       <div className="flow-root py-4">
         <div className="float-left">
-          <h1 className="text-xl font-bold ">{tableName}</h1>
+          <h1 className="text-2xl font-bold ">{tableName}</h1>
         </div>
         <div className="float-right">{buttonContent}</div>
       </div>
