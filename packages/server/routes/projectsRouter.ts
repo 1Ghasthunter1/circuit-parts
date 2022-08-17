@@ -62,7 +62,6 @@ projectsRouter.get("/:id/components", (async (req, res) => {
   const foundProject = await getProjectById(projectId);
   if (foundProject) {
     const query = { "parent.parentId": projectId };
-    console.log(query);
     const parts = await PartModel.find(query);
     return res.status(200).send(parts).end();
   }
