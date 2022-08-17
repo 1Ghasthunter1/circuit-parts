@@ -1,7 +1,7 @@
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
 import { SubmitProject, Project } from "../types/projectTypes";
-
+import { TestPart } from "../types/partsTypes";
 export async function fetchProjects() {
   const { data } = await axios.get<Project[]>(`${apiBaseUrl}/projects`);
   return data;
@@ -16,6 +16,17 @@ export const fetchProject = async (projectId: string | undefined) => {
   }
   const { data } = await axios.get<Project>(`${apiBaseUrl}/`);
   return data;
+};
+
+export const fetchProjectComponents = async (
+  projectId: string | undefined
+): Promise<TestPart[] | undefined> => {
+  if (projectId) {
+    const { data } = await axios.get<TestPart[]>(
+      `${apiBaseUrl}/projects/${projectId}/components`
+    );
+    return data;
+  }
 };
 
 export const createProject = async (

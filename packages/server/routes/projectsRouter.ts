@@ -5,6 +5,7 @@ import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newProjectSchema } from "../validation/projectValidation";
 import { NewProject } from "../types/projectTypes";
 import ProjectModel, { buildProject } from "../models/project";
+import PartModel from "../models/part";
 import { getProjects, getProjectById } from "../services/projectsService";
 
 // import { Logger } from "tslog";
@@ -50,6 +51,20 @@ projectsRouter.get("/:id", (async (req, res) => {
   const foundProject = await getProjectById(projectId);
   if (foundProject) {
     return res.status(200).send(foundProject).end();
+  }
+  return res
+    .status(404)
+    .json({ error: `project not found with id ${projectId}` });
+}) as RequestHandler);
+
+projectsRouter.get("/:id/components", (async (req, res) => {
+  const projectId = req.params.id;
+  const foundProject = await getProjectById(projectId);
+  if (foundProject) {
+    const query = { "parent.parentId": projectId };
+    console.log(query);
+    const parts = await PartModel.find(query);
+    return res.status(200).send(parts).end();
   }
   return res
     .status(404)

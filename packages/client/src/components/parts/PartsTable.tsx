@@ -1,14 +1,14 @@
-import { UseQueryResult } from "react-query";
 import { TestPart } from "../../types/partsTypes";
 import { useNavigate } from "react-router-dom";
 interface PartsTableProps {
-  partsQuery: UseQueryResult<TestPart[], unknown>;
+  data: TestPart[] | undefined;
 }
 
-const PartsTable = ({ partsQuery }: PartsTableProps) => {
+const PartsTable = ({ data }: PartsTableProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, error, isError, isLoading } = partsQuery;
   const navigate = useNavigate();
+
+  if (!data) return null;
 
   return (
     <div className="overflow-x-auto relative sm:rounded-md">

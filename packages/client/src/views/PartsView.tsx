@@ -5,7 +5,7 @@ import PartsTable from "../components/parts/PartsTable";
 import Button from "../elements/Button";
 
 const PartsView = () => {
-  const partsQuery = useQuery("posts", fetchParts);
+  const { data } = useQuery("posts", fetchParts);
   const buttonStuff = (
     <div>
       <Button
@@ -34,7 +34,7 @@ const PartsView = () => {
         tableName="2022 Robot - Parts and Assemblies"
         buttonContent={buttonStuff}
       >
-        <PartsTable partsQuery={partsQuery} />
+        <PartsTable data={data} />
       </PartsLayout>
     </div>
   );
