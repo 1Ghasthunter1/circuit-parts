@@ -11,7 +11,7 @@ function App() {
     <Router>
       <Header />
       <Routes>
-        <Route path="/" element={<DashboardView />}></Route>
+        <Route path="/projects" element={<DashboardView />}></Route>
         <Route path="/parts" element={<PartsView />}></Route>
         <Route path="/parts/:id" element={<PartView />}></Route>
       </Routes>

@@ -4,8 +4,8 @@ require("express-async-errors");
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newProjectSchema } from "../validation/projectValidation";
 import { NewProject } from "../types/projectTypes";
-import { buildProject } from "../models/project";
-import { getProjects } from "../services/projectsService";
+import ProjectModel, { buildProject } from "../models/project";
+import { getProjects, getProjectById } from "../services/projectsService";
 
 // import { Logger } from "tslog";
 // const log: Logger = new Logger({ name: "myLogger" });
@@ -43,6 +43,18 @@ projectsRouter.post(
 projectsRouter.get("/", (async (_req, res) => {
   const projects = await getProjects();
   res.send(projects).status(200).end();
+}) as RequestHandler);
+
+projectsRouter.delete("/:id", (async (req, res) => {
+  const projectId = req.params.id;
+  const foundProject = await getProjectById(projectId);
+  if (foundProject) {
+    await ProjectModel.findByIdAndDelete(projectId);
+    return res.status(204).end();
+  }
+  return res
+    .status(404)
+    .json({ error: `project not found with id ${projectId}` });
 }) as RequestHandler);
 
 export default projectsRouter;

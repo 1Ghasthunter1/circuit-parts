@@ -6,10 +6,10 @@ const Header = () => {
       <a className="m-4 mr-12 text-xl font-bold">696 PMS</a>
       <ul className="flex">
         <li className="mx-3">
-          <HeaderItem url={""}>Dashboard</HeaderItem>
+          <HeaderItem url='/dashboard'>Dashboard</HeaderItem>
         </li>
         <li className="mx-3">
-          <HeaderItem url={"/parts"}>Parts</HeaderItem>
+          <HeaderItem url={"/projects"}>Projects</HeaderItem>
         </li>
         <li className="mx-3">
           <HeaderItem url={"/orders"}>Orders</HeaderItem>

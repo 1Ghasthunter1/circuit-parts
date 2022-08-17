@@ -9,7 +9,9 @@ export async function fetchProjects() {
 
 export const fetchProject = async (projectId: string | undefined) => {
   if (projectId) {
-    const { data } = await axios.get<Project>(`${apiBaseUrl}/${projectId}`);
+    const { data } = await axios.get<Project>(
+      `${apiBaseUrl}/projects/${projectId}`
+    );
     return data;
   }
   const { data } = await axios.get<Project>(`${apiBaseUrl}/`);
@@ -33,4 +35,13 @@ export const createProject = async (
     }
     return null;
   }
+};
+
+export const deleteProjectById = async (
+  projectId: string
+): Promise<Express.Response> => {
+  const { data } = await axios.delete<Project>(
+    `${apiBaseUrl}/projects/${projectId}`
+  );
+  return data;
 };
