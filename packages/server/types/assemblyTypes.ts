@@ -2,15 +2,10 @@ import { Types } from "mongoose";
 
 export const statuses = [
   "design in progress",
-  "materials need to be ordered",
-  "waiting for materials",
-  "needs drawing",
-  "ready for manufacture",
-  "ready for cnc",
-  "ready for laser",
-  "ready for lathe",
-  "ready for mill",
+  "in production",
+  "completed",
 ] as const;
+
 export const priorities = ["low", "normal", "high", "urgent"] as const;
 export const parentType = ["assembly", "project"] as const;
 
@@ -39,10 +34,6 @@ export interface Part {
   status: Status;
   priority: PriorityType;
   notes?: string;
-  sourceMaterial?: string;
-  haveMaterial?: boolean;
-  materialCutLength?: string;
-  quantityRequired?: number;
 }
 
 export type NewPart = Omit<Part, "id" | "partNumber" | "status" | "priority">;
