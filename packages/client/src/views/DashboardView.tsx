@@ -1,7 +1,12 @@
 import HeaderButtonTableLayout from "../layouts/HeaderButtonTableLayout";
 import Button from "../elements/Button";
 import ProjectList from "../components/dashboard/ProjectsList";
+import { useQuery } from "react-query";
+import { fetchProjects } from "../services/projectsServices";
+import { Project } from "../types/projectTypes";
+
 const DashboardView = () => {
+  const { data } = useQuery<Project[]>("projects", fetchProjects);
   const buttonStuff = (
     <Button
       iconName="puzzle-piece"
@@ -16,7 +21,7 @@ const DashboardView = () => {
 
   return (
     <HeaderButtonTableLayout tableName="Projects" buttonContent={buttonStuff}>
-      <ProjectList />
+      <ProjectList projects={data} />
     </HeaderButtonTableLayout>
   );
 };

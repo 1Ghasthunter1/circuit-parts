@@ -10,6 +10,11 @@ const partSchema = new mongoose.Schema<Project>({
     type: String,
     required: true,
   },
+  creationDate: {
+    type: Date,
+    required: true,
+  },
+  description: { type: String, default: "" },
 });
 
 partSchema.set("toJSON", {

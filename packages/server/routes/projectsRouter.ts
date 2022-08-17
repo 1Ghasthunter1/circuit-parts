@@ -32,6 +32,7 @@ projectsRouter.post(
 
     const projectToDB = buildProject({
       ...validatedData,
+      creationDate: new Date(),
     });
 
     const returnedProject = await projectToDB.save();

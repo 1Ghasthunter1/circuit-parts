@@ -7,6 +7,15 @@ export const newProjectSchema: Schema = {
   },
   prefix: {
     isString: true,
-    errorMessage: "Prefix must be string",
+    errorMessage: "prefix must be string",
+  },
+  description: {
+    isString: true,
+    isLength: {
+      errorMessage: "description can be no more than 100 characters",
+      options: { max: 100 },
+    },
+    errorMessage: "bad description",
+    optional: true,
   },
 };
