@@ -5,6 +5,7 @@ import "./fontAwesome/globalInit";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import DashboardView from "./views/DashboardView";
+import ProjectView from "./views/ProjectView";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/projects" element={<DashboardView />}></Route>
+        <Route path="/projects/:id" element={<ProjectView />}></Route>
         <Route path="/parts" element={<PartsView />}></Route>
         <Route path="/parts/:id" element={<PartView />}></Route>
       </Routes>

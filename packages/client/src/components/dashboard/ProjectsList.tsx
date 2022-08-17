@@ -1,5 +1,5 @@
 import { Project } from "../../types/projectTypes";
-import ProjectComponent from "./Project";
+import ProjectComponent from "./ProjectCard";
 
 interface ProjectListProps {
   projects: Project[] | undefined;

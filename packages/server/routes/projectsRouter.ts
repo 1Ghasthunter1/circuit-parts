@@ -45,6 +45,17 @@ projectsRouter.get("/", (async (_req, res) => {
   res.send(projects).status(200).end();
 }) as RequestHandler);
 
+projectsRouter.get("/:id", (async (req, res) => {
+  const projectId = req.params.id;
+  const foundProject = await getProjectById(projectId);
+  if (foundProject) {
+    return res.status(200).send(foundProject).end();
+  }
+  return res
+    .status(404)
+    .json({ error: `project not found with id ${projectId}` });
+}) as RequestHandler);
+
 projectsRouter.delete("/:id", (async (req, res) => {
   const projectId = req.params.id;
   const foundProject = await getProjectById(projectId);
