@@ -18,7 +18,7 @@ const ProjectCard = ({ project }: ProjectTypes) => {
 
   return (
     <Link to={`/projects/${project.id}`}>
-      <div className="group flex flex-row items-center transition bg-gray-200 my-2 p-4 rounded-md hover:bg-gray-300 hover:scale-105">
+      <div className="group flex flex-row items-center transition bg-gray-200 my-2 p-4 rounded-md hover:bg-gray-300 hover:scale-102">
         <div className="h-full items-center float-left p-1 mx-4">
           <FontAwesomeIcon icon="folder-open" size="2x" color="#EE3D96" />
         </div>

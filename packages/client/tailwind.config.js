@@ -8,6 +8,9 @@ module.exports = {
     extend: {
       width: {
         '600': '600px',
+      },
+      scale: {
+        '102': "1.02"
       }
     }
   },

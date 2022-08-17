@@ -6,7 +6,6 @@ import {
   fetchProjectComponents,
 } from "../services/projectsServices";
 
-import CreateProjectModal from "../components/dashboard/createProject/CreateProjectModal";
 import CreatePartModal from "../components/parts/createPartModal/CreatePartModal";
 import PartsTable from "../components/parts/PartsTable";
 import Button from "../elements/Button";
@@ -54,7 +53,7 @@ const ProjectView = () => {
         }
         buttonContent={
           <div>
-            <CreatePartModal /> <CreateProjectModal />
+            <CreatePartModal />
           </div>
         }
       >
