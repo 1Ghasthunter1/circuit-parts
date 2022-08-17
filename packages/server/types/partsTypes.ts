@@ -35,6 +35,7 @@ export interface Part {
     parentType: ParentType;
     parentId: Types.ObjectId;
   };
+  type: "part";
   partNumber: string;
   status: Status;
   priority: PriorityType;
@@ -43,6 +44,7 @@ export interface Part {
   haveMaterial?: boolean;
   materialCutLength?: string;
   quantityRequired?: number;
+  creationDate: Date;
 }
 
 export type NewPart = Omit<Part, "id" | "partNumber" | "status" | "priority">;

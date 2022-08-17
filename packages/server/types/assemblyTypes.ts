@@ -30,6 +30,7 @@ export interface Assembly {
     parentType: ParentType;
     parentId: Types.ObjectId;
   };
+  type: "assembly";
   partNumber: string;
   status: Status;
   priority: PriorityType;

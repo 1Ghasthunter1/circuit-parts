@@ -6,9 +6,7 @@ import { NewPart } from "../types/partsTypes";
 import { build } from "../models/part";
 import { RequestHandler } from "express";
 import ProjectModel from "../models/project";
-
-// import { Logger } from "tslog";
-// const log: Logger = new Logger({ name: "myLogger" });
+import AssemblyModel from "../models/assembly";
 
 require("express-async-errors");
 
@@ -51,7 +49,7 @@ partsRouter.post(
 
     switch (parentType) {
       case "assembly":
-        const foundAssembly = undefined;
+        const foundAssembly = await AssemblyModel.findById(parentId);
         if (!foundAssembly) {
           return res.status(400).json({
             error: `${parentType} parent with given ID does not exist`,
@@ -75,6 +73,8 @@ partsRouter.post(
       status: "design in progress",
       partNumber: "696-2022-P-1234",
       priority: "low",
+      type: "part",
+      creationDate: new Date(),
     });
     const savedPart = await partToDB.save();
     return res.json(savedPart).end();

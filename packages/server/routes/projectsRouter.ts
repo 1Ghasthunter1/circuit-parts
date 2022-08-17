@@ -6,6 +6,8 @@ import { newProjectSchema } from "../validation/projectValidation";
 import { NewProject } from "../types/projectTypes";
 import ProjectModel, { buildProject } from "../models/project";
 import PartModel from "../models/part";
+import AssemblyModel from "../models/assembly";
+
 import { getProjects, getProjectById } from "../services/projectsService";
 
 // import { Logger } from "tslog";
@@ -61,9 +63,12 @@ projectsRouter.get("/:id/components", (async (req, res) => {
   const projectId = req.params.id;
   const foundProject = await getProjectById(projectId);
   if (foundProject) {
-    const query = { "parent.parentId": projectId };
-    const parts = await PartModel.find(query);
-    return res.status(200).send(parts).end();
+    const parts = await PartModel.find({ "parent.parentId": projectId });
+    const assemblies = await AssemblyModel.find({
+      "parent.parentId": projectId,
+    });
+    const respJson = [...parts, ...assemblies];
+    return res.status(200).send(respJson).end();
   }
   return res
     .status(404)

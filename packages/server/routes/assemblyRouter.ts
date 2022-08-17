@@ -79,6 +79,7 @@ assemblyRouter.post(
       partNumber: "696-2022-P-1234",
       priority: "low",
       creationDate: new Date(),
+      type: "assembly"
     });
     const savedPart = await partToDB.save();
     return res.json(savedPart).end();

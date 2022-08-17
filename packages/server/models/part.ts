@@ -14,6 +14,7 @@ const partSchema = new mongoose.Schema<Part>({
       required: true,
     },
   },
+  type: { type: String, required: true },
   partNumber: {
     type: String,
     required: true,
@@ -28,6 +29,7 @@ const partSchema = new mongoose.Schema<Part>({
   materialCutLength: { type: String, default: "" },
   quantityRequired: { type: String, default: "" },
   priority: String,
+  creationDate: {type: Date, required: true}
 });
 
 partSchema.set("toJSON", {

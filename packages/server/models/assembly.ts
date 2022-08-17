@@ -23,8 +23,9 @@ const assemblySchema = new mongoose.Schema<Assembly>({
     required: true,
   },
   notes: { type: String, default: "" },
-  priority: String,
-  creationDate: Date,
+  priority: { type: String, required: true },
+  creationDate: { type: Date, required: true },
+  type: { type: String, required: true},
 });
 
 assemblySchema.set("toJSON", {
