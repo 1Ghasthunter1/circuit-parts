@@ -14,6 +14,7 @@ module.exports = {
   variants: {
     extend: {
       backgroundColor: ['even'],
+      display: ["group-hover"],
     }
   },
   plugins: []
