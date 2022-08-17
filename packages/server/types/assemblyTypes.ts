@@ -23,7 +23,7 @@ export const isParentType = (value: string): value is ParentType => {
   return parentType.includes(value as ParentType);
 };
 
-export interface Part {
+export interface Assembly {
   id: Types.ObjectId;
   name: string;
   parent: {
@@ -33,7 +33,11 @@ export interface Part {
   partNumber: string;
   status: Status;
   priority: PriorityType;
+  creationDate: Date;
   notes?: string;
 }
 
-export type NewPart = Omit<Part, "id" | "partNumber" | "status" | "priority">;
+export type NewAssembly = Omit<
+  Assembly,
+  "id" | "partNumber" | "status" | "priority" | "creationDate"
+>;

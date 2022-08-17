@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { Part } from "../types/partsTypes";
+import { Assembly } from "../types/assemblyTypes";
 
-const assemblySchema = new mongoose.Schema<Part>({
+const assemblySchema = new mongoose.Schema<Assembly>({
   name: {
     type: String,
     required: true,
@@ -24,6 +24,7 @@ const assemblySchema = new mongoose.Schema<Part>({
   },
   notes: { type: String, default: "" },
   priority: String,
+  creationDate: Date,
 });
 
 assemblySchema.set("toJSON", {
@@ -38,7 +39,7 @@ assemblySchema.set("toJSON", {
 
 const AssemblyModel = mongoose.model("Assembly", assemblySchema);
 
-export const build = (attr: Omit<Part, "id">) => {
+export const build = (attr: Omit<Assembly, "id">) => {
   return new AssemblyModel(attr);
 };
 

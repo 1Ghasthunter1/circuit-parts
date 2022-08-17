@@ -1,7 +1,7 @@
 import { Schema } from "express-validator";
 import { isParentType } from "../types/partsTypes";
 import { isValidObjectId } from "mongoose";
-export const newPartSchema: Schema = {
+export const newAssemblySchema: Schema = {
   name: {
     isString: true,
     errorMessage: "Name must be string",
