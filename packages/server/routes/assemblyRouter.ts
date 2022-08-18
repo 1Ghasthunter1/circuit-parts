@@ -1,5 +1,5 @@
 import express from "express";
-import { getAssemblyById, getAssemblies } from "../services/assemblyService";
+import { getAssemblies } from "../services/assemblyService";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newAssemblySchema } from "../validation/assemblyValidation";
 import { Assembly, NewAssembly } from "../types/assemblyTypes";
@@ -23,10 +23,17 @@ assemblyRouter.get("/", (async (_req, res) => {
 
 assemblyRouter.get("/:id", (async (req, res) => {
   const assemblyId = req.params.id;
-  const foundAssembly = await getAssemblyById(assemblyId);
+  const foundAssembly = await AssemblyModel.findById(assemblyId).populate(
+    "children.child"
+  );
   if (foundAssembly) {
-    return res.status(200).send(foundAssembly).end();
+    const modifiedAssembly = {
+      ...foundAssembly.toObject(),
+      children: foundAssembly.children.map((childObj) => childObj.child),
+    };
+    return res.status(200).send(modifiedAssembly).end();
   }
+
   return res
     .status(404)
     .json({ error: `assembly not found with id ${assemblyId}` });

@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import DashboardView from "./views/DashboardView";
 import ProjectView from "./views/ProjectView";
-
+import AssemblyView from "./views/AssemblyView";
 function App() {
   return (
     <Router>
@@ -17,6 +17,7 @@ function App() {
         <Route path="/projects/:id" element={<ProjectView />}></Route>
         <Route path="/parts" element={<PartsView />}></Route>
         <Route path="/parts/:id" element={<PartView />}></Route>
+        <Route path="/assemblies/:id" element={<AssemblyView />}></Route>
       </Routes>
     </Router>
   );

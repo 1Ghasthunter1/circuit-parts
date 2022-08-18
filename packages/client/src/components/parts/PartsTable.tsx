@@ -1,13 +1,13 @@
 import { Part } from "../../types/partsTypes";
+import { Assembly } from "../../types/assemblyTypes";
 import { useNavigate } from "react-router-dom";
 interface PartsTableProps {
-  data: Part[] | undefined;
+  data: Array<Assembly | Part> | undefined;
 }
 
 const PartsTable = ({ data }: PartsTableProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
-  console.log(data);
 
   if (data === undefined || data === null) {
     return null;
@@ -34,22 +34,26 @@ const PartsTable = ({ data }: PartsTableProps) => {
         </thead>
         <tbody>
           {data &&
-            data.map((part) => {
+            data.map((rowItem) => {
               return (
                 <tr
-                  key={part.id}
+                  key={rowItem.id}
                   className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
-                  onClick={() => navigate(`/parts/${part.id}`)}
+                  onClick={
+                    rowItem.type === "part"
+                      ? () => navigate(`/parts/${rowItem.id}`)
+                      : () => navigate(`/assemblies/${rowItem.id}`)
+                  }
                 >
                   <th
                     scope="row"
                     className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {part.partNumber}
+                    {rowItem.partNumber}
                   </th>
-                  <td className="py-4 px-6">{part.type}</td>
-                  <td className="py-4 px-6">{part.name}</td>
-                  <td className="py-4 px-6">{part.id}</td>
+                  <td className="py-4 px-6">{rowItem.type}</td>
+                  <td className="py-4 px-6">{rowItem.name}</td>
+                  <td className="py-4 px-6">{rowItem.id}</td>
                 </tr>
               );
             })}

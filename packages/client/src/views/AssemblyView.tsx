@@ -1,31 +1,24 @@
 import PartsLayout from "../layouts/HeaderButtonTableLayout";
 import { useParams } from "react-router";
 import { useQuery } from "react-query";
-import {
-  fetchProject,
-  fetchProjectComponents,
-} from "../services/projectsServices";
+import { fetchAssembly } from "../services/assemblyServices";
 import CreateModal from "../components/modals/CreateModal";
 import CreatePartForm from "../components/parts/CreatePartForm";
 import PartsTable from "../components/parts/PartsTable";
 import Button from "../elements/Button";
 import { useState } from "react";
 
-const ProjectView = () => {
+const AssemblyView = () => {
   const [partModalVis, setPartModalVis] = useState<boolean>(false);
   const { id } = useParams();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, error, isError, isLoading } = useQuery("project", () =>
-    fetchProject(id)
+  const { data, error, isError, isLoading } = useQuery("assembly", () =>
+    fetchAssembly(id)
   );
 
-  const projectComponentsQuery = useQuery("projectComponents", () =>
-    fetchProjectComponents(id)
-  );
-
-  const project = data;
-  const parts = projectComponentsQuery.data;
+  const assembly = data;
+  const childComponents = assembly?.children;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const buttonStuff = (
@@ -63,14 +56,14 @@ const ProjectView = () => {
     <div>
       <PartsLayout
         tableName={
-          project ? `${project.name} - Parts and Assemblies` : "loading..."
+          assembly ? `${assembly.name} - Parts and Assemblies` : "loading..."
         }
         buttonContent={buttonStuff}
       >
-        <PartsTable data={parts} />
+        <PartsTable data={childComponents} />
       </PartsLayout>
     </div>
   );
 };
 
-export default ProjectView;
+export default AssemblyView;

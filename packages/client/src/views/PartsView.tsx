@@ -5,7 +5,7 @@ import PartsTable from "../components/parts/PartsTable";
 import Button from "../elements/Button";
 
 const PartsView = () => {
-  const { data } = useQuery("posts", fetchParts);
+  const { data } = useQuery("parts", fetchParts);
   const buttonStuff = (
     <div>
       <Button
