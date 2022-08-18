@@ -31,7 +31,7 @@ const PartsView = () => {
   return (
     <div>
       <PartsLayout
-        tableName="2022 Robot - Parts and Assemblies"
+        pageTitle="2022 Robot - Parts and Assemblies"
         buttonContent={buttonStuff}
       >
         <PartsTable data={data} />

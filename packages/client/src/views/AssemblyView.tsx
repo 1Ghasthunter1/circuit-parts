@@ -73,7 +73,7 @@ const AssemblyView = () => {
   return (
     <div>
       <PartsLayout
-        tableName={
+        pageTitle={
           assembly ? `${assembly.name} - Parts and Assemblies` : "loading..."
         }
         buttonContent={buttonStuff}

@@ -34,7 +34,7 @@ const DashboardView = () => {
   );
 
   return (
-    <HeaderButtonTableLayout tableName="Projects" buttonContent={ButtonStuff}>
+    <HeaderButtonTableLayout pageTitle="Projects" buttonContent={ButtonStuff}>
       <ProjectList projects={data} />
     </HeaderButtonTableLayout>
   );

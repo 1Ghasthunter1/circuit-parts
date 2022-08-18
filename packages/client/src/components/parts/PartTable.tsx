@@ -17,6 +17,11 @@ const PartTable = ({ part }: PropType) => {
             value={part?.partNumber}
           />
           <PartTableEntry key={uuidv4()} title="Type" value={part?.type} />
+          <PartTableEntry
+            key={uuidv4()}
+            title="Description"
+            value={part?.notes}
+          />
         </tbody>
       </table>
     </div>

@@ -33,7 +33,6 @@ const ProjectView = () => {
     return null;
   }
 
-
   const buttonStuff = (
     <div>
       <Button
@@ -85,9 +84,10 @@ const ProjectView = () => {
   return (
     <div>
       <PartsLayout
-        tableName={
-          project ? `${project.name} - Parts and Assemblies` : "loading..."
-        }
+        pageTitle={project ? `${project.name}` : "loading..."}
+        subtitle={project.prefix}
+        tableName="Parts and Assemblies"
+        description={project.description}
         buttonContent={buttonStuff}
       >
         <PartsTable data={parts} />

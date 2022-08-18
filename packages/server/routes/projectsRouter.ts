@@ -70,10 +70,14 @@ projectsRouter.get("/:id/components", (async (req, res) => {
   const projectId = req.params.id;
   const foundProject = await getProjectById(projectId);
   if (foundProject) {
-    const parts = await PartModel.find({ project: projectId });
+    const parts = await PartModel.find({ project: projectId })
+      .populate({ path: "parent.parent" })
+      .populate("project");
     const assemblies = await AssemblyModel.find({
       project: projectId,
-    });
+    })
+      .populate({ path: "parent.parent" })
+      .populate("project");
     const respJson = [...parts, ...assemblies];
     return res.status(200).send(respJson).end();
   }

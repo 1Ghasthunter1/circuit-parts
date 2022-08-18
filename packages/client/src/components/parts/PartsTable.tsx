@@ -60,7 +60,26 @@ const PartsTable = ({ data }: PartsTableProps) => {
                   </th>
                   <td className="px-6">{rowItem.type}</td>
                   <td className="px-6">{rowItem.name}</td>
-                  <td className="px-6">{rowItem.parent.parent.name}</td>
+                  <td className="px-6 underline">
+                    <div className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const parent = rowItem.parent.parent;
+                        switch (rowItem.parent.parentType) {
+                          case "assembly":
+                            navigate(`/assemblies/${parent.id}`);
+                            break;
+                          case "project":
+                            navigate(`/projects/${parent.id}`);
+                            break;
+                          default:
+                            null;
+                        }
+                      }}
+                    >
+                      {rowItem.parent.parent.name}
+                    </div>
+                  </td>
                   <td className="flex items-center grid place-items-center px-6">
                     <StatusBox inpStatus={rowItem.status} />
                   </td>
