@@ -1,9 +1,12 @@
+import { Part } from "./partsTypes";
+
 export interface Project {
-  name: string;
-  prefix: string;
   id: string;
-  description?: string;
+  name: string;
   creationDate: Date;
+  prefix: string;
+  children: Part[];
+  description?: string;
 }
 
-export type SubmitProject = Omit<Project, "id" | "creationDate">;
+export type SubmitProject = Omit<Project, "id" | "creationDate" | "children">;

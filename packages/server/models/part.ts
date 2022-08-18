@@ -29,7 +29,7 @@ const partSchema = new mongoose.Schema<Part>({
   materialCutLength: { type: String, default: "" },
   quantityRequired: { type: String, default: "" },
   priority: String,
-  creationDate: {type: Date, required: true}
+  creationDate: { type: Date, required: true },
 });
 
 partSchema.set("toJSON", {
@@ -42,7 +42,7 @@ partSchema.set("toJSON", {
   },
 });
 
-const PartModel = mongoose.model("Part", partSchema);
+const PartModel = mongoose.model("part", partSchema);
 
 export const build = (attr: Omit<Part, "id">) => {
   return new PartModel(attr);

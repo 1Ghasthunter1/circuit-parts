@@ -2,11 +2,12 @@ import express from "express";
 import { getPartById, getParts } from "../services/partsService";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newPartSchema } from "../validation/partsValidation";
-import { NewPart } from "../types/partsTypes";
-import { build } from "../models/part";
+import { NewPart, Part } from "../types/partsTypes";
 import { RequestHandler } from "express";
 import ProjectModel from "../models/project";
+import PartModel from "../models/part";
 import AssemblyModel from "../models/assembly";
+import { child } from "../types/universalTypes";
 
 require("express-async-errors");
 
@@ -58,25 +59,61 @@ partsRouter.post(
         break;
       case "project":
         const foundProject = await ProjectModel.findById(parentId);
+
         if (!foundProject) {
           return res.status(400).json({
             error: `${parentType} parent with given ID does not exist`,
           });
         }
+
         break;
       default:
         throw new Error(`parent type "${parentType}" is invalid!`);
     }
 
-    const partToDB = build({
+    const asd = {
       ...validatedData,
       status: "design in progress",
       partNumber: "696-2022-P-1234",
       priority: "low",
       type: "part",
       creationDate: new Date(),
-    });
-    const savedPart = await partToDB.save();
+    };
+
+    const partToDB = new PartModel(asd);
+
+    const savedPart: Part = await partToDB.save();
+
+    const childObject: child = {
+      childType: "part",
+      child: savedPart.id,
+    };
+
+    switch (parentType) {
+      case "assembly":
+        // const foundAssembly = await AssemblyModel.findById(parentId);
+        // if (foundAssembly) {
+        //   const newAssembly = {
+        //     ...foundAssembly,
+        //     children: foundAssembly.children.concat(childObject),
+        //   };
+
+        //   const assyToDb = buildAssembly(newAssembly);
+        //   const result = await assyToDb.save();
+        // }
+        break;
+      case "project":
+        const foundProject = await ProjectModel.findById(parentId);
+
+        if (foundProject) {
+          foundProject.children = foundProject.children.concat(childObject);
+          await foundProject.save();
+        }
+
+        break;
+      default:
+        throw new Error(`parent type "${parentType}" is invalid!`);
+    }
     return res.json(savedPart).end();
   }
 );

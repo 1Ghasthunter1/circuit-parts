@@ -15,6 +15,17 @@ const partSchema = new mongoose.Schema<Project>({
     required: true,
   },
   description: { type: String, default: "" },
+  children: [
+    {
+      childType: { type: String, required: true },
+      child: {
+        type: mongoose.Types.ObjectId,
+        refPath: "children.childType",
+        required: true,
+      },
+      _id: false,
+    },
+  ],
 });
 
 partSchema.set("toJSON", {

@@ -7,6 +7,7 @@ interface PartsTableProps {
 const PartsTable = ({ data }: PartsTableProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
+  console.log(data);
 
   if (data === undefined || data === null) {
     return null;

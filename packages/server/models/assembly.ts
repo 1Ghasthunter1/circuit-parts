@@ -40,7 +40,7 @@ assemblySchema.set("toJSON", {
 
 const AssemblyModel = mongoose.model("Assembly", assemblySchema);
 
-export const build = (attr: Omit<Assembly, "id">) => {
+export const buildAssembly = (attr: Omit<Assembly, "id">) => {
   return new AssemblyModel(attr);
 };
 

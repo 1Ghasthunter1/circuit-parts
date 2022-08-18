@@ -1,10 +1,7 @@
 import PartsLayout from "../layouts/HeaderButtonTableLayout";
 import { useParams } from "react-router";
 import { useQuery } from "react-query";
-import {
-  fetchProject,
-  fetchProjectComponents,
-} from "../services/projectsServices";
+import { fetchProject } from "../services/projectsServices";
 import CreateModal from "../components/modals/CreateModal";
 import CreatePartForm from "../components/parts/CreatePartForm";
 import PartsTable from "../components/parts/PartsTable";
@@ -21,7 +18,7 @@ const ProjectView = () => {
   );
 
   const project = data;
-  const partsQuery = useQuery(`parts`, () => fetchProjectComponents(id));
+  const parts = project?.children;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const buttonStuff = (
@@ -63,7 +60,7 @@ const ProjectView = () => {
         }
         buttonContent={buttonStuff}
       >
-        <PartsTable data={partsQuery.data} />
+        <PartsTable data={parts} />
       </PartsLayout>
     </div>
   );

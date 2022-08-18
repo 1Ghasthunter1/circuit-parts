@@ -3,9 +3,9 @@ import { getAssemblyById, getAssemblies } from "../services/assemblyService";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newAssemblySchema } from "../validation/assemblyValidation";
 import { NewAssembly } from "../types/assemblyTypes";
-import { build } from "../models/assembly";
 import { RequestHandler } from "express";
 import ProjectModel from "../models/project";
+import AssemblyModel from "../models/assembly";
 
 // import { Logger } from "tslog";
 // const log: Logger = new Logger({ name: "myLogger" });
@@ -73,13 +73,13 @@ assemblyRouter.post(
         throw new Error(`parent type "${parentType}" is invalid!`);
     }
 
-    const partToDB = build({
+    const partToDB = new AssemblyModel({
       ...validatedData,
       status: "design in progress",
       partNumber: "696-2022-P-1234",
       priority: "low",
       creationDate: new Date(),
-      type: "assembly"
+      type: "assembly",
     });
     const savedPart = await partToDB.save();
     return res.json(savedPart).end();

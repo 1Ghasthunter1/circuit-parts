@@ -50,9 +50,15 @@ projectsRouter.get("/", (async (_req, res) => {
 
 projectsRouter.get("/:id", (async (req, res) => {
   const projectId = req.params.id;
-  const foundProject = await getProjectById(projectId);
+  const foundProject = await ProjectModel.findById(projectId).populate(
+    "children.child"
+  );
   if (foundProject) {
-    return res.status(200).send(foundProject).end();
+    const modifiedProject = {
+      ...foundProject.toObject(),
+      children: foundProject.children.map((childObj) => childObj.child),
+    };
+    return res.status(200).send(modifiedProject).end();
   }
   return res
     .status(404)
