@@ -1,11 +1,10 @@
 import React from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Formik, Form, Field, ErrorMessage } from "formik";
-// import { createProject } from "../../services/projectsServices";
-// import { useQueryClient } from "react-query";
+import { Project } from "../../types/projectTypes";
 
 interface ProjectFormProps {
   closeModal: () => void;
+  project: Project;
 }
 
 interface errorsType {
@@ -13,12 +12,15 @@ interface errorsType {
   parent?: string;
 }
 
-const CreateProjectForm = ({ closeModal }: ProjectFormProps) => {
-  // const queryClient = useQueryClient();
-
+const CreateProjectForm = ({ closeModal, project }: ProjectFormProps) => {
   return (
     <Formik
-      initialValues={{ name: "", parent: "", description: "" }}
+      initialValues={{
+        projectId: project.id,
+        name: "",
+        parent: "",
+        description: "",
+      }}
       validate={(values) => {
         const errors: errorsType = {};
         if (!values.name) {
@@ -31,12 +33,27 @@ const CreateProjectForm = ({ closeModal }: ProjectFormProps) => {
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
+        alert(`${values.name}, ${values.parent}, ${values.projectId}`);
         closeModal();
         setSubmitting(false);
       }}
     >
       {({ isSubmitting, isValid }) => (
         <Form>
+          <div className="mb-4 ">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              Project*
+            </label>
+            <Field
+              className={`cursor-not-allowed bg-gray-200 border border-gray-300 text-sm rounded-lg text-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 {}`}
+              type="text"
+              name="project"
+              placeholder={`${project.name} (${project.prefix})`}
+              value={`${project.name} (${project.prefix})`}
+              disabled={true}
+            />
+          </div>
+
           <div className="mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Part Name*

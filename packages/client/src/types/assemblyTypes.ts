@@ -1,4 +1,5 @@
 import { Part } from "./partsTypes";
+import { Project } from "./projectTypes";
 export const statuses = [
   "design in progress",
   "in production",
@@ -30,7 +31,7 @@ export interface Assembly {
     parentId: string;
   };
   type: "assembly";
-  project: string;
+  project: Project;
   partNumber: string;
   status: Status;
   priority: PriorityType;

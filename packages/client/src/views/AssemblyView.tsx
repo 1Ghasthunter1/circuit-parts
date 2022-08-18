@@ -25,8 +25,13 @@ const AssemblyView = () => {
     doThing().catch(console.error);
   }, [id]);
 
+  if (!data) {
+    return null;
+  }
+
   const assembly = data;
-  const childComponents = assembly?.children;
+  const childComponents = assembly.children;
+  const project = assembly.project;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const buttonStuff = (
@@ -45,7 +50,12 @@ const AssemblyView = () => {
         title="New Part"
         showModal={partModalVis}
         setShowModal={setPartModalVis}
-        form={<CreatePartForm closeModal={() => setPartModalVis(false)} />}
+        form={
+          <CreatePartForm
+            closeModal={() => setPartModalVis(false)}
+            project={project}
+          />
+        }
       />
 
       <Button

@@ -27,7 +27,10 @@ const ProjectView = () => {
   const project = data;
   const parts = projectComponentsQuery.data;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  if (!project) {
+    return null;
+  }
+
   const buttonStuff = (
     <div>
       <Button
@@ -44,7 +47,12 @@ const ProjectView = () => {
         title="New Part"
         showModal={partModalVis}
         setShowModal={setPartModalVis}
-        form={<CreatePartForm closeModal={() => setPartModalVis(false)} />}
+        form={
+          <CreatePartForm
+            project={project}
+            closeModal={() => setPartModalVis(false)}
+          />
+        }
       />
 
       <Button

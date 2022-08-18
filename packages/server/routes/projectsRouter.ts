@@ -56,7 +56,7 @@ projectsRouter.get("/:id", (async (req, res) => {
   );
   if (foundProject) {
     const modifiedProject = {
-      ...foundProject.toObject(),
+      ...foundProject.toJSON(),
       children: foundProject.children.map((childObj) => childObj.child),
     };
     return res.status(200).send(modifiedProject).end();

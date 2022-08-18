@@ -23,12 +23,12 @@ assemblyRouter.get("/", (async (_req, res) => {
 
 assemblyRouter.get("/:id", (async (req, res) => {
   const assemblyId = req.params.id;
-  const foundAssembly = await AssemblyModel.findById(assemblyId).populate(
-    "children.child"
-  );
+  const foundAssembly = await AssemblyModel.findById(assemblyId)
+    .populate("children.child")
+    .populate("project");
   if (foundAssembly) {
     const modifiedAssembly = {
-      ...foundAssembly.toObject(),
+      ...foundAssembly.toJSON(),
       children: foundAssembly.children.map((childObj) => childObj.child),
     };
     return res.status(200).send(modifiedAssembly).end();
