@@ -8,7 +8,7 @@ const assemblySchema = new mongoose.Schema<Assembly>({
   },
   parent: {
     parentType: { type: String, required: true },
-    parentId: {
+    parent: {
       type: mongoose.Types.ObjectId,
       refPath: "parent.parentType",
       required: true,

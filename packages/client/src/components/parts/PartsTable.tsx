@@ -42,6 +42,7 @@ const PartsTable = ({ data }: PartsTableProps) => {
         <tbody>
           {data &&
             data.map((rowItem) => {
+              console.log(rowItem);
               return (
                 <tr
                   key={rowItem.id}
@@ -60,7 +61,7 @@ const PartsTable = ({ data }: PartsTableProps) => {
                   </th>
                   <td className="px-6">{rowItem.type}</td>
                   <td className="px-6">{rowItem.name}</td>
-                  <td className="px-6">{rowItem.parent.parentId}</td>
+                  <td className="px-6">{rowItem.parent.parent.name}</td>
                   <td className="flex items-center grid place-items-center px-6">
                     <StatusBox inpStatus={rowItem.status} />
                   </td>

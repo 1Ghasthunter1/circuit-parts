@@ -50,7 +50,7 @@ const CreateProjectForm = ({ closeModal, project }: ProjectFormProps) => {
         const newPart: NewPart = {
           ...values,
           projectId: project.id,
-          parent: { parentType: "assembly", parentId: values.parentId },
+          parent: { parentType: "assembly", parent: values.parentId },
         };
         await createPart(newPart);
         await queryClient.invalidateQueries("assembly");

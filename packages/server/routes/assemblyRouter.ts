@@ -23,7 +23,7 @@ assemblyRouter.get("/", (async (_req, res) => {
 assemblyRouter.get("/:id", (async (req, res) => {
   const assemblyId = req.params.id;
   const foundAssembly = await AssemblyModel.findById(assemblyId)
-    .populate("children.child")
+    .populate({ path: "children.child", populate: { path: "parent.parent" } })
     .populate("project");
   if (foundAssembly) {
     const modifiedAssembly = {
@@ -56,12 +56,12 @@ assemblyRouter.post(
       includeOptionals: true,
     });
 
-    const parentId = validatedData.parent.parentId;
+    const parent = validatedData.parent.parent;
     const parentType = validatedData.parent.parentType;
 
     switch (parentType) {
       case "assembly":
-        const foundAssembly = await AssemblyModel.findById(parentId);
+        const foundAssembly = await AssemblyModel.findById(parent);
         if (!foundAssembly) {
           return res.status(400).json({
             error: `${parentType} parent with given ID does not exist`,
@@ -69,7 +69,7 @@ assemblyRouter.post(
         }
         break;
       case "project":
-        const foundProject = await ProjectModel.findById(parentId);
+        const foundProject = await ProjectModel.findById(parent);
         if (!foundProject) {
           return res.status(400).json({
             error: `${parentType} parent with given ID does not exist`,
@@ -96,7 +96,7 @@ assemblyRouter.post(
 
     switch (parentType) {
       case "assembly":
-        const foundAssembly = await AssemblyModel.findById(parentId);
+        const foundAssembly = await AssemblyModel.findById(parent);
 
         if (foundAssembly) {
           foundAssembly.children = foundAssembly.children.concat(childObject);
@@ -104,7 +104,7 @@ assemblyRouter.post(
         }
         break;
       case "project":
-        const foundProject = await ProjectModel.findById(parentId);
+        const foundProject = await ProjectModel.findById(parent);
 
         if (foundProject) {
           foundProject.children = foundProject.children.concat(childObject);

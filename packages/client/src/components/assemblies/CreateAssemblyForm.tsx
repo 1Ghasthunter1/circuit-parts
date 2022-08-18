@@ -56,7 +56,7 @@ const CreateAssemblyForm = ({ closeModal, project }: FormProps) => {
           project: project.id,
           parent: {
             parentType: parentType,
-            parentId: values.parentId.replace("PROJECT:", ""),
+            parent: values.parentId.replace("PROJECT:", ""),
           },
         };
         await createAssembly(newAssembly);

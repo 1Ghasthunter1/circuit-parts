@@ -28,7 +28,7 @@ export interface Assembly {
   name: string;
   parent: {
     parentType: ParentType;
-    parentId: Types.ObjectId;
+    parent: Types.ObjectId;
   };
   type: "assembly";
   project: Types.ObjectId;

@@ -16,12 +16,15 @@ export const newAssemblySchema: Schema = {
     },
   },
 
-  "parent.parentId": {
+  "parent.parent": {
     custom: {
       options: (value: string) => {
-        return isValidObjectId(value);
+        console.log(value);
+        if (!value) throw new Error("parent.parent is reqiured");
+        if (!isValidObjectId(value))
+          throw new Error("parent.parent is not a valid mongoose id");
+        return true;
       },
-      errorMessage: "parentId is not a valid mongoose object ID",
     },
   },
 

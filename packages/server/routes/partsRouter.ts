@@ -45,12 +45,12 @@ partsRouter.post(
       includeOptionals: true,
     });
 
-    const parentId = validatedData.parent.parentId;
+    const parent = validatedData.parent.parent;
     const parentType = validatedData.parent.parentType;
 
     switch (parentType) {
       case "assembly":
-        const foundAssembly = await AssemblyModel.findById(parentId);
+        const foundAssembly = await AssemblyModel.findById(parent);
         if (!foundAssembly) {
           return res.status(400).json({
             error: `${parentType} parent with given ID does not exist`,
@@ -58,7 +58,7 @@ partsRouter.post(
         }
         break;
       case "project":
-        const foundProject = await ProjectModel.findById(parentId);
+        const foundProject = await ProjectModel.findById(parent);
 
         if (!foundProject) {
           return res.status(400).json({
@@ -89,7 +89,7 @@ partsRouter.post(
 
     switch (parentType) {
       case "assembly":
-        const foundAssembly = await AssemblyModel.findById(parentId);
+        const foundAssembly = await AssemblyModel.findById(parent);
 
         if (foundAssembly) {
           foundAssembly.children = foundAssembly.children.concat(childObject);
@@ -97,7 +97,7 @@ partsRouter.post(
         }
         break;
       case "project":
-        const foundProject = await ProjectModel.findById(parentId);
+        const foundProject = await ProjectModel.findById(parent);
 
         if (foundProject) {
           foundProject.children = foundProject.children.concat(childObject);

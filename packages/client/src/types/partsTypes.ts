@@ -1,4 +1,5 @@
 import { Project } from "./projectTypes";
+import { Assembly } from "./assemblyTypes";
 
 export const partStatuses = [
   "design in progress",
@@ -34,13 +35,10 @@ export const isParentType = (value: string): value is ParentType => {
   return parentType.includes(value as ParentType);
 };
 
-export interface Part {
+export interface BasePart {
   id: string;
   name: string;
-  parent: {
-    parentType: ParentType;
-    parentId: string;
-  };
+
   project: Project;
   partNumber: string;
   type: EntryType;
@@ -53,10 +51,20 @@ export interface Part {
   quantityRequired?: number;
 }
 
+export interface Part extends BasePart {
+  parent: {
+    parentType: ParentType;
+    parent: Assembly | Project;
+  };
+}
 export interface NewPart
   extends Omit<
-    Part,
+    BasePart,
     "id" | "partNumber" | "status" | "priority" | "project" | "type"
   > {
   projectId: string;
+  parent: {
+    parentType: ParentType;
+    parent: string;
+  };
 }

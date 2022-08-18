@@ -16,19 +16,18 @@ export const newPartSchema: Schema = {
     },
   },
 
-  "parent.parentId": {
+  "parent.parent": {
     custom: {
       options: (value: string) => {
         return isValidObjectId(value);
       },
-      errorMessage: "parentId is not a valid mongoose object ID",
+      errorMessage: "parent is not a valid mongoose object ID",
     },
   },
 
   projectId: {
     custom: {
       options: (value: string) => {
-
         return isValidObjectId(value);
       },
       errorMessage: "project is not a valid mongoose object ID",

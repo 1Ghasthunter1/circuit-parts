@@ -33,7 +33,7 @@ export interface Part {
   name: string;
   parent: {
     parentType: ParentType;
-    parentId: Types.ObjectId;
+    parent: Types.ObjectId;
   };
   type: "part";
   project: Types.ObjectId;

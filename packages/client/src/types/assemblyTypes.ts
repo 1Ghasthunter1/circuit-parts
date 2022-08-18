@@ -24,13 +24,9 @@ export const isParentType = (value: string): value is ParentType => {
   return parentType.includes(value as ParentType);
 };
 
-export interface Assembly {
+export interface BaseAssembly {
   id: string;
   name: string;
-  parent: {
-    parentType: ParentType;
-    parentId: string;
-  };
   type: "assembly";
   project: Project;
   partNumber: string;
@@ -41,9 +37,16 @@ export interface Assembly {
   notes?: string;
 }
 
+export interface Assembly extends BaseAssembly {
+  parent: {
+    parentType: ParentType;
+    parent: Assembly | Project;
+  };
+}
+
 export interface NewAssembly
   extends Omit<
-    Assembly,
+    BaseAssembly,
     | "id"
     | "partNumber"
     | "status"
@@ -54,4 +57,8 @@ export interface NewAssembly
     | "type"
   > {
   project: string;
+  parent: {
+    parentType: ParentType;
+    parent: string;
+  };
 }
