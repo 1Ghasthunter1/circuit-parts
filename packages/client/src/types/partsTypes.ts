@@ -1,6 +1,6 @@
 import { Project } from "./projectTypes";
 
-export const statuses = [
+export const partStatuses = [
   "design in progress",
   "materials need to be ordered",
   "waiting for materials",
@@ -11,17 +11,18 @@ export const statuses = [
   "ready for lathe",
   "ready for mill",
 ] as const;
+
 export const entryType = ["part", "assembly"] as const;
 export const priorities = ["low", "normal", "high", "urgent"] as const;
 export const parentType = ["assembly", "project"] as const;
 
-export type Status = typeof statuses[number];
+export type PartStatus = typeof partStatuses[number];
 export type EntryType = typeof entryType[number];
 export type PriorityType = typeof priorities[number];
 export type ParentType = typeof parentType[number];
 
-export const isStatus = (value: string): value is Status => {
-  return statuses.includes(value as Status);
+export const isStatus = (value: string): value is PartStatus => {
+  return partStatuses.includes(value as PartStatus);
 };
 export const isPartAssembly = (value: string): value is EntryType => {
   return entryType.includes(value as EntryType);
@@ -43,7 +44,7 @@ export interface Part {
   project: Project;
   partNumber: string;
   type: EntryType;
-  status: Status;
+  status: PartStatus;
   priority: PriorityType;
   notes?: string;
   sourceMaterial?: string;
@@ -53,6 +54,9 @@ export interface Part {
 }
 
 export interface NewPart
-  extends Omit<Part, "id" | "partNumber" | "status" | "priority" | "project" | "type"> {
+  extends Omit<
+    Part,
+    "id" | "partNumber" | "status" | "priority" | "project" | "type"
+  > {
   projectId: string;
 }

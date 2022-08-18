@@ -80,8 +80,6 @@ partsRouter.post(
       creationDate: new Date(),
     });
 
-    console.log("asd");
-
     const savedPart: Part = await partToDB.save();
 
     const childObject: Child = {

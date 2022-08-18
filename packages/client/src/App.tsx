@@ -7,7 +7,7 @@ import Header from "./components/header/Header";
 import DashboardView from "./views/DashboardView";
 import ProjectView from "./views/ProjectView";
 import AssemblyView from "./views/AssemblyView";
-function App() {
+const App = () => {
   return (
     <Router>
       <Header />
@@ -21,6 +21,6 @@ function App() {
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

@@ -1,6 +1,7 @@
 import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
 import { useNavigate } from "react-router-dom";
+import StatusBox from "../../components/entries/StatusBox";
 interface PartsTableProps {
   data: Array<Assembly | Part> | undefined;
 }
@@ -28,6 +29,12 @@ const PartsTable = ({ data }: PartsTableProps) => {
               Name
             </th>
             <th scope="col" className="py-3 px-6">
+              Parent
+            </th>
+            <th scope="col" className="py-3 px-6">
+              Status
+            </th>
+            <th scope="col" className="py-3 px-6">
               Edit
             </th>
           </tr>
@@ -47,13 +54,17 @@ const PartsTable = ({ data }: PartsTableProps) => {
                 >
                   <th
                     scope="row"
-                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="h-12 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     {rowItem.partNumber}
                   </th>
-                  <td className="py-4 px-6">{rowItem.type}</td>
-                  <td className="py-4 px-6">{rowItem.name}</td>
-                  <td className="py-4 px-6">{rowItem.id}</td>
+                  <td className="px-6">{rowItem.type}</td>
+                  <td className="px-6">{rowItem.name}</td>
+                  <td className="px-6">{rowItem.parent.parentId}</td>
+                  <td className="flex items-center grid place-items-center px-6">
+                    <StatusBox inpStatus={rowItem.status} />
+                  </td>
+                  <td className="px-6">edit stuff</td>
                 </tr>
               );
             })}
