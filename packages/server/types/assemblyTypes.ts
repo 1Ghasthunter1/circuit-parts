@@ -31,6 +31,7 @@ export interface Assembly {
     parentId: Types.ObjectId;
   };
   type: "assembly";
+  project: Types.ObjectId;
   partNumber: string;
   status: Status;
   priority: PriorityType;
@@ -41,5 +42,11 @@ export interface Assembly {
 
 export type NewAssembly = Omit<
   Assembly,
-  "id" | "partNumber" | "status" | "priority" | "creationDate" | "children"
+  | "id"
+  | "partNumber"
+  | "status"
+  | "priority"
+  | "creationDate"
+  | "children"
+  | "project"
 >;

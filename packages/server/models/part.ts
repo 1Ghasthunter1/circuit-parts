@@ -14,6 +14,10 @@ const partSchema = new mongoose.Schema<Part>({
       required: true,
     },
   },
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "project",
+  },
   type: { type: String, required: true },
   partNumber: {
     type: String,

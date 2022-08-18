@@ -14,6 +14,11 @@ const assemblySchema = new mongoose.Schema<Assembly>({
       required: true,
     },
   },
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "project",
+    required: true,
+  },
   partNumber: {
     type: String,
     required: true,

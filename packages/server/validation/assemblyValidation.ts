@@ -24,4 +24,13 @@ export const newAssemblySchema: Schema = {
       errorMessage: "parentId is not a valid mongoose object ID",
     },
   },
+
+  project: {
+    custom: {
+      options: (value: string) => {
+        return isValidObjectId(value);
+      },
+      errorMessage: "project is not a valid mongoose object ID",
+    },
+  },
 };

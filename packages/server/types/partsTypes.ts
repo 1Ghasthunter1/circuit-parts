@@ -36,6 +36,7 @@ export interface Part {
     parentId: Types.ObjectId;
   };
   type: "part";
+  project: Types.ObjectId;
   partNumber: string;
   status: Status;
   priority: PriorityType;
@@ -47,4 +48,7 @@ export interface Part {
   creationDate: Date;
 }
 
-export type NewPart = Omit<Part, "id" | "partNumber" | "status" | "priority">;
+export type NewPart = Omit<
+  Part,
+  "id" | "partNumber" | "status" | "priority" | "project"
+>;
