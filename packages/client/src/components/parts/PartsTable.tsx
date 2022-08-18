@@ -42,7 +42,6 @@ const PartsTable = ({ data }: PartsTableProps) => {
         <tbody>
           {data &&
             data.map((rowItem) => {
-              console.log(rowItem);
               return (
                 <tr
                   key={rowItem.id}

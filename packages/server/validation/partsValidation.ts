@@ -25,7 +25,7 @@ export const newPartSchema: Schema = {
     },
   },
 
-  projectId: {
+  project: {
     custom: {
       options: (value: string) => {
         return isValidObjectId(value);

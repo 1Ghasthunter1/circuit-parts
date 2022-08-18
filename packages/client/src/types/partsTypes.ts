@@ -38,8 +38,6 @@ export const isParentType = (value: string): value is ParentType => {
 export interface BasePart {
   id: string;
   name: string;
-
-  project: Project;
   partNumber: string;
   type: EntryType;
   status: PartStatus;
@@ -56,13 +54,14 @@ export interface Part extends BasePart {
     parentType: ParentType;
     parent: Assembly | Project;
   };
+  project: Project;
 }
 export interface NewPart
   extends Omit<
     BasePart,
     "id" | "partNumber" | "status" | "priority" | "project" | "type"
   > {
-  projectId: string;
+  project: string;
   parent: {
     parentType: ParentType;
     parent: string;

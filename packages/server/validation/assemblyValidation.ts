@@ -19,7 +19,6 @@ export const newAssemblySchema: Schema = {
   "parent.parent": {
     custom: {
       options: (value: string) => {
-        console.log(value);
         if (!value) throw new Error("parent.parent is reqiured");
         if (!isValidObjectId(value))
           throw new Error("parent.parent is not a valid mongoose id");

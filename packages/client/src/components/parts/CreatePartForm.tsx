@@ -49,7 +49,7 @@ const CreateProjectForm = ({ closeModal, project }: ProjectFormProps) => {
         setSubmitting(true);
         const newPart: NewPart = {
           ...values,
-          projectId: project.id,
+          project: project.id,
           parent: { parentType: "assembly", parent: values.parentId },
         };
         await createPart(newPart);
