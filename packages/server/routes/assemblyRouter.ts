@@ -62,7 +62,7 @@ assemblyRouter.post(
 
     switch (parentType) {
       case "assembly":
-        const foundAssembly = undefined;
+        const foundAssembly = await AssemblyModel.findById(parentId);
         if (!foundAssembly) {
           return res.status(400).json({
             error: `${parentType} parent with given ID does not exist`,

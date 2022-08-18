@@ -6,16 +6,24 @@ import CreateModal from "../components/modals/CreateModal";
 import CreatePartForm from "../components/parts/CreatePartForm";
 import PartsTable from "../components/parts/PartsTable";
 import Button from "../elements/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const AssemblyView = () => {
   const [partModalVis, setPartModalVis] = useState<boolean>(false);
   const { id } = useParams();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, error, isError, isLoading } = useQuery("assembly", () =>
-    fetchAssembly(id)
+  const { data, error, isError, isLoading, refetch } = useQuery(
+    "assembly",
+    () => fetchAssembly(id)
   );
+
+  useEffect(() => {
+    const doThing = async () => {
+      await refetch();
+    };
+    doThing().catch(console.error);
+  }, [id]);
 
   const assembly = data;
   const childComponents = assembly?.children;
