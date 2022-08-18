@@ -7,7 +7,7 @@ import { RequestHandler } from "express";
 import ProjectModel from "../models/project";
 import PartModel from "../models/part";
 import AssemblyModel from "../models/assembly";
-import { child } from "../types/universalTypes";
+import { Child } from "../types/universalTypes";
 
 require("express-async-errors");
 
@@ -71,36 +71,30 @@ partsRouter.post(
         throw new Error(`parent type "${parentType}" is invalid!`);
     }
 
-    const asd = {
+    const partToDB = new PartModel({
       ...validatedData,
       status: "design in progress",
       partNumber: "696-2022-P-1234",
       priority: "low",
       type: "part",
       creationDate: new Date(),
-    };
-
-    const partToDB = new PartModel(asd);
+    });
 
     const savedPart: Part = await partToDB.save();
 
-    const childObject: child = {
+    const childObject: Child = {
       childType: "part",
       child: savedPart.id,
     };
 
     switch (parentType) {
       case "assembly":
-        // const foundAssembly = await AssemblyModel.findById(parentId);
-        // if (foundAssembly) {
-        //   const newAssembly = {
-        //     ...foundAssembly,
-        //     children: foundAssembly.children.concat(childObject),
-        //   };
+        const foundAssembly = await AssemblyModel.findById(parentId);
 
-        //   const assyToDb = buildAssembly(newAssembly);
-        //   const result = await assyToDb.save();
-        // }
+        if (foundAssembly) {
+          foundAssembly.children = foundAssembly.children.concat(childObject);
+          await foundAssembly.save();
+        }
         break;
       case "project":
         const foundProject = await ProjectModel.findById(parentId);

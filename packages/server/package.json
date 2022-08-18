@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev index.ts",
+    "dev": "ts-node-dev --max-old-space-size=4096  index.ts",
     "dev:full": "concurrently -n \"BACK-END,FRONT-END\" -c \"bgBlue.bold,bgGreen.bold\" \"npm:dev\" \"cd ../client && npm start\"",
     "lint": "eslint --ext .ts ."
   },

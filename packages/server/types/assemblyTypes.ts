@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-
+import { Child } from "./universalTypes";
 export const statuses = [
   "design in progress",
   "in production",
@@ -35,10 +35,11 @@ export interface Assembly {
   status: Status;
   priority: PriorityType;
   creationDate: Date;
+  children: Child[];
   notes?: string;
 }
 
 export type NewAssembly = Omit<
   Assembly,
-  "id" | "partNumber" | "status" | "priority" | "creationDate"
+  "id" | "partNumber" | "status" | "priority" | "creationDate" | "children"
 >;

@@ -25,7 +25,18 @@ const assemblySchema = new mongoose.Schema<Assembly>({
   notes: { type: String, default: "" },
   priority: { type: String, required: true },
   creationDate: { type: Date, required: true },
-  type: { type: String, required: true},
+  type: { type: String, required: true },
+  children: [
+    {
+      childType: { type: String, required: true },
+      child: {
+        type: mongoose.Types.ObjectId,
+        refPath: "children.childType",
+        required: true,
+      },
+      _id: false,
+    },
+  ],
 });
 
 assemblySchema.set("toJSON", {
@@ -38,7 +49,7 @@ assemblySchema.set("toJSON", {
   },
 });
 
-const AssemblyModel = mongoose.model("Assembly", assemblySchema);
+const AssemblyModel = mongoose.model("assembly", assemblySchema);
 
 export const buildAssembly = (attr: Omit<Assembly, "id">) => {
   return new AssemblyModel(attr);
