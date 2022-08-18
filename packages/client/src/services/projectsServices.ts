@@ -2,6 +2,7 @@ import axios from "axios";
 import { apiBaseUrl } from "../constants";
 import { SubmitProject, Project } from "../types/projectTypes";
 import { Part } from "../types/partsTypes";
+import { Assembly } from "../types/assemblyTypes";
 export async function fetchProjects() {
   const { data } = await axios.get<Project[]>(`${apiBaseUrl}/projects`);
   return data;
@@ -20,7 +21,7 @@ export const fetchProject = async (projectId: string | undefined) => {
 
 export const fetchProjectComponents = async (
   projectId: string | undefined
-): Promise<Part[] | undefined> => {
+): Promise<Array<Part | Assembly> | undefined> => {
   if (projectId) {
     const { data } = await axios.get<Part[]>(
       `${apiBaseUrl}/projects/${projectId}/components`

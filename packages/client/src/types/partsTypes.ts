@@ -1,3 +1,4 @@
+import { Project } from "./projectTypes";
 
 export const statuses = [
   "design in progress",
@@ -39,6 +40,7 @@ export interface Part {
     parentType: ParentType;
     parentId: string;
   };
+  project: Project;
   partNumber: string;
   type: EntryType;
   status: Status;
@@ -50,4 +52,7 @@ export interface Part {
   quantityRequired?: number;
 }
 
-export type NewPart = Omit<Part, "id" | "partNumber" | "status" | "priority">;
+export interface NewPart
+  extends Omit<Part, "id" | "partNumber" | "status" | "priority" | "project" | "type"> {
+  projectId: string;
+}

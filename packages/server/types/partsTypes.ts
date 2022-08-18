@@ -48,7 +48,7 @@ export interface Part {
   creationDate: Date;
 }
 
-export type NewPart = Omit<
-  Part,
-  "id" | "partNumber" | "status" | "priority" | "project"
->;
+export interface NewPart
+  extends Omit<Part, "id" | "partNumber" | "status" | "priority" | "project"> {
+  projectId: Types.ObjectId;
+}

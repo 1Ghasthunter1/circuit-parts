@@ -16,7 +16,6 @@ require("express-async-errors");
 const assemblyRouter = express.Router();
 
 assemblyRouter.get("/", (async (_req, res) => {
-  console.log("here");
   const assemblies = await getAssemblies();
   res.send(assemblies).status(200).end();
 }) as RequestHandler);
