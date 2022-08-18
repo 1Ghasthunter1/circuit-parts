@@ -40,13 +40,17 @@ export interface Assembly {
   notes?: string;
 }
 
-export type NewAssembly = Omit<
-  Assembly,
-  | "id"
-  | "partNumber"
-  | "status"
-  | "priority"
-  | "creationDate"
-  | "children"
-  | "project"
->;
+export interface NewAssembly
+  extends Omit<
+    Assembly,
+    | "id"
+    | "partNumber"
+    | "status"
+    | "priority"
+    | "creationDate"
+    | "children"
+    | "project"
+    | "type"
+  > {
+  project: string;
+}

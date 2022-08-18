@@ -1,6 +1,6 @@
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
-import { Assembly } from "../types/assemblyTypes";
+import { Assembly, NewAssembly } from "../types/assemblyTypes";
 
 export const fetchAssembly = async (assemblyId: string | undefined) => {
   if (assemblyId) {
@@ -10,5 +10,13 @@ export const fetchAssembly = async (assemblyId: string | undefined) => {
     return data;
   }
   const { data } = await axios.get<Assembly>(`${apiBaseUrl}/assemblies`);
+  return data;
+};
+
+export const createAssembly = async (newAssembly: NewAssembly) => {
+  const { data } = await axios.post<Assembly>(
+    `${apiBaseUrl}/assemblies`,
+    newAssembly
+  );
   return data;
 };
