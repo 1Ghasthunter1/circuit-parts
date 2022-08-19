@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+<<<<<<< HEAD
 
 // Type constants =======================
 
@@ -52,8 +53,18 @@ export const isPriorityType = (value: string): value is Priority => {
 export const isParentType = (value: string): value is ParentType => {
   return parentTypes.includes(value as ParentType);
 };
+=======
+>>>>>>> 61245edd4d80c8e507181d46c5a7e6d1ea6703bb
 
-export interface Child {
+//Define constants ================
+
+export const childTypes = ["assembly", "part"] as const;
+
+//=================================
+
+export type ChildType = typeof childTypes[number];
+
+export interface ChildObject {
   childType: ChildType;
   child: Types.ObjectId;
 }
