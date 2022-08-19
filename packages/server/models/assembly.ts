@@ -22,7 +22,7 @@ const assemblySchema = new mongoose.Schema<DatabaseAssembly>({
       required: true,
     },
   },
-  children: childSchema,
+  children: [childSchema],
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "project",

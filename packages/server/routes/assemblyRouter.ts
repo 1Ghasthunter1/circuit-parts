@@ -2,7 +2,7 @@ import express from "express";
 import { getAssemblies } from "../services/assemblyService";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newAssemblySchema } from "../validation/assemblyValidation";
-import { Assembly, NewAssembly } from "../types/assemblyTypes";
+import { NewAssembly } from "../types/assemblyTypes";
 import { RequestHandler } from "express";
 import ProjectModel from "../models/project";
 import AssemblyModel from "../models/assembly";

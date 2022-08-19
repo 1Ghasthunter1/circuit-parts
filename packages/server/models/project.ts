@@ -15,7 +15,7 @@ const projectSchema = new mongoose.Schema<DatabaseProject>({
     required: true,
   },
   description: { type: String, default: "" },
-  children: childrenSchema,
+  children: [childrenSchema],
 });
 
 projectSchema.set("toJSON", {
