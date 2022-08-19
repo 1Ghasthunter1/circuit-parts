@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { Project } from "../types/projectTypes";
-
-const projectSchema = new mongoose.Schema<Project>({
+import { DatabaseProject } from "../types/projectTypes";
+import childrenSchema from "./schemas/childrenSchema";
+const projectSchema = new mongoose.Schema<DatabaseProject>({
   name: {
     type: String,
     required: true,
@@ -15,17 +15,7 @@ const projectSchema = new mongoose.Schema<Project>({
     required: true,
   },
   description: { type: String, default: "" },
-  children: [
-    {
-      childType: { type: String, required: true },
-      child: {
-        type: mongoose.Types.ObjectId,
-        refPath: "children.childType",
-        required: true,
-      },
-      _id: false,
-    },
-  ],
+  children: childrenSchema,
 });
 
 projectSchema.set("toJSON", {
@@ -39,9 +29,5 @@ projectSchema.set("toJSON", {
 });
 
 const ProjectModel = mongoose.model("project", projectSchema);
-
-export const buildProject = (attr: Omit<Project, "id">) => {
-  return new ProjectModel(attr);
-};
 
 export default ProjectModel;

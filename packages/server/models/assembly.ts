@@ -1,19 +1,28 @@
 import mongoose from "mongoose";
 import { DatabaseAssembly } from "../types/assemblyTypes";
-
+import { isParentType } from "../types/universalTypes";
+import childSchema from "./schemas/childrenSchema";
 const assemblySchema = new mongoose.Schema<DatabaseAssembly>({
   name: {
     type: String,
     required: true,
   },
   parent: {
-    parentType: { type: String, required: true },
+    parentType: {
+      type: String,
+      required: true,
+      validate: {
+        validator: (value: string) => isParentType(value),
+        message: "`parent.parentType` is not a parent type",
+      },
+    },
     parent: {
       type: mongoose.Types.ObjectId,
       refPath: "parent.parentType",
       required: true,
     },
   },
+  children: childSchema,
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "project",
@@ -30,17 +39,6 @@ const assemblySchema = new mongoose.Schema<DatabaseAssembly>({
   notes: { type: String, default: "" },
   priority: { type: String, required: true },
   creationDate: { type: Date, required: true },
-  children: [
-    {
-      childType: { type: String, required: true },
-      child: {
-        type: mongoose.Types.ObjectId,
-        refPath: "children.childType",
-        required: true,
-      },
-      _id: false,
-    },
-  ],
 });
 
 assemblySchema.set("toJSON", {
@@ -54,9 +52,5 @@ assemblySchema.set("toJSON", {
 });
 
 const AssemblyModel = mongoose.model("assembly", assemblySchema);
-
-export const buildAssembly = (attr: Omit<Assembly, "id">) => {
-  return new AssemblyModel(attr);
-};
 
 export default AssemblyModel;

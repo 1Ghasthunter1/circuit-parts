@@ -18,11 +18,11 @@ export interface DatabaseAssembly {
   partNumber: string;
   parent: Parent;
   children: Child[];
+  project: Types.ObjectId;
   status: AssemblyStatus;
   priority: Priority;
-  project: Types.ObjectId;
-  notes?: string;
   creationDate: Date;
+  notes?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
