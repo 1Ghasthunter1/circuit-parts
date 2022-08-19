@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { Assembly } from "../types/assemblyTypes";
+import { DatabaseAssembly } from "../types/assemblyTypes";
 
-const assemblySchema = new mongoose.Schema<Assembly>({
+const assemblySchema = new mongoose.Schema<DatabaseAssembly>({
   name: {
     type: String,
     required: true,
@@ -30,7 +30,6 @@ const assemblySchema = new mongoose.Schema<Assembly>({
   notes: { type: String, default: "" },
   priority: { type: String, required: true },
   creationDate: { type: Date, required: true },
-  type: { type: String, required: true },
   children: [
     {
       childType: { type: String, required: true },

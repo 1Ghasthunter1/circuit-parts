@@ -1,24 +1,30 @@
 import { Types } from "mongoose";
 import { DatabaseAssembly } from "./assemblyTypes";
 import { DatabaseProject } from "./projectTypes";
-import { ParentType, PartStatus, Priority } from "./universalTypes";
+import {
+  Parent,
+  partStatuses,
+  PartStatus,
+  Priority,
+} from "./universalTypes";
+
+export const isPartStatus = (value: string): value is PartStatus => {
+  return partStatuses.includes(value as PartStatus);
+};
 export interface DatabasePart {
   id: Types.ObjectId;
   name: string;
   partNumber: string;
-  parent: {
-    parentType: ParentType;
-    parent: Types.ObjectId;
-  };
+  parent: Parent;
+  project: Types.ObjectId;
   status: PartStatus;
   priority: Priority;
-  project: Types.ObjectId;
+  creationDate: Date;
   notes?: string;
   sourceMaterial?: string;
   haveMaterial?: boolean;
   materialCutLength?: string;
   quantityRequired?: number;
-  creationDate: Date;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

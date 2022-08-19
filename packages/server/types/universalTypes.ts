@@ -1,11 +1,9 @@
 import { Types } from "mongoose";
-<<<<<<< HEAD
-
 // Type constants =======================
 
-const childTypes = ["assembly", "part"] as const;
+export const childTypes = ["assembly", "part"] as const;
 
-const assemblyStatuses = [
+export const assemblyStatuses = [
   "design in progress",
   "ready for assembly",
   "assembly in progress",
@@ -13,7 +11,7 @@ const assemblyStatuses = [
   "done",
 ] as const;
 
-const partStatuses = [
+export const partStatuses = [
   "design in progress",
   "materials need to be ordered",
   "waiting for materials",
@@ -25,8 +23,8 @@ const partStatuses = [
   "ready for mill",
 ] as const;
 
-const priorities = ["low", "normal", "high", "urgent"] as const;
-const parentTypes = ["assembly", "project"] as const;
+export const priorities = ["low", "normal", "high", "urgent"] as const;
+export const parentTypes = ["assembly", "project"] as const;
 
 //========================================
 
@@ -38,33 +36,22 @@ export type Priority = typeof priorities[number];
 export type ParentType = typeof parentTypes[number];
 
 //type guards and validators
-export const isPartStatus = (value: string): value is PartStatus => {
-  return partStatuses.includes(value as PartStatus);
-};
-export const isAssemblyStatus = (value: string): value is AssemblyStatus => {
-  return assemblyStatuses.includes(value as AssemblyStatus);
-};
 export const isChildType = (value: string): value is ChildType => {
   return childTypes.includes(value as ChildType);
 };
-export const isPriorityType = (value: string): value is Priority => {
+export const isPriority = (value: string): value is Priority => {
   return priorities.includes(value as Priority);
 };
 export const isParentType = (value: string): value is ParentType => {
   return parentTypes.includes(value as ParentType);
 };
-=======
->>>>>>> 61245edd4d80c8e507181d46c5a7e6d1ea6703bb
 
-//Define constants ================
-
-export const childTypes = ["assembly", "part"] as const;
-
-//=================================
-
-export type ChildType = typeof childTypes[number];
-
-export interface ChildObject {
+export interface Child {
   childType: ChildType;
   child: Types.ObjectId;
+}
+
+export interface Parent {
+  parentType: ParentType;
+  parent: Types.ObjectId;
 }

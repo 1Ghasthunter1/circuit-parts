@@ -1,14 +1,22 @@
 import { Types } from "mongoose";
 import { DatabaseProject } from "./projectTypes";
-import { ParentType, AssemblyStatus, Priority, Child } from "./universalTypes";
+import {
+  Parent,
+  assemblyStatuses,
+  AssemblyStatus,
+  Priority,
+  Child,
+} from "./universalTypes";
+
+export const isAssemblyStatus = (value: string): value is AssemblyStatus => {
+  return assemblyStatuses.includes(value as AssemblyStatus);
+};
+
 export interface DatabaseAssembly {
   id: Types.ObjectId;
   name: string;
   partNumber: string;
-  parent: {
-    parentType: ParentType;
-    parent: Types.ObjectId;
-  };
+  parent: Parent;
   children: Child[];
   status: AssemblyStatus;
   priority: Priority;
