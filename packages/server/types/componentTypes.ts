@@ -1,7 +1,4 @@
 import { Types } from "mongoose";
-import { Assembly } from "./assemblyTypes";
-import { Project } from "./projectTypes";
-
 // DEFINE TYPES HERE ==============
 export const partStatuses = [
   "design in progress",
@@ -14,8 +11,6 @@ export const partStatuses = [
   "ready for lathe",
   "ready for mill",
 ] as const;
-
-const childTypes = ["assembly", "part"] as const;
 
 export const assemblyStatuses = [
   "design in progress",
@@ -37,7 +32,6 @@ export type AssemblyStatus = typeof assemblyStatuses[number];
 export type PriorityType = typeof priorities[number];
 export type ComponentType = typeof componentTypes[number];
 export type ParentType = typeof parentTypes[number];
-export type ChildType = typeof childType[number];
 
 export const isPartStatus = (value: string): value is PartStatus => {
   return partStatuses.includes(value as PartStatus);
@@ -59,19 +53,16 @@ export interface DatabaseComponent {
   id: Types.ObjectId;
   name: string;
   type: ComponentType;
+  project: Types.ObjectId;
   parent: {
     parentType: ParentType;
     parent: Types.ObjectId;
   };
-  project: Types.ObjectId;
+  children?: [Types.ObjectId];
   partNumber: string;
   status: PartStatus | AssemblyStatus;
   priority: PriorityType;
   creationDate: Date;
-  children?: {
-    childType: ChildType;
-    child: Types.ObjectId;
-  };
   notes?: string;
   sourceMaterial?: string;
   haveMaterial?: boolean;
@@ -80,31 +71,34 @@ export interface DatabaseComponent {
 }
 
 export interface DatabasePart
-  extends Omit<DatabaseComponent, "status" | "children"> {
+  extends Omit<DatabaseComponent, "status" | "children" | "type"> {
   status: PartStatus;
+  type: "part";
 }
 
-export type NewPart = Omit<
-  DatabasePart,
-  "id" | "partNumber" | "status" | "priority" | "creationDate" | "type"
->;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface NewPart
+  extends Omit<
+    DatabasePart,
+    "id" | "partNumber" | "status" | "priority" | "creationDate" | "type"
+  > {}
 
 export interface DatabaseAssembly
-  extends Omit<DatabaseComponent, "status" | "children"> {
+  extends Omit<DatabaseComponent, "status" | "children" | "type"> {
   status: AssemblyStatus;
-  children: {
-    childType: ChildType;
-    child: Types.ObjectId;
-  };
+  children: Types.ObjectId[];
+  type: "assembly";
 }
 
-export type NewAssembly = Omit<
-  DatabaseAssembly,
-  | "id"
-  | "partNumber"
-  | "status"
-  | "priority"
-  | "creationDate"
-  | "type"
-  | "children"
->;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface NewAssembly
+  extends Omit<
+    DatabaseAssembly,
+    | "id"
+    | "partNumber"
+    | "status"
+    | "priority"
+    | "creationDate"
+    | "type"
+    | "children"
+  > {}

@@ -6,7 +6,6 @@ import { Assembly, NewAssembly } from "../types/assemblyTypes";
 import { RequestHandler } from "express";
 import ProjectModel from "../models/project";
 import AssemblyModel from "../models/assembly";
-import { Child } from "../types/universalTypes";
 
 // import { Logger } from "tslog";
 // const log: Logger = new Logger({ name: "myLogger" });
@@ -20,23 +19,23 @@ assemblyRouter.get("/", (async (_req, res) => {
   res.send(assemblies).status(200).end();
 }) as RequestHandler);
 
-assemblyRouter.get("/:id", (async (req, res) => {
-  const assemblyId = req.params.id;
-  const foundAssembly = await AssemblyModel.findById(assemblyId)
-    .populate({ path: "children.child", populate: { path: "parent.parent" } })
-    .populate("project");
-  if (foundAssembly) {
-    const modifiedAssembly = {
-      ...foundAssembly.toJSON(),
-      children: foundAssembly.children.map((childObj) => childObj.child),
-    };
-    return res.status(200).send(modifiedAssembly).end();
-  }
+// assemblyRouter.get("/:id", (async (req, res) => {
+//   const assemblyId = req.params.id;
+//   const foundAssembly = await AssemblyModel.findById(assemblyId)
+//     .populate({ path: "children.child", populate: { path: "parent.parent" } })
+//     .populate("project");
+//   if (foundAssembly) {
+//     const modifiedAssembly = {
+//       ...foundAssembly.toJSON(),
+//       children: foundAssembly.children.map((childObj) => childObj.child),
+//     };
+//     return res.status(200).send(modifiedAssembly).end();
+//   }
 
-  return res
-    .status(404)
-    .json({ error: `assembly not found with id ${assemblyId}` });
-}) as RequestHandler);
+//   return res
+//     .status(404)
+//     .json({ error: `assembly not found with id ${assemblyId}` });
+// }) as RequestHandler);
 
 assemblyRouter.post(
   "/",
@@ -89,32 +88,32 @@ assemblyRouter.post(
       type: "assembly",
     }).save();
 
-    const childObject: Child = {
-      childType: "assembly",
-      child: savedAssembly.id,
-    };
+    // const childObject: Child = {
+    //   childType: "assembly",
+    //   child: savedAssembly.id,
+    // };
 
-    switch (parentType) {
-      case "assembly":
-        const foundAssembly = await AssemblyModel.findById(parent);
+    // switch (parentType) {
+    //   case "assembly":
+    //     const foundAssembly = await AssemblyModel.findById(parent);
 
-        if (foundAssembly) {
-          foundAssembly.children = foundAssembly.children.concat(childObject);
-          await foundAssembly.save();
-        }
-        break;
-      case "project":
-        const foundProject = await ProjectModel.findById(parent);
+    //     if (foundAssembly) {
+    //       foundAssembly.children = foundAssembly.children.concat(childObject);
+    //       await foundAssembly.save();
+    //     }
+    //     break;
+    //   case "project":
+    //     const foundProject = await ProjectModel.findById(parent);
 
-        if (foundProject) {
-          foundProject.children = foundProject.children.concat(childObject);
-          await foundProject.save();
-        }
+    //     if (foundProject) {
+    //       foundProject.children = foundProject.children.concat(childObject);
+    //       await foundProject.save();
+    //     }
 
-        break;
-      default:
-        throw new Error(`parent type "${parentType}" is invalid!`);
-    }
+    //     break;
+    //   default:
+    //     throw new Error(`parent type "${parentType}" is invalid!`);
+    // }
 
     return res.json(savedAssembly).end();
   }

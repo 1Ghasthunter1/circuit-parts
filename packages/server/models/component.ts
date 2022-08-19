@@ -79,6 +79,6 @@ partSchema.set("toJSON", {
   },
 });
 
-const PartModel = mongoose.model("part", partSchema);
+const PartModel = mongoose.model("component", partSchema);
 
 export default PartModel;

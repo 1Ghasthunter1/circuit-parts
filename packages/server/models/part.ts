@@ -5,7 +5,7 @@ const partSchema = new mongoose.Schema<DatabasePart>({
   name: {
     type: String,
     required: true,
-  },s
+  },
   parent: {
     parentType: { type: String, required: true },
     parent: {

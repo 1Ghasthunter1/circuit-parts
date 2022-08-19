@@ -1,8 +1,14 @@
-const childType = ["assembly", "part"] as const;
 import { Types } from "mongoose";
-type ChildType = typeof childType[number];
 
-export interface Child {
+//Define constants ================
+
+export const childTypes = ["assembly", "part"] as const;
+
+//=================================
+
+export type ChildType = typeof childTypes[number];
+
+export interface ChildObject {
   childType: ChildType;
   child: Types.ObjectId;
 }
