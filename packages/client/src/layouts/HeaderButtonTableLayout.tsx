@@ -23,10 +23,10 @@ const HeaderButtonTableLayout = ({
         <div className="float-left">
           <h1 className="text-4xl font-bold ">{pageTitle}</h1>
           <div className="text-md text-gray-400">
-            <b>Prefix:</b> {subtitle}
+            {subtitle ? <b>Prefix: </b> : null}
+            {subtitle}
           </div>
-          <div className="text-md text-gray-400 font-italic">{description}
-          </div>
+          <div className="text-md text-gray-400 font-italic">{description}</div>
         </div>
         <div className="float-right">{buttonContent}</div>
       </div>

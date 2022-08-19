@@ -19,18 +19,22 @@ export const newPartSchema: Schema = {
   "parent.parent": {
     custom: {
       options: (value: string) => {
-        return isValidObjectId(value);
+        if (!value) throw new Error("field `parent.parent` is reqiured");
+        if (!isValidObjectId(value))
+          throw new Error("field `parent.parent` is not a valid mongoose id");
+        return true;
       },
-      errorMessage: "parent is not a valid mongoose object ID",
     },
   },
 
   project: {
     custom: {
       options: (value: string) => {
-        return isValidObjectId(value);
+        if (!value) throw new Error("field `project` is reqiured");
+        if (!isValidObjectId(value))
+          throw new Error("field `project` is not a valid mongoose id");
+        return true;
       },
-      errorMessage: "project is not a valid mongoose object ID",
     },
   },
 };

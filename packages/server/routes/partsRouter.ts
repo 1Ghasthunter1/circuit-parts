@@ -1,8 +1,7 @@
 import express from "express";
-import { getPartById, getParts } from "../services/partsService";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newPartSchema } from "../validation/partsValidation";
-import { NewPart, Part } from "../types/partsTypes";
+import { NewPart, DatabasePart, ToDatabasePart } from "../types/partsTypes";
 import { RequestHandler } from "express";
 import ProjectModel from "../models/project";
 import PartModel from "../models/part";
@@ -14,13 +13,13 @@ require("express-async-errors");
 const partsRouter = express.Router();
 
 partsRouter.get("/", (async (_req, res) => {
-  const parts = await getParts();
+  const parts = await PartModel.find({});
   res.send(parts).status(200).end();
 }) as RequestHandler);
 
 partsRouter.get("/:id", (async (req, res) => {
   const partId = req.params.id;
-  const foundPart = await getPartById(partId);
+  const foundPart = await PartModel.findById(partId);
   if (foundPart) {
     return res.status(200).send(foundPart).end();
   }
@@ -30,84 +29,49 @@ partsRouter.get("/:id", (async (req, res) => {
 partsRouter.post(
   "/",
   checkSchema(newPartSchema),
-  async (
-    req: express.Request<never, never, NewPart>,
-    res: express.Response
-  ) => {
+  async (req: express.Request, res: express.Response) => {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const validatedData = <NewPart>matchedData(req, {
+    const newPart = <NewPart>matchedData(req, {
       locations: ["body"],
       includeOptionals: true,
     });
 
-    const parent = validatedData.parent.parent;
-    const parentType = validatedData.parent.parentType;
+    const { parentType, parent } = newPart.parent;
 
-    switch (parentType) {
-      case "assembly":
-        const foundAssembly = await AssemblyModel.findById(parent);
-        if (!foundAssembly) {
-          return res.status(400).json({
-            error: `${parentType} parent with given ID does not exist`,
-          });
-        }
-        break;
-      case "project":
-        const foundProject = await ProjectModel.findById(parent);
+    let foundParent;
 
-        if (!foundProject) {
-          return res.status(400).json({
-            error: `${parentType} parent with given ID does not exist`,
-          });
-        }
+    if (parentType === "assembly")
+      foundParent = await AssemblyModel.findById(parent);
+    else if (parentType === "project")
+      foundParent = await ProjectModel.findById(parent);
 
-        break;
-      default:
-        throw new Error(`parent type "${parentType}" is invalid!`);
+    if (!foundParent) {
+      throw new Error(`a(n) ${parentType} with id ${parent} does not exist`);
     }
 
-    const partToDB = new PartModel({
-      ...validatedData,
+    const databasePart: ToDatabasePart = {
+      ...newPart,
       status: "design in progress",
       partNumber: "696-2022-P-1234",
       priority: "low",
-      type: "part",
       creationDate: new Date(),
-    });
+    };
 
-    const savedPart: Part = await partToDB.save();
+    const partToDB = new PartModel(databasePart);
+    const savedPart: DatabasePart = await partToDB.save();
 
     const childObject: Child = {
       childType: "part",
       child: savedPart.id,
     };
 
-    switch (parentType) {
-      case "assembly":
-        const foundAssembly = await AssemblyModel.findById(parent);
+    foundParent.children = foundParent.children.concat(childObject);
+    await foundParent.save();
 
-        if (foundAssembly) {
-          foundAssembly.children = foundAssembly.children.concat(childObject);
-          await foundAssembly.save();
-        }
-        break;
-      case "project":
-        const foundProject = await ProjectModel.findById(parent);
-
-        if (foundProject) {
-          foundProject.children = foundProject.children.concat(childObject);
-          await foundProject.save();
-        }
-
-        break;
-      default:
-        throw new Error(`parent type "${parentType}" is invalid!`);
-    }
     return res.json(savedPart).end();
   }
 );

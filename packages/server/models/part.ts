@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { Part } from "../types/partsTypes";
+import { DatabasePart } from "../types/partsTypes";
 
-const partSchema = new mongoose.Schema<Part>({
+const partSchema = new mongoose.Schema<DatabasePart>({
   name: {
     type: String,
     required: true,
@@ -19,7 +19,6 @@ const partSchema = new mongoose.Schema<Part>({
     ref: "project",
     required: true,
   },
-  type: { type: String, required: true },
   partNumber: {
     type: String,
     required: true,
@@ -48,9 +47,5 @@ partSchema.set("toJSON", {
 });
 
 const PartModel = mongoose.model("part", partSchema);
-
-export const build = (attr: Omit<Part, "id">) => {
-  return new PartModel(attr);
-};
 
 export default PartModel;

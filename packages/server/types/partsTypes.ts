@@ -1,4 +1,6 @@
 import { Types } from "mongoose";
+import { Assembly } from "./assemblyTypes";
+import { Project } from "./projectTypes";
 
 export const statuses = [
   "design in progress",
@@ -28,18 +30,17 @@ export const isParentType = (value: string): value is ParentType => {
   return parentType.includes(value as ParentType);
 };
 
-export interface Part {
+export interface DatabasePart {
   id: Types.ObjectId;
   name: string;
+  partNumber: string;
   parent: {
     parentType: ParentType;
     parent: Types.ObjectId;
   };
-  type: "part";
-  project: Types.ObjectId;
-  partNumber: string;
   status: Status;
   priority: PriorityType;
+  project: Types.ObjectId;
   notes?: string;
   sourceMaterial?: string;
   haveMaterial?: boolean;
@@ -48,7 +49,13 @@ export interface Part {
   creationDate: Date;
 }
 
-export interface NewPart
-  extends Omit<Part, "id" | "partNumber" | "status" | "priority" | "project"> {
-  projectId: Types.ObjectId;
+export type ToDatabasePart = Omit<DatabasePart, "id">;
+
+export interface PartToUser extends Omit<DatabasePart, "parent"> {
+  parent: Assembly | Project;
 }
+
+export type NewPart = Omit<
+  DatabasePart,
+  "id" | "partNumber" | "status" | "priority"
+>;
