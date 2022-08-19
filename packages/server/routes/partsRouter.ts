@@ -2,11 +2,11 @@ import express from "express";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newPartSchema } from "../validation/partsValidation";
 import { RequestHandler } from "express";
-import ProjectModel from "../models/project";
 import PartModel from "../models/part";
-import AssemblyModel from "../models/assembly";
-
-import { NewPart } from "../types/partsTypes";
+import { findParent, findProject } from "../utils/generic";
+import { NewPart, PopulatedPart } from "../types/partsTypes";
+import { DatabaseProject } from "../types/projectTypes";
+import { DatabaseAssembly } from "../types/assemblyTypes";
 require("express-async-errors");
 
 const partsRouter = express.Router();
@@ -18,11 +18,22 @@ partsRouter.get("/", (async (_req, res) => {
 
 partsRouter.get("/:id", (async (req, res) => {
   const partId = req.params.id;
-  const foundPart = await PartModel.findById(partId);
-  if (foundPart) {
-    return res.status(200).send(foundPart).end();
-  }
-  return res.status(404).json({ error: `part not found with id ${partId}` });
+  const foundPart = await PartModel.findById(partId).populate<{
+    parent: {
+      parentType: string;
+      parent: DatabaseAssembly | DatabaseProject;
+    };
+  }>("parent.parent");
+
+  if (!foundPart)
+    return res.status(404).json({ error: `part not found with id ${partId}` });
+
+  const populatedPart: PopulatedPart = {
+    ...foundPart.toJSON(),
+    parent: foundPart.parent.parent,
+  };
+
+  return res.status(200).json(populatedPart);
 }) as RequestHandler);
 
 partsRouter.post(
@@ -40,16 +51,24 @@ partsRouter.post(
     });
 
     const { parentType, parent } = newPart.parent;
-
-    let foundParent;
-    if (parentType === "assembly")
-      foundParent = await AssemblyModel.findById(parent);
-    else if (parentType === "project")
-      foundParent = await ProjectModel.findById(parent);
+    const foundParent = await findParent(parentType, parent);
+    const foundProject = await findProject(newPart.project);
 
     if (!foundParent) {
       res
-        .json({ error: `a(n) ${parentType} with id ${parent} does not exist` })
+        .json({
+          error: `a(n) ${parentType} parent with id ${parent} does not exist`,
+        })
+        .status(400)
+        .end();
+      return;
+    }
+
+    if (!foundProject) {
+      res
+        .json({
+          error: `'project' refers to an id ${newPart.project} does not exist`,
+        })
         .status(400)
         .end();
       return;

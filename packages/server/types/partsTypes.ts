@@ -1,12 +1,7 @@
 import { Types } from "mongoose";
 import { DatabaseAssembly } from "./assemblyTypes";
 import { DatabaseProject } from "./projectTypes";
-import {
-  Parent,
-  partStatuses,
-  PartStatus,
-  Priority,
-} from "./universalTypes";
+import { Parent, partStatuses, PartStatus, Priority } from "./universalTypes";
 
 export const isPartStatus = (value: string): value is PartStatus => {
   return partStatuses.includes(value as PartStatus);
@@ -29,7 +24,7 @@ export interface DatabasePart {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ToDatabasePart extends Omit<DatabasePart, "id"> {}
-export interface PartToUser extends Omit<DatabasePart, "parent"> {
+export interface PopulatedPart extends Omit<DatabasePart, "parent"> {
   parent: DatabaseAssembly | DatabaseProject;
 }
 

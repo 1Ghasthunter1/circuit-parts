@@ -10,7 +10,7 @@ import {
   ToDatabaseAssembly,
 } from "../types/assemblyTypes";
 import { DatabasePart } from "../types/partsTypes";
-import { findParent } from "../utils/generic";
+import { findParent, findProject } from "../utils/generic";
 require("express-async-errors");
 
 const assemblyRouter = express.Router();
@@ -63,10 +63,23 @@ assemblyRouter.post(
     const { parentType, parent } = newAssembly.parent;
 
     const foundParent = await findParent(parentType, parent);
+    const foundProject = await findProject(newAssembly.project);
 
     if (!foundParent) {
       res
-        .json({ error: `a(n) ${parentType} with id ${parent} does not exist` })
+        .json({
+          error: `a(n) ${parentType} parent with id ${parent} does not exist`,
+        })
+        .status(400)
+        .end();
+      return;
+    }
+
+    if (!foundProject) {
+      res
+        .json({
+          error: `'project' refers to an id ${newAssembly.project} does not exist`,
+        })
         .status(400)
         .end();
       return;
@@ -84,7 +97,8 @@ assemblyRouter.post(
 
     foundParent.children = foundParent.children.concat({
       childType: "assembly",
-      child: savedAssembly.toJSON().id,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      child: savedAssembly.id,
     });
     await foundParent.save();
 

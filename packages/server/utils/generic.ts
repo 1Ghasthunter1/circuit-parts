@@ -14,3 +14,7 @@ export const findParent = async (
     foundParent = await ProjectModel.findById(parentId);
   return foundParent;
 };
+
+export const findProject = async (projectId: mongoose.Types.ObjectId) => {
+  return await ProjectModel.findById(projectId);
+};
