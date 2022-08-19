@@ -1,119 +1,92 @@
 import express from "express";
-import { getAssemblies } from "../services/assemblyService";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newAssemblySchema } from "../validation/assemblyValidation";
-import { NewAssembly } from "../types/assemblyTypes";
 import { RequestHandler } from "express";
-import ProjectModel from "../models/project";
 import AssemblyModel from "../models/assembly";
-
-// import { Logger } from "tslog";
-// const log: Logger = new Logger({ name: "myLogger" });
-
+import {
+  PopulatedAssembly,
+  DatabaseAssembly,
+  NewAssembly,
+  ToDatabaseAssembly,
+} from "../types/assemblyTypes";
+import { DatabasePart } from "../types/partsTypes";
+import { findParent } from "../utils/generic";
 require("express-async-errors");
 
 const assemblyRouter = express.Router();
 
 assemblyRouter.get("/", (async (_req, res) => {
-  const assemblies = await getAssemblies();
+  const assemblies = await AssemblyModel.find({});
   res.send(assemblies).status(200).end();
 }) as RequestHandler);
 
-// assemblyRouter.get("/:id", (async (req, res) => {
-//   const assemblyId = req.params.id;
-//   const foundAssembly = await AssemblyModel.findById(assemblyId)
-//     .populate({ path: "children.child", populate: { path: "parent.parent" } })
-//     .populate("project");
-//   if (foundAssembly) {
-//     const modifiedAssembly = {
-//       ...foundAssembly.toJSON(),
-//       children: foundAssembly.children.map((childObj) => childObj.child),
-//     };
-//     return res.status(200).send(modifiedAssembly).end();
-//   }
+assemblyRouter.get("/:id", (async (req, res) => {
+  const assemblyId = req.params.id;
+  const foundAssembly = await AssemblyModel.findById(assemblyId)
+    .populate<{
+      children: Array<{
+        childType: string;
+        child: DatabaseAssembly | DatabasePart;
+      }>;
+    }>({
+      path: "children.child",
+      populate: { path: "parent.parent" },
+    })
+    .populate("project");
 
-//   return res
-//     .status(404)
-//     .json({ error: `assembly not found with id ${assemblyId}` });
-// }) as RequestHandler);
+  if (!foundAssembly)
+    return res
+      .status(404)
+      .json({ error: `assembly not found with id ${assemblyId}` });
+
+  const modifiedAssembly: PopulatedAssembly = {
+    ...foundAssembly.toJSON(),
+    children: foundAssembly.children.map((childObj) => childObj.child),
+  };
+  return res.status(200).send(modifiedAssembly).end();
+}) as RequestHandler);
 
 assemblyRouter.post(
   "/",
   checkSchema(newAssemblySchema),
-  async (
-    req: express.Request<never, never, NewAssembly>,
-    res: express.Response
-  ) => {
+  async (req: express.Request, res: express.Response) => {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const validatedData = <NewAssembly>matchedData(req, {
+    const newAssembly = <NewAssembly>matchedData(req, {
       locations: ["body"],
       includeOptionals: true,
     });
 
-    const parent = validatedData.parent.parent;
-    const parentType = validatedData.parent.parentType;
+    const { parentType, parent } = newAssembly.parent;
 
-    switch (parentType) {
-      case "assembly":
-        const foundAssembly = await AssemblyModel.findById(parent);
-        if (!foundAssembly) {
-          return res.status(400).json({
-            error: `${parentType} parent with given ID does not exist`,
-          });
-        }
-        break;
-      case "project":
-        const foundProject = await ProjectModel.findById(parent);
-        if (!foundProject) {
-          return res.status(400).json({
-            error: `${parentType} parent with given ID does not exist`,
-          });
-        }
-        break;
-      default:
-        throw new Error(`parent type "${parentType}" is invalid!`);
+    const foundParent = await findParent(parentType, parent);
+
+    if (!foundParent) {
+      res
+        .json({ error: `a(n) ${parentType} with id ${parent} does not exist` })
+        .status(400)
+        .end();
+      return;
     }
 
-    const savedAssembly: Assembly = await new AssemblyModel({
-      ...validatedData,
+    const newAssemblyObj: ToDatabaseAssembly = {
+      ...newAssembly,
       status: "design in progress",
       partNumber: "696-2022-P-1234",
-      priority: "low",
+      priority: "normal",
       creationDate: new Date(),
-      type: "assembly",
-    }).save();
+    };
 
-    // const childObject: Child = {
-    //   childType: "assembly",
-    //   child: savedAssembly.id,
-    // };
+    const savedAssembly = await new AssemblyModel(newAssemblyObj).save();
 
-    // switch (parentType) {
-    //   case "assembly":
-    //     const foundAssembly = await AssemblyModel.findById(parent);
-
-    //     if (foundAssembly) {
-    //       foundAssembly.children = foundAssembly.children.concat(childObject);
-    //       await foundAssembly.save();
-    //     }
-    //     break;
-    //   case "project":
-    //     const foundProject = await ProjectModel.findById(parent);
-
-    //     if (foundProject) {
-    //       foundProject.children = foundProject.children.concat(childObject);
-    //       await foundProject.save();
-    //     }
-
-    //     break;
-    //   default:
-    //     throw new Error(`parent type "${parentType}" is invalid!`);
-    // }
+    foundParent.children = foundParent.children.concat({
+      childType: "assembly",
+      child: savedAssembly.toJSON().id,
+    });
+    await foundParent.save();
 
     return res.json(savedAssembly).end();
   }

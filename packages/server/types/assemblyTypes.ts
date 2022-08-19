@@ -7,6 +7,7 @@ import {
   Priority,
   Child,
 } from "./universalTypes";
+import { DatabasePart } from "./partsTypes";
 
 export const isAssemblyStatus = (value: string): value is AssemblyStatus => {
   return assemblyStatuses.includes(value as AssemblyStatus);
@@ -27,8 +28,11 @@ export interface DatabaseAssembly {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ToDatabaseAssembly extends Omit<DatabaseAssembly, "id"> {}
-export interface AssemblyToUser extends Omit<DatabaseAssembly, "parent"> {
+
+export interface PopulatedAssembly
+  extends Omit<DatabaseAssembly, "parent" | "children"> {
   parent: DatabaseAssembly | DatabaseProject;
+  children: Array<DatabasePart | DatabaseAssembly>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
