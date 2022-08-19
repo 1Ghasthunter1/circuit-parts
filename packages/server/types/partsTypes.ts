@@ -1,35 +1,7 @@
 import { Types } from "mongoose";
-import { Assembly } from "./assemblyTypes";
-import { Project } from "./projectTypes";
-
-export const statuses = [
-  "design in progress",
-  "materials need to be ordered",
-  "waiting for materials",
-  "needs drawing",
-  "ready for manufacture",
-  "ready for cnc",
-  "ready for laser",
-  "ready for lathe",
-  "ready for mill",
-] as const;
-export const priorities = ["low", "normal", "high", "urgent"] as const;
-export const parentType = ["assembly", "project"] as const;
-
-export type Status = typeof statuses[number];
-export type PriorityType = typeof priorities[number];
-export type ParentType = typeof parentType[number];
-
-export const isStatus = (value: string): value is Status => {
-  return statuses.includes(value as Status);
-};
-export const isPriorityType = (value: string): value is PriorityType => {
-  return priorities.includes(value as PriorityType);
-};
-export const isParentType = (value: string): value is ParentType => {
-  return parentType.includes(value as ParentType);
-};
-
+import { DatabaseAssembly } from "./assemblyTypes";
+import { DatabaseProject } from "./projectTypes";
+import { ParentType, PartStatus, Priority } from "./universalTypes";
 export interface DatabasePart {
   id: Types.ObjectId;
   name: string;
@@ -38,8 +10,8 @@ export interface DatabasePart {
     parentType: ParentType;
     parent: Types.ObjectId;
   };
-  status: Status;
-  priority: PriorityType;
+  status: PartStatus;
+  priority: Priority;
   project: Types.ObjectId;
   notes?: string;
   sourceMaterial?: string;
@@ -49,13 +21,12 @@ export interface DatabasePart {
   creationDate: Date;
 }
 
-export type ToDatabasePart = Omit<DatabasePart, "id">;
-
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ToDatabasePart extends Omit<DatabasePart, "id"> {}
 export interface PartToUser extends Omit<DatabasePart, "parent"> {
-  parent: Assembly | Project;
+  parent: DatabaseAssembly | DatabaseProject;
 }
 
-export type NewPart = Omit<
-  DatabasePart,
-  "id" | "partNumber" | "status" | "priority"
->;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface NewPart
+  extends Omit<DatabasePart, "id" | "partNumber" | "status" | "priority"> {}

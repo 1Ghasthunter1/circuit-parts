@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import { Child } from "./universalTypes";
 
-export interface Project {
+export interface DatabaseProject {
   id: Types.ObjectId;
   name: string;
   creationDate: Date;
@@ -10,4 +10,12 @@ export interface Project {
   description?: string;
 }
 
-export type NewProject = Omit<Project, "id" | "date" | "children">;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface NewProject
+  extends Omit<DatabaseProject, "id" | "date" | "children"> {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ProjectToDB extends Omit<DatabaseProject, "id"> {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ProjectToUser extends DatabaseProject {}

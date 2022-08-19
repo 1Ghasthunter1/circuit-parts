@@ -1,55 +1,28 @@
 import { Types } from "mongoose";
-import { Child } from "./universalTypes";
-export const statuses = [
-  "design in progress",
-  "in production",
-  "completed",
-] as const;
-
-export const priorities = ["low", "normal", "high", "urgent"] as const;
-export const parentType = ["assembly", "project"] as const;
-
-export type Status = typeof statuses[number];
-export type PriorityType = typeof priorities[number];
-export type ParentType = typeof parentType[number];
-
-export const isStatus = (value: string): value is Status => {
-  return statuses.includes(value as Status);
-};
-export const isPriorityType = (value: string): value is PriorityType => {
-  return priorities.includes(value as PriorityType);
-};
-export const isParentType = (value: string): value is ParentType => {
-  return parentType.includes(value as ParentType);
-};
-
-export interface Assembly {
+import { DatabaseProject } from "./projectTypes";
+import { ParentType, AssemblyStatus, Priority, Child } from "./universalTypes";
+export interface DatabaseAssembly {
   id: Types.ObjectId;
   name: string;
+  partNumber: string;
   parent: {
     parentType: ParentType;
     parent: Types.ObjectId;
   };
-  type: "assembly";
-  project: Types.ObjectId;
-  partNumber: string;
-  status: Status;
-  priority: PriorityType;
-  creationDate: Date;
   children: Child[];
+  status: AssemblyStatus;
+  priority: Priority;
+  project: Types.ObjectId;
   notes?: string;
+  creationDate: Date;
 }
 
-export interface NewAssembly
-  extends Omit<
-    Assembly,
-    | "id"
-    | "partNumber"
-    | "status"
-    | "priority"
-    | "creationDate"
-    | "children"
-    | "project"
-  > {
-  project: Types.ObjectId;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ToDatabaseAssembly extends Omit<DatabaseAssembly, "id"> {}
+export interface AssemblyToUser extends Omit<DatabaseAssembly, "parent"> {
+  parent: DatabaseAssembly | DatabaseProject;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface NewAssembly
+  extends Omit<DatabaseAssembly, "id" | "partNumber" | "status" | "priority"> {}
