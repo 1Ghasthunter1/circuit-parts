@@ -1,6 +1,6 @@
 import PartsLayout from "../layouts/HeaderButtonTableLayout";
 import { useParams } from "react-router";
-import { useQuery } from "react-query";
+import { QueryKey, useQuery } from "react-query";
 import {
   fetchProject,
   fetchProjectComponents,
@@ -21,12 +21,15 @@ const ProjectView = () => {
     return null;
   }
 
+  const projectQueryKey: QueryKey = `/projects/${id}`;
+  const projectComponentsQueryKey: QueryKey = `/projects/${id}/components`;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, error, isError, isLoading } = useQuery(`projects/${id}`, () =>
+  const { data, error, isError, isLoading } = useQuery(projectQueryKey, () =>
     fetchProject(id)
   );
 
-  const projectComponentsQuery = useQuery(`/projects/${id}/components`, () =>
+  const projectComponentsQuery = useQuery(projectComponentsQueryKey, () =>
     fetchProjectComponents(id)
   );
 
@@ -55,6 +58,7 @@ const ProjectView = () => {
         setShowModal={setPartModalVis}
         form={
           <CreatePartForm
+            queriesToInvalidate={[projectQueryKey, projectComponentsQueryKey]}
             project={project}
             closeModal={() => setPartModalVis(false)}
           />
@@ -77,6 +81,7 @@ const ProjectView = () => {
         setShowModal={setassyModalVis}
         form={
           <CreateAssemblyForm
+            queriesToInvalidate={[projectQueryKey, projectComponentsQueryKey]}
             project={project}
             closeModal={() => setassyModalVis(false)}
           />

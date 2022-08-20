@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import types from "react-query";
 
 interface CreateModalProps {
   title: string;
@@ -8,7 +9,12 @@ interface CreateModalProps {
   form: JSX.Element;
 }
 
-const CreateModal = ({ title, showModal, setShowModal, form }: CreateModalProps) => {
+const CreateModal = ({
+  title,
+  showModal,
+  setShowModal,
+  form,
+}: CreateModalProps) => {
   return (
     <>
       {showModal ? (

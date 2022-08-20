@@ -1,6 +1,6 @@
 import PartsLayout from "../layouts/HeaderButtonTableLayout";
 import { useParams } from "react-router";
-import { useQuery } from "react-query";
+import { useQuery, QueryKey } from "react-query";
 import { fetchAssembly } from "../services/assemblyServices";
 import CreateModal from "../components/modals/CreateModal";
 import CreatePartForm from "../components/parts/CreatePartForm";
@@ -12,19 +12,19 @@ import CreateAssemblyForm from "../components/assemblies/CreateAssemblyForm";
 const AssemblyView = () => {
   const [partModalVis, setPartModalVis] = useState<boolean>(false);
   const [assyModalVis, setassyModalVis] = useState<boolean>(false);
-
   const { id } = useParams();
 
   if (!id) return null;
-  const { data, refetch } = useQuery(`assemblies/${id}`, () =>
-    fetchAssembly(id)
-  );
+  
+  const assemblyQueryKey: QueryKey = `assemblies/${id}`;
+  const { data, refetch } = useQuery(assemblyQueryKey, () => fetchAssembly(id));
 
+  //Refreshes page if routed to same route e.g. assemblies/id1 and asseblies/id2
   useEffect(() => {
-    const doThing = async () => {
+    const refreshPage = async () => {
       await refetch();
     };
-    doThing().catch(console.error);
+    refreshPage().catch(console.error);
   }, [id]);
 
   if (!data) {
@@ -54,6 +54,7 @@ const AssemblyView = () => {
         setShowModal={setPartModalVis}
         form={
           <CreatePartForm
+            queriesToInvalidate={[assemblyQueryKey]}
             project={project}
             closeModal={() => setPartModalVis(false)}
           />
@@ -76,6 +77,7 @@ const AssemblyView = () => {
         setShowModal={setassyModalVis}
         form={
           <CreateAssemblyForm
+            queriesToInvalidate={[assemblyQueryKey]}
             project={project}
             closeModal={() => setassyModalVis(false)}
           />

@@ -1,14 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Project } from "../../types/projectTypes";
 import { createAssembly } from "../../services/assemblyServices";
-import { useQuery } from "react-query";
-import { fetchProjectComponents } from "../../services/projectsServices";
+import { fetchProjectAssemblies } from "../../services/projectsServices";
 import { NewAssembly } from "../../types/assemblyTypes";
-import { useQueryClient } from "react-query";
+import { QueryKey, useQueryClient, useQuery } from "react-query";
 
 interface FormProps {
   closeModal: () => void;
   project: Project;
+  queriesToInvalidate: QueryKey[];
 }
 
 interface errorsType {
@@ -16,10 +16,14 @@ interface errorsType {
   parent?: string;
 }
 
-const CreateAssemblyForm = ({ closeModal, project }: FormProps) => {
+const CreateAssemblyForm = ({
+  closeModal,
+  project,
+  queriesToInvalidate,
+}: FormProps) => {
   const queryClient = useQueryClient();
-  const { data } = useQuery(`assemblies?project=${project.id}`, () =>
-    fetchProjectComponents(project.id)
+  const { data } = useQuery(`/assemblies?project=${project.id}`, () =>
+    fetchProjectAssemblies(project.id)
   );
 
   if (!data) return null;
@@ -57,8 +61,10 @@ const CreateAssemblyForm = ({ closeModal, project }: FormProps) => {
           },
         };
         await createAssembly(newAssembly);
-        await queryClient.invalidateQueries("assembly");
-        await queryClient.invalidateQueries("projectComponents");
+        queriesToInvalidate.map(
+          async (queryKey) => await queryClient.invalidateQueries(queryKey)
+        );
+        await queryClient.invalidateQueries(`/projects/${project.id}`);
         closeModal();
         setSubmitting(false);
       }}
