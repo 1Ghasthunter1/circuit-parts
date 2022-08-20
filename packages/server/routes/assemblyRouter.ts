@@ -96,6 +96,7 @@ assemblyRouter.post(
         foundParent,
         "assembly"
       ),
+      type: "assembly",
       priority: "normal",
       creationDate: new Date(),
     };

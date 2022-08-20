@@ -4,7 +4,7 @@ import { newPartSchema } from "../validation/partsValidation";
 import { RequestHandler } from "express";
 import PartModel from "../models/part";
 import { findParent, findProject } from "../utils/generic";
-import { NewPart, PopulatedPart } from "../types/partsTypes";
+import { NewPart, PopulatedPart, ToDatabasePart } from "../types/partsTypes";
 import { DatabaseProject } from "../types/projectTypes";
 import { DatabaseAssembly } from "../types/assemblyTypes";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
@@ -75,7 +75,7 @@ partsRouter.post(
       return;
     }
 
-    const savedPart = await new PartModel({
+    const partToDb: ToDatabasePart = {
       ...newPart,
       status: "design in progress",
       partNumber: await generateNewPartNumber(
@@ -83,9 +83,12 @@ partsRouter.post(
         foundParent,
         "part"
       ),
+      type: "part",
       priority: "low",
       creationDate: new Date(),
-    }).save();
+    };
+
+    const savedPart = await new PartModel(partToDb).save();
 
     foundParent.children = foundParent.children.concat({
       childType: "part",

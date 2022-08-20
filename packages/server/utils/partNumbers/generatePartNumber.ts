@@ -79,7 +79,7 @@ export const generateNewPartNumber = async (
     if (addSeqAssemblyIds.length > 0)
       seqAN = twoDigitNumToStr(Math.max(...addSeqAssemblyIds) + 1);
     else seqAN = "00";
-  } else if (type === "part" && "type" in parent) {
+  } else if (type === "part" && parent.type === "assembly") {
     //parent must be an assembly and we know we are making a part, so we will search for all parts with given parent ID
     typeLetter = "P";
     seqAN = parsePN(parent.partNumber).sequentialAssyNumber;
@@ -99,7 +99,10 @@ export const generateNewPartNumber = async (
     );
 
     seqPN = twoDigitNumToStr(Math.max(...allSeqPartIds) + 1);
-  } else throw new Error(`type "${type}" is not a valid type.`);
+  } else
+    throw new Error(
+      `cannot make "${type}" part number if it is a child of ${parent.type}.`
+    );
 
   return `${project.prefix}-${typeLetter}-${seqAN || "00"}${seqPN || "00"}`;
 };

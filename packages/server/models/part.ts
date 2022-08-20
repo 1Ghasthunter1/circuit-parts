@@ -10,6 +10,11 @@ const partSchema = new mongoose.Schema<DatabasePart>({
     type: String,
     required: true,
   },
+  type: {
+    required: true,
+    type: String,
+    enum: ["part"],
+  },
   parent: {
     parentType: {
       type: String,
@@ -59,7 +64,6 @@ partSchema.set("toJSON", {
   transform: (_document: any, returnedObject: any) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     returnedObject.id = returnedObject._id?.toString();
-    returnedObject.type = "part";
     delete returnedObject._id;
     delete returnedObject.__v;
   },

@@ -32,6 +32,11 @@ const assemblySchema = new mongoose.Schema<DatabaseAssembly>({
     type: String,
     required: true,
   },
+  type: {
+    required: true,
+    type: String,
+    enum: ['assembly']
+  },
   status: {
     type: String,
     required: true,
@@ -46,7 +51,6 @@ assemblySchema.set("toJSON", {
   transform: (_document: any, returnedObject: any) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     returnedObject.id = returnedObject._id?.toString();
-    returnedObject.type = "assembly";
     delete returnedObject._id;
     delete returnedObject.__v;
   },

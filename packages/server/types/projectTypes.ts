@@ -6,13 +6,14 @@ export interface DatabaseProject {
   name: string;
   creationDate: Date;
   prefix: string;
+  type: "project";
   children: Child[];
   description?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface NewProject
-  extends Omit<DatabaseProject, "id" | "date" | "children"> {}
+  extends Omit<DatabaseProject, "id" | "date" | "children" | "type"> {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ProjectToDB extends Omit<DatabaseProject, "id"> {}

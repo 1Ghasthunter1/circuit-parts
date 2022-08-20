@@ -2,7 +2,7 @@ import express from "express";
 import { RequestHandler } from "express";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newProjectSchema } from "../validation/projectValidation";
-import { NewProject } from "../types/projectTypes";
+import { NewProject, ProjectToDB } from "../types/projectTypes";
 import ProjectModel from "../models/project";
 import PartModel from "../models/part";
 import AssemblyModel from "../models/assembly";
@@ -34,11 +34,14 @@ projectsRouter.post(
       includeOptionals: true,
     });
 
-    const savedProject = await new ProjectModel({
+    const projectToDb: ProjectToDB = {
       ...newProject,
       creationDate: new Date(),
+      type: "project",
       children: [],
-    }).save();
+    };
+
+    const savedProject = await new ProjectModel(projectToDb).save();
 
     return res.status(201).json(savedProject).end();
   }

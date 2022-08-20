@@ -6,7 +6,6 @@ import {
   AssemblyStatus,
   Priority,
   Child,
-  ComponentType,
 } from "./universalTypes";
 import { DatabasePart } from "./partsTypes";
 
@@ -18,18 +17,18 @@ export interface DatabaseAssembly {
   id: Types.ObjectId;
   name: string;
   partNumber: string;
+  type: "assembly";
   parent: Parent;
   children: Child[];
   project: Types.ObjectId;
   status: AssemblyStatus;
   priority: Priority;
   creationDate: Date;
-  type: ComponentType
   notes?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ToDatabaseAssembly extends Omit<DatabaseAssembly, "id" | "type"> {}
+export interface ToDatabaseAssembly extends Omit<DatabaseAssembly, "id"> {}
 
 export interface PopulatedAssembly
   extends Omit<DatabaseAssembly, "parent" | "children"> {
@@ -39,4 +38,7 @@ export interface PopulatedAssembly
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface NewAssembly
-  extends Omit<DatabaseAssembly, "id" | "partNumber" | "status" | "priority" | "type"> {}
+  extends Omit<
+    DatabaseAssembly,
+    "id" | "partNumber" | "status" | "priority" | "type"
+  > {}

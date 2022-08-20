@@ -6,7 +6,6 @@ import {
   partStatuses,
   PartStatus,
   Priority,
-  ComponentType,
 } from "./universalTypes";
 
 export const isPartStatus = (value: string): value is PartStatus => {
@@ -16,12 +15,12 @@ export interface DatabasePart {
   id: Types.ObjectId;
   name: string;
   partNumber: string;
+  type: "part";
   parent: Parent;
   project: Types.ObjectId;
   status: PartStatus;
   priority: Priority;
   creationDate: Date;
-  type: ComponentType;
   notes?: string;
   sourceMaterial?: string;
   haveMaterial?: boolean;
@@ -30,11 +29,14 @@ export interface DatabasePart {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ToDatabasePart extends Omit<DatabasePart, "id" | "type"> {}
+export interface ToDatabasePart extends Omit<DatabasePart, "id"> {}
 export interface PopulatedPart extends Omit<DatabasePart, "parent"> {
   parent: DatabaseAssembly | DatabaseProject;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface NewPart
-  extends Omit<DatabasePart, "id" | "partNumber" | "status" | "priority" | "type"> {}
+  extends Omit<
+    DatabasePart,
+    "id" | "partNumber" | "status" | "priority" | "type"
+  > {}

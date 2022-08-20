@@ -14,6 +14,11 @@ const projectSchema = new mongoose.Schema<DatabaseProject>({
     type: Date,
     required: true,
   },
+  type: {
+    required: true,
+    type: String,
+    enum: ["project"],
+  },
   description: { type: String, default: "" },
   children: [childrenSchema],
 });
