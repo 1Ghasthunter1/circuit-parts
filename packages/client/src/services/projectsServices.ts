@@ -30,6 +30,17 @@ export const fetchProjectComponents = async (
   }
 };
 
+export const fetchProjectAssemblies = async (
+  projectId: string | undefined
+): Promise<Array<Assembly> | undefined> => {
+  if (projectId) {
+    const { data } = await axios.get<Assembly[]>(
+      `${apiBaseUrl}/assemblies?project=${projectId}`
+    );
+    return data;
+  }
+};
+
 export const createProject = async (
   values: SubmitProject
 ): Promise<Project | null> => {

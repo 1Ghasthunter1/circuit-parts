@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import { fetchProjectComponents } from "../../services/projectsServices";
 import { NewPart } from "../../types/partsTypes";
 import { useQueryClient } from "react-query";
+import { useLocation } from "react-router";
 
 interface ProjectFormProps {
   closeModal: () => void;
@@ -17,16 +18,15 @@ interface errorsType {
 }
 
 const CreateProjectForm = ({ closeModal, project }: ProjectFormProps) => {
+  const location = useLocation().pathname;
   const queryClient = useQueryClient();
-  const { data } = useQuery(`projects/${project.id}/components`, () =>
+  const { data } = useQuery(`assemblies?project=${project.id}`, () =>
     fetchProjectComponents(project.id)
   );
 
-  if (!data) {
-    return null;
-  }
+  if (!data) return null;
 
-  const allAssemblies = data.filter((entry) => entry.type === "assembly");
+  const allAssemblies = data;
 
   return (
     <Formik
@@ -53,7 +53,8 @@ const CreateProjectForm = ({ closeModal, project }: ProjectFormProps) => {
           parent: { parentType: "assembly", parent: values.parentId },
         };
         await createPart(newPart);
-        await queryClient.invalidateQueries("assembly");
+        console.log(location);
+        await queryClient.invalidateQueries(location);
         closeModal();
         setSubmitting(false);
       }}

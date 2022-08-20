@@ -18,15 +18,12 @@ interface errorsType {
 
 const CreateAssemblyForm = ({ closeModal, project }: FormProps) => {
   const queryClient = useQueryClient();
-  const { data } = useQuery(`projects/${project.id}/components`, () =>
+  const { data } = useQuery(`assemblies?project=${project.id}`, () =>
     fetchProjectComponents(project.id)
   );
 
-  if (!data) {
-    return null;
-  }
-
-  const allAssemblies = data.filter((entry) => entry.type === "assembly");
+  if (!data) return null;
+  const allAssemblies = data;
 
   return (
     <Formik

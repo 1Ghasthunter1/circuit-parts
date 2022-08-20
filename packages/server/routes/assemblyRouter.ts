@@ -15,8 +15,9 @@ require("express-async-errors");
 
 const assemblyRouter = express.Router();
 
-assemblyRouter.get("/", (async (_req, res) => {
-  const assemblies = await AssemblyModel.find({});
+assemblyRouter.get("/", (async (req, res) => {
+  const searchQuery = req.query.project ? { project: req.query.project } : {};
+  const assemblies = await AssemblyModel.find(searchQuery);
   res.send(assemblies).status(200).end();
 }) as RequestHandler);
 

@@ -26,7 +26,7 @@ const ProjectView = () => {
     fetchProject(id)
   );
 
-  const projectComponentsQuery = useQuery(`projects/${id}/components`, () =>
+  const projectComponentsQuery = useQuery(`/projects/${id}/components`, () =>
     fetchProjectComponents(id)
   );
 
