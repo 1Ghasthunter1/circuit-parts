@@ -7,7 +7,6 @@ import mongoose from "mongoose";
 import config from "./utils/config";
 require("express-async-errors");
 import { errorHandler } from "./utils/middleware/middleware";
-
 import { Logger } from "tslog";
 const log: Logger = new Logger({ name: "myLogger" });
 

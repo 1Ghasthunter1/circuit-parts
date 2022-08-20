@@ -1,12 +1,12 @@
-import { Project } from "../types/projectTypes";
+import { DatabaseProject } from "../types/projectTypes";
 import ProjectModel from "../models/project";
 
-export const getProjects = async (): Promise<Project[] | null> => {
+export const getProjects = async (): Promise<DatabaseProject[] | null> => {
   const resp = await ProjectModel.find({});
   return resp;
 };
 
-export const getProjectById = async (id: string): Promise<Project | null> => {
-  const resp = await ProjectModel.findById<Project>(id);
+export const getProjectById = async (id: string): Promise<DatabaseProject | null> => {
+  const resp = await ProjectModel.findById<DatabaseProject>(id);
   return resp;
 };

@@ -7,9 +7,16 @@ import { findParent, findProject } from "../utils/generic";
 import { NewPart, PopulatedPart } from "../types/partsTypes";
 import { DatabaseProject } from "../types/projectTypes";
 import { DatabaseAssembly } from "../types/assemblyTypes";
+import { doThing } from "../utils/partNumbers/generatePartNumber";
 require("express-async-errors");
 
 const partsRouter = express.Router();
+
+partsRouter.get("/ooga", (async (_req, res) => {
+  const result = await doThing();
+  console.log(`res from thing: ${result}`);
+  res.status(200).end();
+}) as RequestHandler);
 
 partsRouter.get("/", (async (_req, res) => {
   const parts = await PartModel.find({});
