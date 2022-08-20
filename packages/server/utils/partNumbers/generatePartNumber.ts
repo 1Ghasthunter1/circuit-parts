@@ -58,6 +58,8 @@ export const generateNewPartNumber = async (
 ) => {
   let typeLetter, seqAN, seqPN;
 
+  console.log(parent);
+
   if (type === "assembly") {
     typeLetter = "A";
 
@@ -69,14 +71,14 @@ export const generateNewPartNumber = async (
       (ANs: number[], currentAssembly) => {
         const seqANReducer = parsePN(
           currentAssembly.partNumber
-        ).sequentialPartNumber;
+        ).sequentialAssyNumber;
         return [...ANs, seqANReducer];
       },
       []
     );
-
-    seqAN = twoDigitNumToStr(Math.max(...addSeqAssemblyIds) + 1);
-    seqPN = "00";
+    if (addSeqAssemblyIds.length > 0)
+      seqAN = twoDigitNumToStr(Math.max(...addSeqAssemblyIds) + 1);
+    else seqAN = "00";
   } else if (type === "part" && "type" in parent) {
     //parent must be an assembly and we know we are making a part, so we will search for all parts with given parent ID
     typeLetter = "P";

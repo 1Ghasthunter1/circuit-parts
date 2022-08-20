@@ -11,6 +11,8 @@ import {
 } from "../types/assemblyTypes";
 import { DatabasePart } from "../types/partsTypes";
 import { findParent, findProject } from "../utils/generic";
+import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
+
 require("express-async-errors");
 
 const assemblyRouter = express.Router();
@@ -89,7 +91,11 @@ assemblyRouter.post(
     const newAssemblyObj: ToDatabaseAssembly = {
       ...newAssembly,
       status: "design in progress",
-      partNumber: "696-2022-P-1234",
+      partNumber: await generateNewPartNumber(
+        foundProject,
+        foundParent,
+        "assembly"
+      ),
       priority: "normal",
       creationDate: new Date(),
     };
