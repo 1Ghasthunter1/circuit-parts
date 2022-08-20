@@ -58,8 +58,6 @@ export const generateNewPartNumber = async (
 ) => {
   let typeLetter, seqAN, seqPN;
 
-  console.log(parent);
-
   if (type === "assembly") {
     typeLetter = "A";
 
@@ -101,8 +99,6 @@ export const generateNewPartNumber = async (
     if (allSeqPartIds.length > 0)
       seqPN = twoDigitNumToStr(Math.max(...allSeqPartIds) + 1);
     else seqPN = "01";
-
-    console.log(seqPN);
   } else
     throw new Error(
       `cannot make "${type}" part number if it is a child of ${parent.type}.`

@@ -15,7 +15,7 @@ const StatusBox = ({ inpStatus }: StatusProps) => {
     }
   };
   return (
-    <div className="grid place-items-center px-2 py-1 bg-blue-600 text-white rounded-md">
+    <div className="whitespace-nowrap w-min px-2 py-1 bg-blue-600 text-white rounded-md">
       {getJSX()}
     </div>
   );

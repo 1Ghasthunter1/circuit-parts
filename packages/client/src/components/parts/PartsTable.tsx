@@ -80,7 +80,7 @@ const PartsTable = ({ data }: PartsTableProps) => {
                       {rowItem.parent.parent.name}
                     </div>
                   </td>
-                  <td className="flex items-center grid place-items-center px-6">
+                  <td className="px-6">
                     <StatusBox inpStatus={rowItem.status} />
                   </td>
                   <td className="px-6">edit stuff</td>

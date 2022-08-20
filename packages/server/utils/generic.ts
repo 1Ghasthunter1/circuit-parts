@@ -39,7 +39,5 @@ export const refactorParentAndChildren = (
     parent: mongoObj.parent.parent,
   };
 
-  console.log(newObj);
-
   return newObj;
 };
