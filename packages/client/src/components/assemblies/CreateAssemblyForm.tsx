@@ -18,7 +18,7 @@ interface errorsType {
 
 const CreateAssemblyForm = ({ closeModal, project }: FormProps) => {
   const queryClient = useQueryClient();
-  const { data } = useQuery(`${project.id}childAssemblies`, () =>
+  const { data } = useQuery(`projects/${project.id}/components`, () =>
     fetchProjectComponents(project.id)
   );
 

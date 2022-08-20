@@ -17,12 +17,16 @@ const ProjectView = () => {
   const [assyModalVis, setassyModalVis] = useState<boolean>(false);
   const { id } = useParams();
 
+  if (!id) {
+    return null;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, error, isError, isLoading } = useQuery("project", () =>
+  const { data, error, isError, isLoading } = useQuery(`projects/${id}`, () =>
     fetchProject(id)
   );
 
-  const projectComponentsQuery = useQuery("projectComponents", () =>
+  const projectComponentsQuery = useQuery(`projects/${id}/components`, () =>
     fetchProjectComponents(id)
   );
 

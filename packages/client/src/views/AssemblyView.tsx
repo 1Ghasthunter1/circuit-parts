@@ -12,9 +12,10 @@ const AssemblyView = () => {
   const [partModalVis, setPartModalVis] = useState<boolean>(false);
   const { id } = useParams();
 
+  if (!id) return null;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data, error, isError, isLoading, refetch } = useQuery(
-    "assembly",
+    `assemblies/${id}`,
     () => fetchAssembly(id)
   );
 
