@@ -82,7 +82,7 @@ export const generateNewPartNumber = async (
   } else if (type === "part" && parent.type === "assembly") {
     //parent must be an assembly and we know we are making a part, so we will search for all parts with given parent ID
     typeLetter = "P";
-    seqAN = parsePN(parent.partNumber).sequentialAssyNumber;
+    seqAN = twoDigitNumToStr(parsePN(parent.partNumber).sequentialAssyNumber);
 
     const partsInAssembly = await PartModel.find({
       "parent.parent": parent.id,
@@ -98,7 +98,11 @@ export const generateNewPartNumber = async (
       []
     );
 
-    seqPN = twoDigitNumToStr(Math.max(...allSeqPartIds) + 1);
+    if (allSeqPartIds.length > 0)
+      seqPN = twoDigitNumToStr(Math.max(...allSeqPartIds) + 1);
+    else seqPN = "01";
+
+    console.log(seqPN);
   } else
     throw new Error(
       `cannot make "${type}" part number if it is a child of ${parent.type}.`
