@@ -25,6 +25,7 @@ export const partStatuses = [
 
 export const priorities = ["low", "normal", "high", "urgent"] as const;
 export const parentTypes = ["assembly", "project"] as const;
+export const componentTypes = ["assembly", "project", "part"];
 
 //========================================
 
@@ -34,6 +35,7 @@ export type AssemblyStatus = typeof assemblyStatuses[number];
 export type ChildType = typeof childTypes[number];
 export type Priority = typeof priorities[number];
 export type ParentType = typeof parentTypes[number];
+export type ComponentType = typeof componentTypes[number];
 
 //type guards and validators
 export const isChildType = (value: string): value is ChildType => {
@@ -44,6 +46,9 @@ export const isPriority = (value: string): value is Priority => {
 };
 export const isParentType = (value: string): value is ParentType => {
   return parentTypes.includes(value as ParentType);
+};
+export const isComponentType = (value: string): value is ComponentType => {
+  return componentTypes.includes(value as ComponentType);
 };
 
 export interface Child {
