@@ -14,7 +14,7 @@ const partsRouter = express.Router();
 
 partsRouter.get("/", (async (_req, res) => {
   const parts = await PartModel.find({});
-  res.send(parts).status(200).end();
+  res.status(200).send(parts).end();
 }) as RequestHandler);
 
 partsRouter.get("/:id", (async (req, res) => {
@@ -57,20 +57,20 @@ partsRouter.post(
 
     if (!foundParent) {
       res
+        .status(400)
         .json({
           error: `a(n) ${parentType} parent with id ${parent} does not exist`,
         })
-        .status(400)
         .end();
       return;
     }
 
     if (!foundProject) {
       res
+        .status(400)
         .json({
           error: `'project' refers to an id ${newPart.project} does not exist`,
         })
-        .status(400)
         .end();
       return;
     }

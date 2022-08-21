@@ -20,7 +20,7 @@ const assemblyRouter = express.Router();
 assemblyRouter.get("/", (async (req, res) => {
   const searchQuery = req.query.project ? { project: req.query.project } : {};
   const assemblies = await AssemblyModel.find(searchQuery);
-  res.send(assemblies).status(200).end();
+  res.status(200).send(assemblies).end();
 }) as RequestHandler);
 
 assemblyRouter.get("/:id", (async (req, res) => {
@@ -70,10 +70,10 @@ assemblyRouter.post(
 
     if (!foundParent) {
       res
+        .status(400)
         .json({
           error: `a(n) ${parentType} parent with id ${parent} does not exist`,
         })
-        .status(400)
         .end();
       return;
     }

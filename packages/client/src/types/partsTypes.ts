@@ -39,7 +39,7 @@ export interface BasePart {
   id: string;
   name: string;
   partNumber: string;
-  type: EntryType;
+  type: "part";
   status: PartStatus;
   priority: PriorityType;
   notes?: string;

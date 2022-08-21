@@ -45,7 +45,7 @@ const NewComponentButtons = ({
           <CreatePartForm
             queriesToInvalidate={queriesToInvalidate}
             project={project}
-            defaultParentId={parent?.id}
+            defaultParentId={parent?.type === "assembly" ? parent.id : ""}
             closeModal={() => setPartModalVis(false)}
           />
         }
@@ -69,7 +69,13 @@ const NewComponentButtons = ({
           <CreateAssemblyForm
             queriesToInvalidate={queriesToInvalidate}
             project={project}
-            defaultParentId={parent?.id}
+            defaultParentId={
+              parent?.type
+                ? parent.type === "project"
+                  ? `PROJECT:${parent.id}`
+                  : parent.id
+                : ""
+            }
             closeModal={() => setAssyModalVis(false)}
           />
         }

@@ -3,7 +3,7 @@ import { Project } from "../../types/projectTypes";
 import { createAssembly } from "../../services/assemblyServices";
 import { fetchProjectAssemblies } from "../../services/projectsServices";
 import { NewAssembly } from "../../types/assemblyTypes";
-import { UseQueryResult, useQueryClient, useQuery } from "react-query";
+import { UseQueryResult, useQuery } from "react-query";
 
 interface FormProps {
   closeModal: () => void;
@@ -21,9 +21,8 @@ const CreateAssemblyForm = ({
   closeModal,
   project,
   queriesToInvalidate,
-  defaultParentId
+  defaultParentId,
 }: FormProps) => {
-  const queryClient = useQueryClient();
   const { data } = useQuery(`/assemblies?project=${project.id}`, () =>
     fetchProjectAssemblies(project.id)
   );
@@ -51,21 +50,18 @@ const CreateAssemblyForm = ({
       }}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
-        let parentType: "project" | "assembly" = "assembly";
-        if (values.parentId.startsWith("PROJECT:")) {
-          parentType = "project";
-        }
         const newAssembly: NewAssembly = {
           ...values,
           project: project.id,
           parent: {
-            parentType: parentType,
+            parentType: values.parentId.startsWith("PROJECT:")
+              ? "project"
+              : "assembly",
             parent: values.parentId.replace("PROJECT:", ""),
           },
         };
         await createAssembly(newAssembly);
         queriesToInvalidate.map(async (query) => await query.refetch());
-        await queryClient.invalidateQueries(`/projects/${project.id}`);
         closeModal();
         setSubmitting(false);
       }}
