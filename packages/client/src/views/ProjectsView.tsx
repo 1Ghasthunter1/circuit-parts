@@ -37,7 +37,7 @@ const DashboardView = () => {
     </>
   );
 
-  const topLeftStuff = <h1 className="text-4xl font-bold ">All Projects</h1>;
+  const topLeftStuff = <div className="text-4xl font-bold ">All Projects</div>;
 
   return (
     <TopLeftRightAndMiddle

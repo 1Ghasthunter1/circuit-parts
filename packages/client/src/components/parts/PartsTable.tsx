@@ -1,19 +1,17 @@
 import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
-import { useNavigate } from "react-router-dom";
 import StatusBox from "../components/StatusBox";
 import CustomStatusBox from "../components/TypeBox";
+import { useNavigate } from "react-router-dom";
+import TableParent from "./TableParent";
+
 interface PartsTableProps {
   data: Array<Assembly | Part> | undefined;
 }
 
 const PartsTable = ({ data }: PartsTableProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
-
-  if (data === undefined || data === null) {
-    return null;
-  }
+  if (!data) return null;
 
   return (
     <div className="overflow-x-auto relative sm:rounded-md">
@@ -59,30 +57,12 @@ const PartsTable = ({ data }: PartsTableProps) => {
                   >
                     {rowItem.partNumber}
                   </th>
-                  <td className="px-6">
+                  <td className="px-6 mx-auto">
                     <CustomStatusBox type={rowItem.type}></CustomStatusBox>
                   </td>
                   <td className="px-6 whitespace-nowrap">{rowItem.name}</td>
                   <td className="px-6 underline whitespace-nowrap">
-                    <div
-                      className="cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const parent = rowItem.parent.parent;
-                        switch (rowItem.parent.parentType) {
-                          case "assembly":
-                            navigate(`/assemblies/${parent.id}`);
-                            break;
-                          case "project":
-                            navigate(`/projects/${parent.id}`);
-                            break;
-                          default:
-                            null;
-                        }
-                      }}
-                    >
-                      {rowItem.parent.parent.name}
-                    </div>
+                    <TableParent rowItem={rowItem} />
                   </td>
                   <td className="px-6 whitespace-nowrap">
                     <StatusBox inpStatus={rowItem.status} />
