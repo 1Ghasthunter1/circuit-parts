@@ -3,12 +3,12 @@ import { Project } from "../../types/projectTypes";
 import { createPart } from "../../services/partsServices";
 import { fetchProjectAssemblies } from "../../services/projectsServices";
 import { NewPart } from "../../types/partsTypes";
-import { QueryKey, useQueryClient, useQuery } from "react-query";
+import { UseQueryResult, useQuery } from "react-query";
 
 interface ProjectFormProps {
   closeModal: () => void;
   project: Project;
-  queriesToInvalidate: QueryKey[];
+  queriesToInvalidate: UseQueryResult[];
 }
 
 interface errorsType {
@@ -21,7 +21,6 @@ const CreateProjectForm = ({
   project,
   queriesToInvalidate,
 }: ProjectFormProps) => {
-  const queryClient = useQueryClient();
   const { data } = useQuery(`assemblies?project=${project.id}`, () =>
     fetchProjectAssemblies(project.id)
   );
@@ -55,9 +54,7 @@ const CreateProjectForm = ({
           parent: { parentType: "assembly", parent: values.parentId },
         };
         await createPart(newPart);
-        queriesToInvalidate.map(
-          async (queryKey) => await queryClient.invalidateQueries(queryKey)
-        );
+        queriesToInvalidate.map(async (query) => await query.refetch());
         closeModal();
         setSubmitting(false);
       }}

@@ -30,7 +30,7 @@ const Button = ({
       } ${style || ""}`}
       onClick={onClick}
     >
-      {iconName && <FontAwesomeIcon icon={iconName} className="pr-1" />}
+      {iconName && <FontAwesomeIcon icon={iconName} className="pr-2" />}
       <span>{children}</span>
     </button>
   );

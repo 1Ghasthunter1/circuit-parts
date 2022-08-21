@@ -3,12 +3,12 @@ import { Project } from "../../types/projectTypes";
 import { createAssembly } from "../../services/assemblyServices";
 import { fetchProjectAssemblies } from "../../services/projectsServices";
 import { NewAssembly } from "../../types/assemblyTypes";
-import { QueryKey, useQueryClient, useQuery } from "react-query";
+import { UseQueryResult, useQueryClient, useQuery } from "react-query";
 
 interface FormProps {
   closeModal: () => void;
   project: Project;
-  queriesToInvalidate: QueryKey[];
+  queriesToInvalidate: UseQueryResult[];
 }
 
 interface errorsType {
@@ -61,9 +61,7 @@ const CreateAssemblyForm = ({
           },
         };
         await createAssembly(newAssembly);
-        queriesToInvalidate.map(
-          async (queryKey) => await queryClient.invalidateQueries(queryKey)
-        );
+        queriesToInvalidate.map(async (query) => await query.refetch());
         await queryClient.invalidateQueries(`/projects/${project.id}`);
         closeModal();
         setSubmitting(false);

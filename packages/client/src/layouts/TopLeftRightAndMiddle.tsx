@@ -1,11 +1,10 @@
-
 interface PartsLayoutProps {
   topLeftContent?: JSX.Element;
   topRightContent?: JSX.Element;
   children?: JSX.Element;
 }
 
-const HeaderButtonTableLayoutDos = ({
+const TopLeftRightAndMiddle = ({
   topLeftContent,
   topRightContent,
   children,
@@ -21,4 +20,4 @@ const HeaderButtonTableLayoutDos = ({
   );
 };
 
-export default HeaderButtonTableLayoutDos;
+export default TopLeftRightAndMiddle;

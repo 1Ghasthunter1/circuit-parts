@@ -1,107 +1,57 @@
-import PartsLayout from "../layouts/HeaderButtonTableLayout";
 import { useParams } from "react-router";
-import { QueryKey, useQuery } from "react-query";
+import { useQuery } from "react-query";
+
 import {
   fetchProject,
   fetchProjectComponents,
 } from "../services/projectsServices";
-import CreateModal from "../components/modals/CreateModal";
-import CreatePartForm from "../components/parts/CreatePartForm";
+
 import PartsTable from "../components/parts/PartsTable";
-import Button from "../elements/Button";
-import { useState } from "react";
-import CreateAssemblyForm from "../components/assemblies/CreateAssemblyForm";
+import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
+import NewComponentButtons from "../components/components/NewComponentButtons";
 
 const ProjectView = () => {
-  const [partModalVis, setPartModalVis] = useState<boolean>(false);
-  const [assyModalVis, setassyModalVis] = useState<boolean>(false);
   const { id } = useParams();
 
-  if (!id) {
-    return null;
-  }
+  if (!id) return null;
 
-  const projectQueryKey: QueryKey = `/projects/${id}`;
-  const projectComponentsQueryKey: QueryKey = `/projects/${id}/components`;
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, error, isError, isLoading } = useQuery(projectQueryKey, () =>
-    fetchProject(id)
-  );
-
-  const projectComponentsQuery = useQuery(projectComponentsQueryKey, () =>
+  const projectQuery = useQuery(`/projects/${id}`, () => fetchProject(id));
+  const projectComponentsQuery = useQuery(`/projects/${id}/components`, () =>
     fetchProjectComponents(id)
   );
 
-  const project = data;
-  const parts = projectComponentsQuery.data;
+  const project = projectQuery.data;
+  const components = projectComponentsQuery.data;
 
-  if (!project) {
-    return null;
-  }
+  if (!project) return null;
 
-  const buttonStuff = (
-    <div>
-      <Button
-        iconName="puzzle-piece"
-        txtColor="text-white"
-        bgColor="bg-green-600"
-        hoverColor="hover:bg-green-700"
-        style="ml-2"
-        onClick={() => setPartModalVis(true)}
-      >
-        New Part
-      </Button>
-      <CreateModal
-        title="New Part"
-        showModal={partModalVis}
-        setShowModal={setPartModalVis}
-        form={
-          <CreatePartForm
-            queriesToInvalidate={[projectQueryKey, projectComponentsQueryKey]}
-            project={project}
-            closeModal={() => setPartModalVis(false)}
-          />
-        }
-      />
+  const topLeftStuff = (
+    <>
+      <div className="text-4xl font-bold ">{project.name}</div>
+      <div className="text-gray-400">
+        Prefix: <b>{project.prefix}</b>
+      </div>
+      <div className="text-gray-400">
+        Creation Date:{" "}
+        <b>{new Date(project.creationDate).toLocaleDateString("en-US")}</b>
+      </div>
+    </>
+  );
 
-      <Button
-        iconName="puzzle-piece"
-        txtColor="text-white"
-        bgColor="bg-green-600"
-        hoverColor="hover:bg-green-700"
-        style="ml-2"
-        onClick={() => setassyModalVis(true)}
-      >
-        New Assembly
-      </Button>
-      <CreateModal
-        title="New Assembly"
-        showModal={assyModalVis}
-        setShowModal={setassyModalVis}
-        form={
-          <CreateAssemblyForm
-            queriesToInvalidate={[projectQueryKey, projectComponentsQueryKey]}
-            project={project}
-            closeModal={() => setassyModalVis(false)}
-          />
-        }
-      />
-    </div>
+  const topRightStuff = (
+    <NewComponentButtons
+      project={project}
+      queriesToInvalidate={[projectQuery, projectComponentsQuery]}
+    />
   );
 
   return (
-    <div>
-      <PartsLayout
-        pageTitle={project ? `${project.name}` : "loading..."}
-        subtitle={project.prefix}
-        tableName="Parts and Assemblies"
-        description={project.description}
-        buttonContent={buttonStuff}
-      >
-        <PartsTable data={parts} />
-      </PartsLayout>
-    </div>
+    <TopLeftRightAndMiddle
+      topLeftContent={topLeftStuff}
+      topRightContent={topRightStuff}
+    >
+      <PartsTable data={components} />
+    </TopLeftRightAndMiddle>
   );
 };
 

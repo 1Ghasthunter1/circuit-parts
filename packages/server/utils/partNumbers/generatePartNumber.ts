@@ -3,7 +3,6 @@ import { DatabaseProject } from "../../types/projectTypes";
 import { ComponentType } from "../../types/universalTypes";
 import PartModel from "../../models/part";
 import AssemblyModel from "../../models/assembly";
-import ProjectModel from "../../models/project";
 
 interface parsedPN {
   projectPrefix: string;
@@ -106,15 +105,3 @@ export const generateNewPartNumber = async (
 
   return `${project.prefix}-${typeLetter}-${seqAN || "00"}${seqPN || "00"}`;
 };
-
-export const doThing = async () => {
-  const project = await ProjectModel.findById("630110d2555f074bdee362c1");
-  const assembly = await AssemblyModel.findById("630110e0555f074bdee362d3");
-  if (!project || !assembly) return;
-  // const parent: DatabaseProject = project.toJSON();
-  const parent: DatabaseAssembly = assembly.toJSON();
-  const result = await generateNewPartNumber(project, parent, "part");
-  return result;
-};
-
-doThing();
