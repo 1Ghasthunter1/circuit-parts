@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import types from "react-query";
 
 interface CreateModalProps {
   title: string;

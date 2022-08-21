@@ -1,7 +1,7 @@
 import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
 import { useNavigate } from "react-router-dom";
-import StatusBox from "../../components/entries/StatusBox";
+import StatusBox from "../components/StatusBox";
 interface PartsTableProps {
   data: Array<Assembly | Part> | undefined;
 }

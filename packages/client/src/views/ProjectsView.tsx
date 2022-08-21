@@ -1,17 +1,21 @@
-import HeaderButtonTableLayout from "../layouts/HeaderButtonTableLayout";
-import ProjectList from "../components/project/ProjectsList";
+//General import format: modules/types, services, components
+import { useState } from "react";
 import { useQuery } from "react-query";
-import { fetchProjects } from "../services/projectsServices";
 import { Project } from "../types/projectTypes";
+
+import { fetchProjects } from "../services/projectsServices";
+
+import Button from "../elements/Button";
+import ProjectList from "../components/project/ProjectsList";
 import CreateModal from "../components/modals/CreateModal";
 import CreateProjectForm from "../components/project/createProject/CreateProjectForm";
-import { useState } from "react";
-import Button from "../elements/Button";
+import HeaderButtonTableLayoutDos from "../layouts/HeaderButtonTableLayoutDos";
+
 const DashboardView = () => {
   const { data } = useQuery<Project[]>("projects", fetchProjects);
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const ButtonStuff = (
+  const topRightStuff = (
     <>
       <Button
         iconName="puzzle-piece"
@@ -33,10 +37,19 @@ const DashboardView = () => {
     </>
   );
 
+  const topLeftStuff = (
+    <>
+      <h1 className="text-4xl font-bold ">All Projects</h1>
+    </>
+  );
+
   return (
-    <HeaderButtonTableLayout pageTitle="Projects" buttonContent={ButtonStuff}>
+    <HeaderButtonTableLayoutDos
+      topLeftContent={topLeftStuff}
+      topRightContent={topRightStuff}
+    >
       <ProjectList projects={data} />
-    </HeaderButtonTableLayout>
+    </HeaderButtonTableLayoutDos>
   );
 };
 

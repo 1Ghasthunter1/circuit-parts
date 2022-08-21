@@ -4,7 +4,7 @@ import PartView from "./views/PartView";
 import "./fontAwesome/globalInit";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
-import DashboardView from "./views/DashboardView";
+import DashboardView from "./views/ProjectsView";
 import ProjectView from "./views/ProjectView";
 import AssemblyView from "./views/AssemblyView";
 const App = () => {

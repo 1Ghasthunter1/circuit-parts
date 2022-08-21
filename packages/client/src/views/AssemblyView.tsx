@@ -1,41 +1,45 @@
 import PartsLayout from "../layouts/HeaderButtonTableLayout";
 import { useParams } from "react-router";
-import { useQuery, QueryKey } from "react-query";
-import { fetchAssembly } from "../services/assemblyServices";
+import { QueryKey, useQuery } from "react-query";
+import {
+  fetchProject,
+  fetchProjectComponents,
+} from "../services/projectsServices";
 import CreateModal from "../components/modals/CreateModal";
 import CreatePartForm from "../components/parts/CreatePartForm";
 import PartsTable from "../components/parts/PartsTable";
 import Button from "../elements/Button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CreateAssemblyForm from "../components/assemblies/CreateAssemblyForm";
 
-const AssemblyView = () => {
+const ProjectView = () => {
   const [partModalVis, setPartModalVis] = useState<boolean>(false);
   const [assyModalVis, setassyModalVis] = useState<boolean>(false);
   const { id } = useParams();
 
-  if (!id) return null;
-  
-  const assemblyQueryKey: QueryKey = `assemblies/${id}`;
-  const { data, refetch } = useQuery(assemblyQueryKey, () => fetchAssembly(id));
-
-  //Refreshes page if routed to same route e.g. assemblies/id1 and asseblies/id2
-  useEffect(() => {
-    const refreshPage = async () => {
-      await refetch();
-    };
-    refreshPage().catch(console.error);
-  }, [id]);
-
-  if (!data) {
+  if (!id) {
     return null;
   }
 
-  const assembly = data;
-  const childComponents = assembly.children;
-  const project = assembly.project;
+  const projectQueryKey: QueryKey = `/projects/${id}`;
+  const projectComponentsQueryKey: QueryKey = `/projects/${id}/components`;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data, error, isError, isLoading } = useQuery(projectQueryKey, () =>
+    fetchProject(id)
+  );
+
+  const projectComponentsQuery = useQuery(projectComponentsQueryKey, () =>
+    fetchProjectComponents(id)
+  );
+
+  const project = data;
+  const parts = projectComponentsQuery.data;
+
+  if (!project) {
+    return null;
+  }
+
   const buttonStuff = (
     <div>
       <Button
@@ -54,7 +58,7 @@ const AssemblyView = () => {
         setShowModal={setPartModalVis}
         form={
           <CreatePartForm
-            queriesToInvalidate={[assemblyQueryKey]}
+            queriesToInvalidate={[projectQueryKey, projectComponentsQueryKey]}
             project={project}
             closeModal={() => setPartModalVis(false)}
           />
@@ -77,7 +81,7 @@ const AssemblyView = () => {
         setShowModal={setassyModalVis}
         form={
           <CreateAssemblyForm
-            queriesToInvalidate={[assemblyQueryKey]}
+            queriesToInvalidate={[projectQueryKey, projectComponentsQueryKey]}
             project={project}
             closeModal={() => setassyModalVis(false)}
           />
@@ -89,15 +93,16 @@ const AssemblyView = () => {
   return (
     <div>
       <PartsLayout
-        pageTitle={
-          assembly ? `${assembly.name} - Parts and Assemblies` : "loading..."
-        }
+        pageTitle={project ? `${project.name}` : "loading..."}
+        subtitle={project.prefix}
+        tableName="Parts and Assemblies"
+        description={project.description}
         buttonContent={buttonStuff}
       >
-        <PartsTable data={childComponents} />
+        <PartsTable data={parts} />
       </PartsLayout>
     </div>
   );
 };
 
-export default AssemblyView;
+export default ProjectView;

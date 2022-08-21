@@ -4,7 +4,6 @@ import { createPart } from "../../services/partsServices";
 import { fetchProjectAssemblies } from "../../services/projectsServices";
 import { NewPart } from "../../types/partsTypes";
 import { QueryKey, useQueryClient, useQuery } from "react-query";
-import { useLocation } from "react-router";
 
 interface ProjectFormProps {
   closeModal: () => void;
@@ -22,7 +21,6 @@ const CreateProjectForm = ({
   project,
   queriesToInvalidate,
 }: ProjectFormProps) => {
-  const location = useLocation().pathname;
   const queryClient = useQueryClient();
   const { data } = useQuery(`assemblies?project=${project.id}`, () =>
     fetchProjectAssemblies(project.id)
