@@ -27,7 +27,7 @@ const ProjectView = () => {
 
   const topLeftStuff = (
     <>
-      <div className="text-4xl font-bold ">{project.name}</div>
+      <div className="text-4xl font-bold pb-2">Project: {project.name}</div>
       <div className="text-gray-400">
         Prefix: <b>{project.prefix}</b>
       </div>
@@ -41,6 +41,7 @@ const ProjectView = () => {
   const topRightStuff = (
     <NewComponentButtons
       project={project}
+      parent={project}
       queriesToInvalidate={[projectQuery, projectComponentsQuery]}
     />
   );

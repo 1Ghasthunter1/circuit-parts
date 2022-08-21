@@ -2,6 +2,7 @@ import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
 import { useNavigate } from "react-router-dom";
 import StatusBox from "../components/StatusBox";
+import CustomStatusBox from "../components/TypeBox";
 interface PartsTableProps {
   data: Array<Assembly | Part> | undefined;
 }
@@ -58,10 +59,13 @@ const PartsTable = ({ data }: PartsTableProps) => {
                   >
                     {rowItem.partNumber}
                   </th>
-                  <td className="px-6">{rowItem.type}</td>
-                  <td className="px-6">{rowItem.name}</td>
-                  <td className="px-6 underline">
-                    <div className="cursor-pointer"
+                  <td className="px-6">
+                    <CustomStatusBox type={rowItem.type}></CustomStatusBox>
+                  </td>
+                  <td className="px-6 whitespace-nowrap">{rowItem.name}</td>
+                  <td className="px-6 underline whitespace-nowrap">
+                    <div
+                      className="cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         const parent = rowItem.parent.parent;
@@ -80,10 +84,10 @@ const PartsTable = ({ data }: PartsTableProps) => {
                       {rowItem.parent.parent.name}
                     </div>
                   </td>
-                  <td className="px-6">
+                  <td className="px-6 whitespace-nowrap">
                     <StatusBox inpStatus={rowItem.status} />
                   </td>
-                  <td className="px-6">edit stuff</td>
+                  <td className="px-6 whitespace-nowrap">edit stuff</td>
                 </tr>
               );
             })}

@@ -8,15 +8,21 @@ import CreatePartForm from "../parts/CreatePartForm";
 import CreateAssemblyForm from "../assemblies/CreateAssemblyForm";
 import { Project } from "../../types/projectTypes";
 import { UseQueryResult } from "react-query";
+import { Assembly } from "../../types/assemblyTypes";
 
 // Modal.setAppElement("#root");
 
 interface props {
   project: Project;
+  parent?: Project | Assembly;
   queriesToInvalidate: UseQueryResult[];
 }
 
-const NewComponentButtons = ({ project, queriesToInvalidate }: props) => {
+const NewComponentButtons = ({
+  project,
+  parent,
+  queriesToInvalidate,
+}: props) => {
   const [partModalVis, setPartModalVis] = useState<boolean>(false);
   const [assyModalVis, setAssyModalVis] = useState<boolean>(false);
   return (
@@ -39,6 +45,7 @@ const NewComponentButtons = ({ project, queriesToInvalidate }: props) => {
           <CreatePartForm
             queriesToInvalidate={queriesToInvalidate}
             project={project}
+            defaultParentId={parent?.id}
             closeModal={() => setPartModalVis(false)}
           />
         }
@@ -62,6 +69,7 @@ const NewComponentButtons = ({ project, queriesToInvalidate }: props) => {
           <CreateAssemblyForm
             queriesToInvalidate={queriesToInvalidate}
             project={project}
+            defaultParentId={parent?.id}
             closeModal={() => setAssyModalVis(false)}
           />
         }

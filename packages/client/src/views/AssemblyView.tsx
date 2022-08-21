@@ -1,17 +1,14 @@
-import PartsLayout from "../layouts/HeaderButtonTableLayout";
 import { useParams } from "react-router";
 import { useQuery } from "react-query";
+import { useEffect } from "react";
+
 import { fetchAssembly } from "../services/assemblyServices";
-import CreateModal from "../components/modals/CreateModal";
-import CreatePartForm from "../components/parts/CreatePartForm";
+
 import PartsTable from "../components/parts/PartsTable";
-import Button from "../elements/Button";
-import { useState, useEffect } from "react";
-import CreateAssemblyForm from "../components/assemblies/CreateAssemblyForm";
+import NewComponentButtons from "../components/components/NewComponentButtons";
+import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
 
 const AssemblyView = () => {
-  const [partModalVis, setPartModalVis] = useState<boolean>(false);
-  const [assyModalVis, setassyModalVis] = useState<boolean>(false);
   const { id } = useParams();
 
   if (!id) return null;
@@ -34,67 +31,33 @@ const AssemblyView = () => {
   const childComponents = assembly.children;
   const project = assembly.project;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const buttonStuff = (
-    <div>
-      <Button
-        iconName="puzzle-piece"
-        txtColor="text-white"
-        bgColor="bg-green-600"
-        hoverColor="hover:bg-green-700"
-        style="ml-2"
-        onClick={() => setPartModalVis(true)}
-      >
-        New Part
-      </Button>
-      <CreateModal
-        title="New Part"
-        showModal={partModalVis}
-        setShowModal={setPartModalVis}
-        form={
-          <CreatePartForm
-            queriesToInvalidate={[assemblyQuery]}
-            project={project}
-            closeModal={() => setPartModalVis(false)}
-          />
-        }
-      />
-
-      <Button
-        iconName="puzzle-piece"
-        txtColor="text-white"
-        bgColor="bg-green-600"
-        hoverColor="hover:bg-green-700"
-        style="ml-2"
-        onClick={() => setassyModalVis(true)}
-      >
-        New Assembly
-      </Button>
-      <CreateModal
-        title="New Assembly"
-        showModal={assyModalVis}
-        setShowModal={setassyModalVis}
-        form={
-          <CreateAssemblyForm
-            queriesToInvalidate={[assemblyQuery]}
-            project={project}
-            closeModal={() => setassyModalVis(false)}
-          />
-        }
-      />
-    </div>
+  const topLeftStuff = (
+    <>
+      <div className="text-4xl font-bold pb-2">Assembly: {assembly.name}</div>
+      <div className="text-gray-400">
+        Part Number: <b>{assembly.partNumber}</b>
+      </div>
+      <div className="text-gray-400">
+        Creation Date:{" "}
+        <b>{new Date(project.creationDate).toLocaleDateString("en-US")}</b>
+      </div>
+    </>
   );
 
   return (
     <div>
-      <PartsLayout
-        pageTitle={
-          assembly ? `${assembly.name} - Parts and Assemblies` : "loading..."
+      <TopLeftRightAndMiddle
+        topLeftContent={topLeftStuff}
+        topRightContent={
+          <NewComponentButtons
+            project={project}
+            parent={assembly}
+            queriesToInvalidate={[assemblyQuery]}
+          />
         }
-        buttonContent={buttonStuff}
       >
         <PartsTable data={childComponents} />
-      </PartsLayout>
+      </TopLeftRightAndMiddle>
     </div>
   );
 };

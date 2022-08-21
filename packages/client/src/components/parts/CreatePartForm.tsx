@@ -9,6 +9,7 @@ interface ProjectFormProps {
   closeModal: () => void;
   project: Project;
   queriesToInvalidate: UseQueryResult[];
+  defaultParentId?: string;
 }
 
 interface errorsType {
@@ -19,6 +20,7 @@ interface errorsType {
 const CreateProjectForm = ({
   closeModal,
   project,
+  defaultParentId,
   queriesToInvalidate,
 }: ProjectFormProps) => {
   const { data } = useQuery(`assemblies?project=${project.id}`, () =>
@@ -33,7 +35,7 @@ const CreateProjectForm = ({
     <Formik
       initialValues={{
         name: "",
-        parentId: "",
+        parentId: defaultParentId || "",
         description: "",
       }}
       validate={(values) => {
