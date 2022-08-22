@@ -1,5 +1,5 @@
-import { PartStatus } from "../../types/partsTypes";
-import { AssemblyStatus } from "../../types/assemblyTypes";
+import { PartStatus } from "../../types/universalTypes";
+import { AssemblyStatus } from "../../types/universalTypes";
 
 interface StatusProps {
   inpStatus: PartStatus | AssemblyStatus;

@@ -1,64 +1,57 @@
-import { Part } from "./partsTypes";
-import { Project } from "./projectTypes";
+import { UnpopulatedProject } from "./projectTypes";
+import { UnpopulatedPartPopulatedParent } from "./partsTypes";
 
-export const assemblyStatuses = [
-  "design in progress",
-  "in production",
-  "completed",
-] as const;
+import {
+  Parent,
+  assemblyStatuses,
+  AssemblyStatus,
+  Priority,
+  Child,
+} from "./universalTypes";
 
-export const priorities = ["low", "normal", "high", "urgent"] as const;
-export const parentType = ["assembly", "project"] as const;
-
-export type AssemblyStatus = typeof assemblyStatuses[number];
-export type PriorityType = typeof priorities[number];
-export type ParentType = typeof parentType[number];
-
-export const isStatus = (value: string): value is AssemblyStatus => {
+export const isAssemblyStatus = (value: string): value is AssemblyStatus => {
   return assemblyStatuses.includes(value as AssemblyStatus);
 };
-export const isPriorityType = (value: string): value is PriorityType => {
-  return priorities.includes(value as PriorityType);
-};
-export const isParentType = (value: string): value is ParentType => {
-  return parentType.includes(value as ParentType);
-};
 
-export interface BaseAssembly {
+export interface UnpopulatedAssembly {
   id: string;
   name: string;
-  type: "assembly";
-  project: Project;
   partNumber: string;
+  type: "assembly";
+  parent: Parent;
+  children: Child[];
+  project: string;
   status: AssemblyStatus;
-  priority: PriorityType;
+  priority: Priority;
   creationDate: Date;
-  children: Array<Part | Assembly>;
   notes?: string;
 }
 
-export interface Assembly extends BaseAssembly {
-  parent: {
-    parentType: ParentType;
-    parent: Assembly | Project;
-  };
+// eslint-disable-file @typescript-eslint/no-empty-interface
+
+export interface Assembly
+  extends Omit<UnpopulatedAssembly, "parent" | "children" | "project"> {
+  parent: UnpopulatedProject | UnpopulatedAssembly;
+  children: Array<
+    UnpopulatedPartPopulatedParent | UnpopulatedAssemblyPopulatedParent
+  >;
+  project: UnpopulatedProject;
 }
 
+export interface UnpopulatedAssemblyPopulatedParent
+  extends Omit<UnpopulatedAssembly, "parent"> {
+  parent: UnpopulatedProject | UnpopulatedAssembly;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface NewAssembly
   extends Omit<
-    BaseAssembly,
+    UnpopulatedAssembly,
     | "id"
     | "partNumber"
     | "status"
     | "priority"
-    | "creationDate"
-    | "children"
-    | "project"
     | "type"
-  > {
-  project: string;
-  parent: {
-    parentType: ParentType;
-    parent: string;
-  };
-}
+    | "children"
+    | "creationDate"
+  > {}

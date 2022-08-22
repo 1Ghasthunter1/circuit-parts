@@ -6,15 +6,15 @@ import Button from "../../elements/Button";
 import CreateModal from "../../components/modals/CreateModal";
 import CreatePartForm from "../parts/CreatePartForm";
 import CreateAssemblyForm from "../assemblies/CreateAssemblyForm";
-import { Project } from "../../types/projectTypes";
+import { UnpopulatedProject, Project } from "../../types/projectTypes";
 import { UseQueryResult } from "react-query";
-import { Assembly } from "../../types/assemblyTypes";
+import { UnpopulatedAssembly, Assembly } from "../../types/assemblyTypes";
 
 // Modal.setAppElement("#root");
 
 interface props {
-  project: Project;
-  parent?: Project | Assembly;
+  project: UnpopulatedProject | Project;
+  parent?: UnpopulatedProject | Project | UnpopulatedAssembly | Assembly;
   queriesToInvalidate: UseQueryResult[];
 }
 

@@ -1,13 +1,22 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
+import { Child } from "./universalTypes";
 import { Part } from "./partsTypes";
-
-export interface Project {
+import { Assembly } from "./assemblyTypes";
+export interface UnpopulatedProject {
   id: string;
   name: string;
   creationDate: Date;
   prefix: string;
   type: "project";
-  children: Part[];
+  children: Child[];
   description?: string;
 }
 
-export type SubmitProject = Omit<Project, "id" | "creationDate" | "children" | "type">;
+export interface Project extends Omit<UnpopulatedProject, "children"> {
+  children: Array<Part | Assembly>;
+}
+export interface NewProject
+  extends Omit<
+    UnpopulatedProject,
+    "id" | "date" | "children" | "type" | "creationDate"
+  > {}

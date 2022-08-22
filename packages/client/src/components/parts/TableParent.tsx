@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Assembly } from "../../types/assemblyTypes";
-import { Part } from "../../types/partsTypes";
+import { UnpopulatedAssemblyPopulatedParent } from "../../types/assemblyTypes";
+import { UnpopulatedPartPopulatedParent } from "../../types/partsTypes";
 
 interface props {
-  rowItem: Assembly | Part;
+  rowItem: UnpopulatedAssemblyPopulatedParent | UnpopulatedPartPopulatedParent;
 }
 const TableParent = ({ rowItem }: props) => {
   const navigate = useNavigate();
@@ -13,8 +13,8 @@ const TableParent = ({ rowItem }: props) => {
       className="cursor-pointer"
       onClick={(e) => {
         e.stopPropagation();
-        const parent = rowItem.parent.parent;
-        switch (rowItem.parent.parentType) {
+        const parent = rowItem.parent;
+        switch (rowItem.parent.type) {
           case "assembly":
             navigate(`/assemblies/${parent.id}`);
             break;
@@ -26,7 +26,7 @@ const TableParent = ({ rowItem }: props) => {
         }
       }}
     >
-      {rowItem.parent.parent.name}
+      {rowItem.parent.name}
     </div>
   );
 };

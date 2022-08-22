@@ -47,7 +47,7 @@ export const isPriority = (value: string): value is Priority => {
 export const isParentType = (value: string): value is ParentType => {
   return parentTypes.includes(value as ParentType);
 };
-export const isComponentType = (value: string): value is ComponentType => {
+export const isComponentType = (value: unknown): value is ComponentType => {
   return componentTypes.includes(value as ComponentType);
 };
 

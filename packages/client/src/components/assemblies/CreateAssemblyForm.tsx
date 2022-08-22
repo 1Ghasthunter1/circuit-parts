@@ -1,5 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Project } from "../../types/projectTypes";
+import { UnpopulatedProject, Project } from "../../types/projectTypes";
 import { createAssembly } from "../../services/assemblyServices";
 import { fetchProjectAssemblies } from "../../services/projectsServices";
 import { NewAssembly } from "../../types/assemblyTypes";
@@ -7,7 +7,7 @@ import { UseQueryResult, useQuery } from "react-query";
 
 interface FormProps {
   closeModal: () => void;
-  project: Project;
+  project: UnpopulatedProject | Project;
   queriesToInvalidate: UseQueryResult[];
   defaultParentId?: string;
 }

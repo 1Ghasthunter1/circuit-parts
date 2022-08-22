@@ -5,7 +5,7 @@ import { deleteProjectById } from "../../services/projectsServices";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Modal from "react-modal";
-import ModalContent from "../modals/NewModal";
+import DeleteModal from "../modals/DeleteModal";
 import Button from "../../elements/Button";
 
 Modal.setAppElement("#root");
@@ -18,14 +18,11 @@ const ProjectCard = ({ project }: ProjectTypes) => {
   const queryClient = useQueryClient();
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
 
-  const closeModal = () => {
-    setDeleteModalVis(false);
-  };
+  console.log(deleteModalVis);
 
   const deleteProject = async (projectId: string) => {
     await deleteProjectById(projectId);
     await queryClient.invalidateQueries("projects");
-    console.log(projectId);
     setDeleteModalVis(true);
   };
 
@@ -68,6 +65,7 @@ const ProjectCard = ({ project }: ProjectTypes) => {
         <div
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             setDeleteModalVis(true);
           }}
           className="hidden transition group-hover:block ml-auto mt-auto items-bottom p-1 z-50"
@@ -78,19 +76,19 @@ const ProjectCard = ({ project }: ProjectTypes) => {
           <Modal
             isOpen={deleteModalVis}
             onRequestClose={(e) => {
-              e.preventDefault();
-              closeModal();
+              console.log("here");
+              e.stopPropagation();
+              setDeleteModalVis(false);
             }}
+            shouldCloseOnOverlayClick={false}
             style={{
               overlay: { backgroundColor: `rgba(0,0,0,0)` },
               content: { backgroundColor: `rgba(0,0,0,0)`, border: 0 },
             }}
-            shouldCloseOnOverlayClick={false}
           >
-            <ModalContent
-              title={`Delete ${project.name}?`}
-              form={<DeleteForm />}
-              setShowModal={closeModal}
+            <DeleteModal
+              component={project}
+              closeModal={() => setDeleteModalVis(false)}
             />
           </Modal>
         </div>

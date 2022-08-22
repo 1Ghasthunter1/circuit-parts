@@ -62,6 +62,7 @@ projectsRouter.get("/:id", (async (req, res) => {
     ...foundProject.toJSON(),
     children: foundProject.children.map((childObj) => childObj.child),
   };
+
   return res.status(200).send(populatedProject).end();
 }) as RequestHandler);
 
@@ -97,7 +98,7 @@ projectsRouter.delete("/:id", (async (req, res) => {
     project: projectId,
   });
   await foundProject.delete();
-  
+
   return res.status(204).end();
 }) as RequestHandler);
 
