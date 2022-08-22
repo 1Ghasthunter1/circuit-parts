@@ -16,6 +16,7 @@ const ProjectList = ({ projects }: ProjectListProps) => {
             </li>
           ))}{" "}
       </ol>
+      {projects && projects.length === 0 && <div>No projects exist. Why not make one?</div>}
     </div>
   );
 };

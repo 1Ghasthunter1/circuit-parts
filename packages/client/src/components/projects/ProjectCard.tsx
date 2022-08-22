@@ -73,6 +73,7 @@ const ProjectCard = ({ project }: ProjectTypes) => {
             padding: 0,
             width: "fit-content",
             height: "fit-content",
+            border: 0,
           },
         }}
         shouldCloseOnOverlayClick={true}

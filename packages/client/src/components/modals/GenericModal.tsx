@@ -8,7 +8,7 @@ interface GenericModalProps {
 
 const GenericModal = ({ title, closeModal, children }: GenericModalProps) => {
   return (
-    <div className="border-0 rounded-lg shadow-lg relative flex flex-col bg-white w-600 outline-none focus:outline-none">
+    <div className="border-0 rounded-lg shadow-lg  relative flex flex-col bg-white w-600 outline-none focus:outline-none">
       <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
         <h3 className="text-2xl font-semibold">{title}</h3>
         <button
@@ -21,7 +21,7 @@ const GenericModal = ({ title, closeModal, children }: GenericModalProps) => {
           <FontAwesomeIcon icon="square-xmark" color="#F4405E" size="2x" />
         </button>
       </div>
-      <div className="relative p-6 flex-auto">{children}</div>
+      <div className="relative p-6 flex-auto bg-transparent">{children}</div>
     </div>
   );
 };
