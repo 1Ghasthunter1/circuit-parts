@@ -12,7 +12,9 @@ import {
 import { DatabasePart } from "../types/partsTypes";
 import { findParent, findProject } from "../utils/generic";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
-
+import PartModel from "../models/part";
+import ProjectModel from "../models/project";
+import { Types } from "mongoose";
 require("express-async-errors");
 
 const assemblyRouter = express.Router();
@@ -113,4 +115,35 @@ assemblyRouter.post(
     return res.json(savedAssembly).end();
   }
 );
+
+assemblyRouter.delete("/:id", (async (req, res) => {
+  const assemblyId = req.params.id;
+
+  const assembly = await AssemblyModel.findById(assemblyId);
+  if (!assembly) return res.status(404).end();
+
+  const parts = await PartModel.find({
+    "parent.parent": new Types.ObjectId(assemblyId),
+  });
+  const assemblies = await AssemblyModel.find({
+    "parent.parent": new Types.ObjectId(assemblyId),
+  });
+  if (parts.length !== 0 || assemblies.length !== 0) {
+    return res.status(409).json({
+      error: {
+        content: `can't delete assembly with id ${assemblyId} because it has existing children`,
+        type: "HAS_CHILDREN",
+        children: [...parts, ...assemblies],
+      },
+    });
+  }
+
+  await ProjectModel.findByIdAndUpdate(assembly.parent.parent, {
+    $pull: { children: { child: new Types.ObjectId(assemblyId) } },
+  });
+  await assembly.delete();
+
+  return res.status(204).end();
+}) as RequestHandler);
+
 export default assemblyRouter;

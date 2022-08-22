@@ -8,6 +8,8 @@ import { NewPart, PopulatedPart, ToDatabasePart } from "../types/partsTypes";
 import { DatabaseProject } from "../types/projectTypes";
 import { DatabaseAssembly } from "../types/assemblyTypes";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
+import AssemblyModel from "../models/assembly";
+import mongoose from "mongoose";
 require("express-async-errors");
 
 const partsRouter = express.Router();
@@ -99,4 +101,20 @@ partsRouter.post(
     return res.json(savedPart).end();
   }
 );
+
+partsRouter.delete("/:id", (async (req, res) => {
+  const partId = req.params.id;
+
+  const foundPart = await PartModel.findById(partId);
+  if (!foundPart)
+    return res.status(404).json({ error: `part not found with id ${partId}` });
+
+  await AssemblyModel.findByIdAndUpdate(foundPart.parent.parent, {
+    $pull: { children: { child: new mongoose.Types.ObjectId(partId) } },
+  });
+
+  await foundPart.delete();
+  return res.status(204).end();
+}) as RequestHandler);
+
 export default partsRouter;
