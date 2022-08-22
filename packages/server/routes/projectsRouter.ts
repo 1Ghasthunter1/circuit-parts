@@ -92,22 +92,12 @@ projectsRouter.delete("/:id", (async (req, res) => {
       .status(404)
       .json({ error: `project not found with id ${projectId}` });
 
-  const parts = await PartModel.find({ project: projectId });
-  const assemblies = await AssemblyModel.find({
+  await PartModel.deleteMany({ project: projectId });
+  await AssemblyModel.deleteMany({
     project: projectId,
   });
-
-  if (parts.length !== 0 || assemblies.length !== 0) {
-    return res.status(409).json({
-      error: {
-        content: `can't delete project with id ${projectId} because it has existing children`,
-        type: "PROJECT_HAS_CHILDREN",
-        children: [...parts, ...assemblies],
-      },
-    });
-  }
-
   await foundProject.delete();
+  
   return res.status(204).end();
 }) as RequestHandler);
 

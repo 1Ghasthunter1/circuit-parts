@@ -15,6 +15,7 @@ const DashboardView = () => {
   const { data } = useQuery<Project[]>("projects", fetchProjects);
   const [showModal, setShowModal] = useState<boolean>(false);
 
+
   const topRightStuff = (
     <>
       <Button
