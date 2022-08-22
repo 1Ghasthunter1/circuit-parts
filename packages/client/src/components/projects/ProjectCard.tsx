@@ -3,6 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "react-query";
 import { deleteProjectById } from "../../services/projectsServices";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import Modal from "react-modal";
+import ModalContent from "../modals/NewModal";
+import Button from "../../elements/Button";
+
+Modal.setAppElement("#root");
 
 interface ProjectTypes {
   project: Project;
@@ -10,10 +16,40 @@ interface ProjectTypes {
 
 const ProjectCard = ({ project }: ProjectTypes) => {
   const queryClient = useQueryClient();
+  const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
 
-  const onSubmit = async (projectId: string) => {
+  const closeModal = () => {
+    setDeleteModalVis(false);
+  };
+
+  const deleteProject = async (projectId: string) => {
     await deleteProjectById(projectId);
     await queryClient.invalidateQueries("projects");
+    console.log(projectId);
+    setDeleteModalVis(true);
+  };
+
+  const DeleteForm = () => {
+    return (
+      <div>
+        <div className="pb-4 text-xl">
+          Confirm deletion of the following project:{" "}
+        </div>
+        <div>Project Name: {project.name}</div>
+        <div className="pb-4">Project Prefix: {project.prefix}</div>
+        <Button
+          bgColor="bg-red-600"
+          txtColor="text-white"
+          className="float-right"
+          onClick={(e) => {
+            e.preventDefault();
+            void deleteProject(project.id);
+          }}
+        >
+          Delete
+        </Button>
+      </div>
+    );
   };
 
   return (
@@ -32,11 +68,31 @@ const ProjectCard = ({ project }: ProjectTypes) => {
         <div
           onClick={(e) => {
             e.preventDefault();
-            void onSubmit(project.id);
+            setDeleteModalVis(true);
           }}
           className="hidden transition group-hover:block ml-auto mt-auto items-bottom p-1 z-50"
         >
           <FontAwesomeIcon icon="trash" color="#c70404" />
+        </div>
+        <div className="z-50">
+          <Modal
+            isOpen={deleteModalVis}
+            onRequestClose={(e) => {
+              e.preventDefault();
+              closeModal();
+            }}
+            style={{
+              overlay: { backgroundColor: `rgba(0,0,0,0)` },
+              content: { backgroundColor: `rgba(0,0,0,0)`, border: 0 },
+            }}
+            shouldCloseOnOverlayClick={false}
+          >
+            <ModalContent
+              title={`Delete ${project.name}?`}
+              form={<DeleteForm />}
+              setShowModal={closeModal}
+            />
+          </Modal>
         </div>
       </div>
     </Link>

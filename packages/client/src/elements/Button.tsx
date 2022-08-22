@@ -8,6 +8,7 @@ interface ButtonPropsTypes {
   hoverColor?: string;
   children?: string;
   style?: string;
+  className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -19,6 +20,7 @@ const Button = ({
   hoverColor,
   children,
   style,
+  className,
   onClick,
 }: ButtonPropsTypes) => {
   return (
@@ -27,7 +29,7 @@ const Button = ({
         bgColor ? bgColor : "bg-gray-300"
       } ${txtColor ? txtColor : "text-black"} ${
         hoverColor ? hoverColor : "hover:bg-pink-300"
-      } ${style || ""}`}
+      } ${style || ""} ${className || ""}`}
       onClick={onClick}
     >
       {iconName && <FontAwesomeIcon icon={iconName} className="pr-2" />}
