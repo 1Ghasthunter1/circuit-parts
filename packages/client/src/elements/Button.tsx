@@ -9,6 +9,7 @@ interface ButtonPropsTypes {
   children?: string;
   style?: string;
   className?: string;
+  disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -21,16 +22,18 @@ const Button = ({
   children,
   style,
   className,
+  disabled,
   onClick,
 }: ButtonPropsTypes) => {
   return (
     <button
-      className={`text-sm text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ${
+      className={`text-sm text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center disabled:bg-gray-200 ${
         bgColor ? bgColor : "bg-gray-300"
       } ${txtColor ? txtColor : "text-black"} ${
         hoverColor ? hoverColor : "hover:bg-pink-300"
       } ${style || ""} ${className || ""}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {iconName && <FontAwesomeIcon icon={iconName} className="pr-2" />}
       <span>{children}</span>

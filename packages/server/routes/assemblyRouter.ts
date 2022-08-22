@@ -48,6 +48,8 @@ assemblyRouter.get("/:id", (async (req, res) => {
     ...foundAssembly.toJSON(),
     children: foundAssembly.children.map((childObj) => childObj.child),
   };
+
+  console.log(modifiedAssembly);
   return res.status(200).send(modifiedAssembly).end();
 }) as RequestHandler);
 
