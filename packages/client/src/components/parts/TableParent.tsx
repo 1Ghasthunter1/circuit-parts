@@ -7,6 +7,9 @@ interface props {
 }
 const TableParent = ({ rowItem }: props) => {
   const navigate = useNavigate();
+  console.log(rowItem);
+
+  const parent = rowItem.parent.parent;
 
   return (
     <div
@@ -14,7 +17,7 @@ const TableParent = ({ rowItem }: props) => {
       onClick={(e) => {
         e.stopPropagation();
         const parent = rowItem.parent;
-        switch (rowItem.parent.type) {
+        switch (parent.type) {
           case "assembly":
             navigate(`/assemblies/${parent.id}`);
             break;
@@ -26,7 +29,7 @@ const TableParent = ({ rowItem }: props) => {
         }
       }}
     >
-      {rowItem.parent.name}
+      {parent.name}
     </div>
   );
 };

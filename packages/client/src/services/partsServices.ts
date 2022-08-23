@@ -20,3 +20,11 @@ export const createPart = async (newPart: NewPart) => {
   const { data } = await axios.post<Part>(`${apiBaseUrl}/parts`, newPart);
   return data;
 };
+
+export const deletePartById = async (
+  partId: string
+): Promise<Express.Response> => {
+  const { data } = await axios.delete<Part>(`${apiBaseUrl}/projects/${partId}`);
+  return data;
+};
+

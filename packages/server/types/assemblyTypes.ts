@@ -31,9 +31,10 @@ export interface DatabaseAssembly {
 export interface ToDatabaseAssembly extends Omit<DatabaseAssembly, "id"> {}
 
 export interface PopulatedAssembly
-  extends Omit<DatabaseAssembly, "parent" | "children"> {
+  extends Omit<DatabaseAssembly, "parent" | "children" | "project"> {
   parent: DatabaseAssembly | DatabaseProject;
   children: Array<DatabasePart | DatabaseAssembly>;
+  project: DatabaseProject;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

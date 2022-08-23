@@ -1,13 +1,16 @@
-import { Project } from "../../types/projectTypes";
-import { Assembly } from "../../types/assemblyTypes";
-import { Part } from "../../types/partsTypes";
+import { UnpopulatedProject } from "../../types/projectTypes";
+import { UnpopulatedAssemblyPopulatedParent } from "../../types/assemblyTypes";
+import { UnpopulatedPartPopulatedParent } from "../../types/partsTypes";
 
 import GenericModal from "./GenericModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../elements/Button";
 
 interface CreateModalProps {
-  component: Project | Assembly | Part;
+  component:
+    | UnpopulatedProject
+    | UnpopulatedAssemblyPopulatedParent
+    | UnpopulatedPartPopulatedParent;
   closeModal: () => void;
   onDelete: () => Promise<void>;
 }

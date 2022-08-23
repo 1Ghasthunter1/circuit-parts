@@ -15,6 +15,7 @@ import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
 import PartModel from "../models/part";
 import ProjectModel from "../models/project";
 import { Types } from "mongoose";
+import { DatabaseProject } from "../types/projectTypes";
 require("express-async-errors");
 
 const assemblyRouter = express.Router();
@@ -37,7 +38,9 @@ assemblyRouter.get("/:id", (async (req, res) => {
       path: "children.child",
       populate: { path: "parent.parent" },
     })
-    .populate("project");
+    .populate<{ project: { projectType: string; project: DatabaseProject } }>(
+      "project"
+    );
 
   if (!foundAssembly)
     return res
