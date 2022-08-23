@@ -4,12 +4,13 @@ import { newPartSchema } from "../validation/partsValidation";
 import { RequestHandler } from "express";
 import PartModel from "../models/part";
 import { findParent, findProject } from "../utils/generic";
-import { NewPart, PopulatedPart, ToDatabasePart } from "../types/partsTypes";
-import { DatabaseProject } from "../types/projectTypes";
-import { DatabaseAssembly } from "../types/assemblyTypes";
+import { NewPart, ToDatabasePart } from "../types/partsTypes";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
 import AssemblyModel from "../models/assembly";
 import mongoose from "mongoose";
+
+import { getPartForUser } from "../utils/population";
+
 require("express-async-errors");
 
 const partsRouter = express.Router();
@@ -21,22 +22,12 @@ partsRouter.get("/", (async (_req, res) => {
 
 partsRouter.get("/:id", (async (req, res) => {
   const partId = req.params.id;
-  const foundPart = await PartModel.findById(partId).populate<{
-    parent: {
-      parentType: string;
-      parent: DatabaseAssembly | DatabaseProject;
-    };
-  }>("parent.parent");
+  const foundPart = await getPartForUser(partId);
 
   if (!foundPart)
     return res.status(404).json({ error: `part not found with id ${partId}` });
 
-  const populatedPart: PopulatedPart = {
-    ...foundPart.toJSON(),
-    parent: foundPart.parent.parent,
-  };
-
-  return res.status(200).json(populatedPart);
+  return res.status(200).json(foundPart);
 }) as RequestHandler);
 
 partsRouter.post(

@@ -3,19 +3,19 @@ import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newAssemblySchema } from "../validation/assemblyValidation";
 import { RequestHandler } from "express";
 import AssemblyModel from "../models/assembly";
-import {
-  PopulatedAssembly,
-  DatabaseAssembly,
-  NewAssembly,
-  ToDatabaseAssembly,
-} from "../types/assemblyTypes";
-import { DatabasePart } from "../types/partsTypes";
+import { NewAssembly, ToDatabaseAssembly } from "../types/assemblyTypes";
 import { findParent, findProject } from "../utils/generic";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
 import PartModel from "../models/part";
 import ProjectModel from "../models/project";
 import { Types } from "mongoose";
-import { DatabaseProject } from "../types/projectTypes";
+import {
+  getAssyForUser,
+  getMultipleAssysForUser,
+  getMultiplePartsForUser,
+} from "../utils/population";
+import { Part } from "../types/partsTypes";
+import { Assembly } from "../types/assemblyTypes";
 require("express-async-errors");
 
 const assemblyRouter = express.Router();
@@ -28,32 +28,32 @@ assemblyRouter.get("/", (async (req, res) => {
 
 assemblyRouter.get("/:id", (async (req, res) => {
   const assemblyId = req.params.id;
-  const foundAssembly = await AssemblyModel.findById(assemblyId)
-    .populate<{
-      children: Array<{
-        childType: string;
-        child: DatabaseAssembly | DatabasePart;
-      }>;
-    }>({
-      path: "children.child",
-      populate: { path: "parent.parent" },
-    })
-    .populate<{ project: { projectType: string; project: DatabaseProject } }>(
-      "project"
-    );
+  const assembly = await getAssyForUser(assemblyId);
 
+  if (!assembly)
+    return res
+      .status(404)
+      .json({ error: `assembly not found with id ${assemblyId}` });
+
+  return res.status(200).send(assembly).end();
+}) as RequestHandler);
+
+assemblyRouter.get("/:id/components", (async (req, res) => {
+  const assemblyId = req.params.id;
+  const foundAssembly = await AssemblyModel.findById(assemblyId);
   if (!foundAssembly)
     return res
       .status(404)
       .json({ error: `assembly not found with id ${assemblyId}` });
 
-  const modifiedAssembly: PopulatedAssembly = {
-    ...foundAssembly.toJSON(),
-    children: foundAssembly.children.map((childObj) => childObj.child),
-  };
+  const parts = await getMultiplePartsForUser({ "parent.parent": assemblyId });
+  const assemblies = await getMultipleAssysForUser({
+    "parent.parent": assemblyId,
+  });
 
-  console.log(modifiedAssembly);
-  return res.status(200).send(modifiedAssembly).end();
+  const resData: (Part | Assembly)[] = [...parts, ...assemblies];
+
+  return res.status(200).send(resData).end();
 }) as RequestHandler);
 
 assemblyRouter.post(

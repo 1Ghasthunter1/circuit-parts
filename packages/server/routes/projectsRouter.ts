@@ -2,15 +2,19 @@ import express from "express";
 import { RequestHandler } from "express";
 import { checkSchema, validationResult, matchedData } from "express-validator";
 import { newProjectSchema } from "../validation/projectValidation";
-import { NewProject, ProjectToDB } from "../types/projectTypes";
+import {
+  NewProject,
+  ProjectToDB,
+  PopulatedProject,
+} from "../types/projectTypes";
 import ProjectModel from "../models/project";
 import PartModel from "../models/part";
 import AssemblyModel from "../models/assembly";
+import { ChildType } from "../types/universalTypes";
+import { DatabaseAssembly } from "../types/assemblyTypes";
+import { DatabasePart } from "../types/partsTypes";
 
 require("express-async-errors");
-
-// import { Logger } from "tslog";
-// const log: Logger = new Logger({ name: "myLogger" });
 
 const projectsRouter = express.Router();
 
@@ -49,21 +53,25 @@ projectsRouter.post(
 
 projectsRouter.get("/:id", (async (req, res) => {
   const projectId = req.params.id;
-  const foundProject = await ProjectModel.findById(projectId).populate(
-    "children.child"
-  );
+  const foundProject = await ProjectModel.findById(projectId).populate<{
+    children: Array<{
+      childType: ChildType;
+      child: DatabaseAssembly | DatabasePart;
+    }>;
+  }>("children.child");
 
   if (!foundProject)
     return res
       .status(404)
       .json({ error: `project not found with id ${projectId}` });
 
-  const populatedProject = {
-    ...foundProject.toJSON(),
-    children: foundProject.children.map((childObj) => childObj.child),
-  };
-
-  return res.status(200).send(populatedProject).end();
+  return res
+    .status(200)
+    .send({
+      ...foundProject.toJSON(),
+      children: foundProject.children.map((childObj) => childObj.child),
+    } as PopulatedProject)
+    .end();
 }) as RequestHandler);
 
 projectsRouter.get("/:id/components", (async (req, res) => {
