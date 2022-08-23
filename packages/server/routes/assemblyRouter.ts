@@ -51,6 +51,8 @@ assemblyRouter.get("/:id/components", (async (req, res) => {
     "parent.parent": assemblyId,
   });
 
+  console.log(assemblies.length);
+
   const resData: (Part | Assembly)[] = [...parts, ...assemblies];
 
   return res.status(200).send(resData).end();

@@ -1,5 +1,5 @@
 import { UnpopulatedProject } from "./projectTypes";
-import { UnpopulatedPartPopulatedParent } from "./partsTypes";
+import { UnpopulatedPart } from "./partsTypes";
 
 import {
   Parent,
@@ -32,15 +32,8 @@ export interface UnpopulatedAssembly {
 export interface Assembly
   extends Omit<UnpopulatedAssembly, "parent" | "children" | "project"> {
   parent: UnpopulatedProject | UnpopulatedAssembly;
-  children: Array<
-    UnpopulatedPartPopulatedParent | UnpopulatedAssemblyPopulatedParent
-  >;
+  children: Array<UnpopulatedPart | UnpopulatedAssembly>;
   project: UnpopulatedProject;
-}
-
-export interface UnpopulatedAssemblyPopulatedParent
-  extends Omit<UnpopulatedAssembly, "parent"> {
-  parent: UnpopulatedProject | UnpopulatedAssembly;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

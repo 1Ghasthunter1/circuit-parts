@@ -1,11 +1,9 @@
-import { UnpopulatedPartPopulatedParent } from "../../types/partsTypes";
-import { UnpopulatedAssemblyPopulatedParent } from "../../types/assemblyTypes";
+import { Part } from "../../types/partsTypes";
+import { Assembly } from "../../types/assemblyTypes";
 import PartsTableItem from "./PartsTableItem";
 
 interface PartsTableProps {
-  data:
-    | Array<UnpopulatedPartPopulatedParent | UnpopulatedAssemblyPopulatedParent>
-    | undefined;
+  data: Array<Part | Assembly> | undefined;
 }
 
 const PartsTable = ({ data }: PartsTableProps) => {

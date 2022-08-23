@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 
-import { UnpopulatedPartPopulatedParent } from "../../types/partsTypes";
-import { UnpopulatedAssemblyPopulatedParent } from "../../types/assemblyTypes";
+import { Part } from "../../types/partsTypes";
+import { Assembly } from "../../types/assemblyTypes";
 import { deletePartById } from "../../services/partsServices";
 import { deleteAssemblyById } from "../../services/assemblyServices";
 
@@ -14,18 +14,14 @@ import CasualDeleteModal from "../modals/DeleteModalCasual";
 import { useState } from "react";
 
 interface intProps {
-  rowItem: UnpopulatedPartPopulatedParent | UnpopulatedAssemblyPopulatedParent;
+  rowItem: Part | Assembly;
 }
 
 const PartsTableItem = ({ rowItem }: intProps) => {
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const deleteComponent = async (
-    component:
-      | UnpopulatedPartPopulatedParent
-      | UnpopulatedAssemblyPopulatedParent
-  ) => {
+  const deleteComponent = async (component: Part | Assembly) => {
     switch (component.type) {
       case "assembly":
         await deleteAssemblyById(component.id);

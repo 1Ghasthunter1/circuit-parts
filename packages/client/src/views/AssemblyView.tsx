@@ -2,7 +2,10 @@ import { useParams } from "react-router";
 import { useQuery } from "react-query";
 import { useEffect } from "react";
 
-import { fetchAssembly } from "../services/assemblyServices";
+import {
+  fetchAssembly,
+  fetchAssemblyComponents,
+} from "../services/assemblyServices";
 
 import PartsTable from "../components/parts/PartsTable";
 import NewComponentButtons from "../components/components/NewComponentButtons";
@@ -14,6 +17,9 @@ const AssemblyView = () => {
   if (!id) return null;
 
   const assemblyQuery = useQuery(`assemblies/${id}`, () => fetchAssembly(id));
+  const assemblyComponentsQuery = useQuery(`assemblies/${id}/components`, () =>
+    fetchAssemblyComponents(id)
+  );
 
   //Refreshes page if routed to same route e.g. assemblies/id1 and asseblies/id2
   useEffect(() => {
@@ -23,12 +29,12 @@ const AssemblyView = () => {
     refreshPage().catch(console.error);
   }, [id]);
 
-  if (!assemblyQuery.data) {
+  if (!assemblyQuery.data || !assemblyComponentsQuery.data) {
     return null;
   }
 
   const assembly = assemblyQuery.data;
-  const childComponents = assembly.children;
+  const childComponents = assemblyComponentsQuery.data;
   const project = assembly.project;
 
   const topLeftStuff = (
@@ -52,7 +58,7 @@ const AssemblyView = () => {
           <NewComponentButtons
             project={project}
             parent={assembly}
-            queriesToInvalidate={[assemblyQuery]}
+            queriesToInvalidate={[assemblyQuery, assemblyComponentsQuery]}
           />
         }
       >

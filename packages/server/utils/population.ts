@@ -47,7 +47,7 @@ export const getAssyForUser = async (
 export const getMultiplePopulatedAssys = async (query: unknown) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-  const foundPart = await PartModel.find(query)
+  const foundAssembly = await AssemblyModel.find(query)
     .populate<{
       parent: {
         parentType: ParentType;
@@ -58,22 +58,22 @@ export const getMultiplePopulatedAssys = async (query: unknown) => {
       "project"
     );
 
-  return foundPart;
+  return foundAssembly;
 };
 
 export const getMultipleAssysForUser = async (
   query: unknown
-): Promise<Part[]> => {
-  const foundParts = await getMultiplePopulatedParts(query);
+): Promise<Assembly[]> => {
+  const foundAssemblies = await getMultiplePopulatedAssys(query);
 
-  if (!foundParts) return [];
+  if (!foundAssemblies) return [];
 
-  const modifiedParts: Part[] = foundParts.map((part) => ({
-    ...part.toJSON(),
-    part: part.parent.parent,
+  const modifiedAssemblies: Assembly[] = foundAssemblies.map((assy) => ({
+    ...assy.toJSON(),
+    parent: assy.parent.parent,
   }));
 
-  return modifiedParts;
+  return modifiedAssemblies;
 };
 
 //FOR PARTS ======================================

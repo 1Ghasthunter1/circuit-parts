@@ -1,16 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { UnpopulatedAssemblyPopulatedParent } from "../../types/assemblyTypes";
-import { UnpopulatedPartPopulatedParent } from "../../types/partsTypes";
+import { Assembly } from "../../types/assemblyTypes";
+import { Part } from "../../types/partsTypes";
 
 interface props {
-  rowItem: UnpopulatedAssemblyPopulatedParent | UnpopulatedPartPopulatedParent;
+  rowItem: Part | Assembly;
 }
 const TableParent = ({ rowItem }: props) => {
   const navigate = useNavigate();
-  console.log(rowItem);
-
-  const parent = rowItem.parent.parent;
-
   return (
     <div
       className="cursor-pointer"
