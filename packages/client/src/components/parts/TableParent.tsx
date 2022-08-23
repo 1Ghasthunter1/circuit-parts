@@ -8,7 +8,6 @@ interface props {
 const TableParent = ({ rowItem }: props) => {
   const navigate = useNavigate();
   const parent = rowItem.parent;
-  console.log(parent);
   return (
     <div
       className="cursor-pointer"
