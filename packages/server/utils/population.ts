@@ -130,7 +130,7 @@ export const getMultiplePartsForUser = async (
 
   const modifiedParts: Part[] = foundParts.map((part) => ({
     ...part.toJSON(),
-    part: part.parent.parent,
+    parent: part.parent.parent,
   }));
 
   return modifiedParts;

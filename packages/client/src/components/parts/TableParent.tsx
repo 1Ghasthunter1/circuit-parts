@@ -7,12 +7,13 @@ interface props {
 }
 const TableParent = ({ rowItem }: props) => {
   const navigate = useNavigate();
+  const parent = rowItem.parent;
+  console.log(parent);
   return (
     <div
       className="cursor-pointer"
       onClick={(e) => {
         e.stopPropagation();
-        const parent = rowItem.parent;
         switch (parent.type) {
           case "assembly":
             navigate(`/assemblies/${parent.id}`);

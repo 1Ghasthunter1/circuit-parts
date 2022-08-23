@@ -21,6 +21,7 @@ const PartsTableItem = ({ rowItem }: intProps) => {
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
   const navigate = useNavigate();
 
+
   const deleteComponent = async (component: Part | Assembly) => {
     switch (component.type) {
       case "assembly":

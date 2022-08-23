@@ -7,6 +7,10 @@ import {
   ProjectToDB,
   PopulatedProject,
 } from "../types/projectTypes";
+import {
+  getMultipleAssysForUser,
+  getMultiplePartsForUser,
+} from "../utils/population";
 import ProjectModel from "../models/project";
 import PartModel from "../models/part";
 import AssemblyModel from "../models/assembly";
@@ -82,12 +86,10 @@ projectsRouter.get("/:id/components", (async (req, res) => {
       .status(404)
       .json({ error: `project not found with id ${projectId}` });
 
-  const parts = await PartModel.find({ project: projectId }).populate(
-    "parent.parent"
-  );
-  const assemblies = await AssemblyModel.find({
-    project: projectId,
-  }).populate("parent.parent");
+  const parts = await getMultiplePartsForUser({ "project": projectId });
+  const assemblies = await getMultipleAssysForUser({
+    "project": projectId,
+  });
 
   const respJson = [...parts, ...assemblies];
   return res.status(200).send(respJson).end();
