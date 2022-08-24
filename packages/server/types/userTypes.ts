@@ -11,3 +11,11 @@ export interface DatabaseUser {
 export interface NewUser extends Omit<DatabaseUser, "id"> {
   password: string;
 }
+
+export interface LoginToUser {
+  token: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  id: Types.ObjectId;
+}
