@@ -2,6 +2,7 @@ import express from "express";
 import partsRouter from "./routes/partsRouter";
 import projectsRouter from "./routes/projectsRouter";
 import assemblyRouter from "./routes/assemblyRouter";
+import usersRouter from "./routes/usersRouter";
 import cors from "cors";
 import mongoose from "mongoose";
 import config from "./utils/config";
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use("/api/parts", partsRouter);
 app.use("/api/projects", projectsRouter);
 app.use("/api/assemblies", assemblyRouter);
+app.use("/api/users", usersRouter);
 
 app.use(errorHandler);
 

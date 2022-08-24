@@ -51,34 +51,34 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
         <td className="px-6 whitespace-nowrap">
           <StatusBox inpStatus={rowItem.status} />
         </td>
-        <td className="px-6 whitespace-nowrap">
-          {queryToRefresh.isLoading ? <div>Lolz!</div> : null}
-          <div
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteModalVis(true);
-            }}
-          >
-            <FontAwesomeIcon
-              className="mx-2 cursor-pointer"
-              icon="trash"
-              color="#c70404"
-              size="lg"
-            />
-          </div>
+        <td className="px-6">
+          <div className="grid grid-cols-2 justify-center">
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteModalVis(true);
+              }}
+            >
+              <FontAwesomeIcon
+                className="mx-2 cursor-pointer"
+                icon="trash"
+                color="#c70404"
+                size="lg"
+              />
+            </div>
 
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <FontAwesomeIcon
-              className="mx-2 cursor-pointer"
-              icon="square-pen"
-              color="#3474eb"
-              size="lg"
-            />
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <FontAwesomeIcon
+                className="mx-2 cursor-pointer"
+                icon="square-pen"
+                color="#3474eb"
+                size="lg"
+              />
+            </div>
           </div>
         </td>
       </tr>
