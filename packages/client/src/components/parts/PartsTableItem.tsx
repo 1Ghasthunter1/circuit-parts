@@ -3,8 +3,6 @@ import Modal from "react-modal";
 
 import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
-import { deletePartById } from "../../services/partsServices";
-import { deleteAssemblyById } from "../../services/assemblyServices";
 
 import CustomStatusBox from "../components/TypeBox";
 import TableParent from "./TableParent";
@@ -12,27 +10,19 @@ import StatusBox from "../components/StatusBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CasualDeleteModal from "../modals/DeleteModalCasual";
 import { useState } from "react";
+import { UseQueryResult } from "react-query";
 
 interface intProps {
   rowItem: Part | Assembly;
+  queryToRefresh: UseQueryResult<(Part | Assembly)[], unknown>;
 }
 
-const PartsTableItem = ({ rowItem }: intProps) => {
+const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
   const navigate = useNavigate();
 
-
-  const deleteComponent = async (component: Part | Assembly) => {
-    switch (component.type) {
-      case "assembly":
-        await deleteAssemblyById(component.id);
-        break;
-      case "part":
-        await deletePartById(component.id);
-        break;
-      default:
-        throw new Error("component type is not assembly or type");
-    }
+  const refetch = async () => {
+    await queryToRefresh.refetch();
   };
 
   return (
@@ -61,19 +51,35 @@ const PartsTableItem = ({ rowItem }: intProps) => {
         <td className="px-6 whitespace-nowrap">
           <StatusBox inpStatus={rowItem.status} />
         </td>
-        <td className="px-6 whitespace-nowrap grid-cols-2 ">
-          <FontAwesomeIcon
-            className="mx-2 cursor-pointer"
-            icon="trash"
-            color="#c70404"
-            size="lg"
-          />
-          <FontAwesomeIcon
-            className="mx-2 cursor-pointer"
-            icon="square-pen"
-            color="#3474eb"
-            size="lg"
-          />
+        <td className="px-6 whitespace-nowrap">
+          {queryToRefresh.isLoading ? <div>Lolz!</div> : null}
+          <div
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteModalVis(true);
+            }}
+          >
+            <FontAwesomeIcon
+              className="mx-2 cursor-pointer"
+              icon="trash"
+              color="#c70404"
+              size="lg"
+            />
+          </div>
+
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <FontAwesomeIcon
+              className="mx-2 cursor-pointer"
+              icon="square-pen"
+              color="#3474eb"
+              size="lg"
+            />
+          </div>
         </td>
       </tr>
       <Modal
@@ -108,7 +114,8 @@ const PartsTableItem = ({ rowItem }: intProps) => {
         <CasualDeleteModal
           component={rowItem}
           closeModal={() => setDeleteModalVis(false)}
-          onDelete={() => deleteComponent(rowItem)}
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          afterDelete={refetch}
         />
       </Modal>
     </>

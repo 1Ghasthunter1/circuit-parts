@@ -34,7 +34,6 @@ const AssemblyView = () => {
   }
 
   const assembly = assemblyQuery.data;
-  const childComponents = assemblyComponentsQuery.data;
   const project = assembly.project;
 
   const topLeftStuff = (
@@ -51,7 +50,6 @@ const AssemblyView = () => {
   );
 
   return (
-    <div>
       <TopLeftRightAndMiddle
         topLeftContent={topLeftStuff}
         topRightContent={
@@ -62,9 +60,8 @@ const AssemblyView = () => {
           />
         }
       >
-        <PartsTable data={childComponents} />
+        <PartsTable query={assemblyComponentsQuery} />
       </TopLeftRightAndMiddle>
-    </div>
   );
 };
 

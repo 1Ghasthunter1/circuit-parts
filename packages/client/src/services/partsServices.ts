@@ -21,10 +21,7 @@ export const createPart = async (newPart: NewPart) => {
   return data;
 };
 
-export const deletePartById = async (
-  partId: string
-): Promise<Express.Response> => {
-  const { data } = await axios.delete<Part>(`${apiBaseUrl}/projects/${partId}`);
-  return data;
+export const deletePartById = async (partId: string) => {
+  const response = await axios.delete<Part>(`${apiBaseUrl}/parts/${partId}`);
+  return response;
 };
-

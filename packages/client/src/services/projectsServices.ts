@@ -8,26 +8,18 @@ export async function fetchProjects() {
   return data;
 }
 
-export const fetchProject = async (projectId: string | undefined) => {
-  if (projectId) {
-    const { data } = await axios.get<Project>(
-      `${apiBaseUrl}/projects/${projectId}`
-    );
-    return data;
-  }
-  const { data } = await axios.get<Project>(`${apiBaseUrl}/`);
+export const fetchProject = async (projectId: string) => {
+  const { data } = await axios.get<Project>(
+    `${apiBaseUrl}/projects/${projectId}`
+  );
   return data;
 };
 
-export const fetchProjectComponents = async (
-  projectId: string | undefined
-): Promise<Array<Part | Assembly> | undefined> => {
-  if (projectId) {
-    const { data } = await axios.get<Part[]>(
-      `${apiBaseUrl}/projects/${projectId}/components`
-    );
-    return data;
-  }
+export const fetchProjectComponents = async (projectId: string) => {
+  const { data } = await axios.get<(Part | Assembly)[]>(
+    `${apiBaseUrl}/projects/${projectId}/components`
+  );
+  return data;
 };
 
 export const fetchProjectAssemblies = async (

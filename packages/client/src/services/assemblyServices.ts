@@ -25,11 +25,9 @@ export const createAssembly = async (newAssembly: NewAssembly) => {
   return data;
 };
 
-export const deleteAssemblyById = async (
-  assemblyId: string
-): Promise<Express.Response> => {
-  const { data } = await axios.delete<Assembly>(
-    `${apiBaseUrl}/projects/${assemblyId}`
+export const deleteAssemblyById = async (assemblyId: string) => {
+  const response = await axios.delete<Assembly>(
+    `${apiBaseUrl}/assemblies/${assemblyId}`
   );
-  return data;
+  return response;
 };

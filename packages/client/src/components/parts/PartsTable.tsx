@@ -1,12 +1,14 @@
 import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
 import PartsTableItem from "./PartsTableItem";
+import { UseQueryResult } from "react-query";
 
 interface PartsTableProps {
-  data: Array<Part | Assembly> | undefined;
+  query: UseQueryResult<(Part | Assembly)[], unknown>;
 }
 
-const PartsTable = ({ data }: PartsTableProps) => {
+const PartsTable = ({ query }: PartsTableProps) => {
+  const data = query.data;
   if (!data) return null;
 
   return (
@@ -37,7 +39,7 @@ const PartsTable = ({ data }: PartsTableProps) => {
         <tbody>
           {data &&
             data.map((rowItem) => {
-              return <PartsTableItem key={rowItem.id} rowItem={rowItem} />;
+              return <PartsTableItem key={rowItem.id} rowItem={rowItem} queryToRefresh={query}/>;
             })}
         </tbody>
       </table>

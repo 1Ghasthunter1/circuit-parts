@@ -21,7 +21,6 @@ const ProjectView = () => {
   );
 
   const project = projectQuery.data;
-  const components = projectComponentsQuery.data;
 
   if (!project) return null;
 
@@ -51,7 +50,7 @@ const ProjectView = () => {
       topLeftContent={topLeftStuff}
       topRightContent={topRightStuff}
     >
-      <PartsTable data={components} />
+      <PartsTable query={projectComponentsQuery} />
     </TopLeftRightAndMiddle>
   );
 };
