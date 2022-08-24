@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema<DatabaseUser>({
     max: 255,
     index: true,
   },
+  role: {
+    type: String,
+    enum: ["admin", "user"],
+    required: true,
+    errorMessage: "role must be either admin or user",
+  },
   hash: { type: String, required: true },
 });
 

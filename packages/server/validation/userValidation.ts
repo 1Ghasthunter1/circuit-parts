@@ -1,4 +1,5 @@
 import { Schema } from "express-validator";
+import { isUserRole } from "../types/universalTypes";
 export const newUserSchema: Schema = {
   firstName: {
     isString: true,
@@ -31,5 +32,13 @@ export const newUserSchema: Schema = {
     isString: true,
     notEmpty: true,
     isLength: { options: { min: 3, max: 255 } },
+  },
+  role: {
+    isString: true,
+    notEmpty: true,
+    custom: {
+      options: (value: string) => isUserRole(value),
+      errorMessage: "role must be user or admin"
+    },
   },
 };

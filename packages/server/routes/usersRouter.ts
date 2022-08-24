@@ -21,6 +21,13 @@ usersRouter.get("/:id", (async (req, res) => {
   return res.status(200).json(user);
 }) as RequestHandler);
 
+usersRouter.delete("/:id", (async (req, res) => {
+  const id = req.params.id;
+  const user = await UserModel.findByIdAndDelete(id);
+  if (!user) return res.status(404).end();
+  return res.status(204).json(user);
+}) as RequestHandler);
+
 usersRouter.post("/", checkSchema(newUserSchema), (async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -39,6 +46,7 @@ usersRouter.post("/", checkSchema(newUserSchema), (async (req, res) => {
     firstName: newUser.firstName,
     lastName: newUser.lastName,
     email: newUser.email,
+    role: newUser.role,
     hash: passwordHash,
   };
 

@@ -51,6 +51,7 @@ loginRouter.post(
 
     const userToSend: LoginToUser = {
       token,
+      role: user.role,
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,

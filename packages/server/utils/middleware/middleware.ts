@@ -1,10 +1,45 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+import type { ErrorRequestHandler, RequestHandler } from "express";
+import { IGetUserAuthInfoRequest } from "../../types/reuqestTypes";
 
-import { Logger } from "tslog";
-const log: Logger = new Logger({ name: "myLogger" });
-import type { ErrorRequestHandler } from "express";
+import jwt from "jsonwebtoken";
+import UserModel from "../../models/user";
+export const tokenExtractor: RequestHandler = (
+  req: IGetUserAuthInfoRequest,
+  _res,
+  next
+) => {
+  const authorization = req.get("authorization");
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    req.token = authorization.substring(7);
+  }
+  next();
+};
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+export const userExtractor: RequestHandler = async (
+  req: IGetUserAuthInfoRequest,
+  res,
+  next
+) => {
+  if (!req.token) {
+    return res.status(401).json({ error: "token missing" });
+  }
+  const decodedToken = jwt.verify(
+    req.token,
+    process.env["SECRET"] as string
+  ) as { id: string | undefined };
+
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: "token invalid" });
+  }
+  const user = await UserModel.findById(decodedToken.id);
+  req.user = user || undefined;
+  console.log(user);
+  return next();
+};
 
 export const errorHandler: ErrorRequestHandler = (
   error,
@@ -19,11 +54,14 @@ export const errorHandler: ErrorRequestHandler = (
   } else if (error.name === "TokenExpiredError") {
     return response.status(400).send({ error: error.message });
   }
-  log.error(error.message);
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
   } else if (error.code === 11000) {
-    return response.status(409).json({ error: "username must be unique" });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const duplicateThing = Object.keys(error.keyPattern)[0];
+    return response
+      .status(409)
+      .json({ error: `${duplicateThing} must be unique` });
   }
 
   next(error);
