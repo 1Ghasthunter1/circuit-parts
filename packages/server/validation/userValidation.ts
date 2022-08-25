@@ -4,14 +4,14 @@ export const newUserSchema: Schema = {
   firstName: {
     isString: true,
     notEmpty: true,
-    isLength: { options: { min: 6, max: 255 } },
-    errorMessage: "First name must be string and between 6 and 255 chars",
+    isLength: { options: { min: 1, max: 255 } },
+    errorMessage: "First name must be string and between 1 and 255 chars",
   },
   lastName: {
     isString: true,
     notEmpty: true,
-    isLength: { options: { min: 6, max: 255 } },
-    errorMessage: "Last name must be string and between 6 and 255 chars",
+    isLength: { options: { min: 1, max: 255 } },
+    errorMessage: "Last name must be string and between 1 and 255 chars",
   },
   username: {
     isString: true,
