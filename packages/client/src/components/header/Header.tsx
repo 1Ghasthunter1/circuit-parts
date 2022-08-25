@@ -1,7 +1,10 @@
 import HeaderItem from "./HeaderItem";
 import LoginLogout from "./LoginLogout";
 
+import { userState } from "../../state/state";
+import { useSnapshot } from "valtio";
 const Header = () => {
+  const user = useSnapshot(userState).user;
   return (
     <div className="inline-flex items-center bg-gray-100 w-full">
       <a className="m-4 mr-12 text-xl font-bold">696 PMS</a>
@@ -15,9 +18,11 @@ const Header = () => {
         <li className="mx-3">
           <HeaderItem url={"/orders"}>Orders</HeaderItem>
         </li>
-        <li className="mx-3">
-          <HeaderItem url={"/users"}>Users</HeaderItem>
-        </li>
+        {user?.role === "admin" && (
+          <li className="mx-3">
+            <HeaderItem url={"/users"}>Users</HeaderItem>
+          </li>
+        )}
       </ul>
       <div className="flex ml-auto float-right mr-4">
         <LoginLogout />

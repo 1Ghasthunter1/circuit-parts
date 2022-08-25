@@ -7,6 +7,9 @@ import { useState } from "react";
 import Modal from "react-modal";
 import DeleteModal from "../modals/DeleteModal";
 
+import { userState } from "../../state/state";
+import { useSnapshot } from "valtio";
+
 Modal.setAppElement("#root");
 
 interface ProjectTypes {
@@ -14,6 +17,7 @@ interface ProjectTypes {
 }
 
 const ProjectCard = ({ project }: ProjectTypes) => {
+  const user = useSnapshot(userState).user;
   const queryClient = useQueryClient();
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
 
@@ -37,15 +41,17 @@ const ProjectCard = ({ project }: ProjectTypes) => {
             </p>
             <p className="text-sm">{project.description}</p>
           </div>
-          <div
-            onClick={(e) => {
-              e.preventDefault();
-              setDeleteModalVis(true);
-            }}
-            className="hidden transition group-hover:block ml-auto mt-auto items-bottom p-1 z-50"
-          >
-            <FontAwesomeIcon icon="trash" color="#c70404" />
-          </div>
+          {user?.role === "admin" && (
+            <div
+              onClick={(e) => {
+                e.preventDefault();
+                setDeleteModalVis(true);
+              }}
+              className="hidden transition group-hover:block ml-auto mt-auto items-bottom p-1 z-50"
+            >
+              <FontAwesomeIcon icon="trash" color="#c70404" />
+            </div>
+          )}
           <div className="z-50"></div>
         </div>
       </Link>

@@ -9,15 +9,14 @@ const AppLayout = ({ header }: { header?: JSX.Element }) => {
   if (user)
     axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
 
-  const content =
-    user?.role === "admin" ? (
-      <>
-        {header}
-        <Outlet />
-      </>
-    ) : (
-      <Navigate to="/login" />
-    );
+  const content = user ? (
+    <>
+      {header}
+      <Outlet />
+    </>
+  ) : (
+    <Navigate to="/login" />
+  );
   return content;
 };
 

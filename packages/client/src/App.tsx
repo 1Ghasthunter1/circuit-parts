@@ -2,7 +2,7 @@ import PartView from "./views/PartView";
 import "./fontAwesome/globalInit";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
-import DashboardView from "./views/ProjectsView";
+import ProjectsView from "./views/ProjectsView";
 import ProjectView from "./views/ProjectView";
 import AssemblyView from "./views/AssemblyView";
 import LoginView from "./views/LoginView";
@@ -17,7 +17,7 @@ const App = () => {
         </Route>
         <Route element={<AppLayout header={<Header />} />}>
           <Route path="/dashboard" element={<UnderConstruction />}></Route>
-          <Route path="/projects" element={<DashboardView />}></Route>
+          <Route path="/projects" element={<ProjectsView />}></Route>
           <Route path="/projects/:id" element={<ProjectView />}></Route>
           <Route path="/parts/:id" element={<PartView />}></Route>
           <Route path="/assemblies/:id" element={<AssemblyView />}></Route>
