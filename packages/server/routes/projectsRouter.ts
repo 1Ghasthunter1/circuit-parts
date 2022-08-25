@@ -17,7 +17,7 @@ import AssemblyModel from "../models/assembly";
 import { ChildType } from "../types/universalTypes";
 import { DatabaseAssembly } from "../types/assemblyTypes";
 import { DatabasePart } from "../types/partsTypes";
-
+import { adminRequired } from "../utils/middleware/middleware";
 require("express-async-errors");
 
 const projectsRouter = express.Router();
@@ -86,16 +86,16 @@ projectsRouter.get("/:id/components", (async (req, res) => {
       .status(404)
       .json({ error: `project not found with id ${projectId}` });
 
-  const parts = await getMultiplePartsForUser({ "project": projectId });
+  const parts = await getMultiplePartsForUser({ project: projectId });
   const assemblies = await getMultipleAssysForUser({
-    "project": projectId,
+    project: projectId,
   });
 
   const respJson = [...parts, ...assemblies];
   return res.status(200).send(respJson).end();
 }) as RequestHandler);
 
-projectsRouter.delete("/:id", (async (req, res) => {
+projectsRouter.delete("/:id", adminRequired, (async (req, res) => {
   const projectId = req.params.id;
   const foundProject = await ProjectModel.findById(projectId);
   if (!foundProject)

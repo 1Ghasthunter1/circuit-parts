@@ -37,7 +37,16 @@ export const userExtractor: RequestHandler = async (
   }
   const user = await UserModel.findById(decodedToken.id);
   req.user = user || undefined;
-  console.log(user);
+  return next();
+};
+
+export const adminRequired: RequestHandler = (
+  req: IGetUserAuthInfoRequest,
+  res,
+  next
+) => {
+  if (req.user?.role !== "admin")
+    return res.status(403).json({ error: "forbidden" });
   return next();
 };
 

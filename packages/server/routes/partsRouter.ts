@@ -8,16 +8,15 @@ import { NewPart, ToDatabasePart } from "../types/partsTypes";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
 import AssemblyModel from "../models/assembly";
 import mongoose from "mongoose";
-import { userExtractor, tokenExtractor } from "../utils/middleware/middleware";
 import { getPartForUser } from "../utils/population";
 
 require("express-async-errors");
 
 const partsRouter = express.Router();
 
-partsRouter.use(tokenExtractor);
 
-partsRouter.get("/", userExtractor, (async (_req, res) => {
+
+partsRouter.get("/", (async (_req, res) => {
   const parts = await PartModel.find({});
   res.status(200).send(parts).end();
 }) as RequestHandler);
