@@ -3,18 +3,33 @@ import { Menu, Transition } from "@headlessui/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { userState } from "../../state/state";
+import { useSnapshot } from "valtio";
+import { useNavigate } from "react-router-dom";
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Example() {
+  const navigate = useNavigate();
+  const user = useSnapshot(userState).user;
+  if (!user) return null;
+
+  const onLogout = () => {
+    window.localStorage.clear();
+    userState.user = null;
+    navigate("/login");
+  };
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex">
           <span className="p-4 select-none">
             <FontAwesomeIcon className="pr-2" icon="user" size="sm" />
-            <span className="pr-1">Hunter Pruett</span>
+            <span className="pr-1">
+              {user.firstName} {user.lastName}
+            </span>
             <FontAwesomeIcon icon="caret-down" size="xs" />
           </span>
         </Menu.Button>
@@ -70,21 +85,20 @@ export default function Example() {
                 </a>
               )}
             </Menu.Item>
-            <form method="POST" action="#">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    type="submit"
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block w-full text-left px-4 py-2 text-sm"
-                    )}
-                  >
-                    Sign out
-                  </button>
-                )}
-              </Menu.Item>
-            </form>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  type="submit"
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block w-full text-left px-4 py-2 text-sm"
+                  )}
+                  onClick={onLogout}
+                >
+                  Sign out
+                </button>
+              )}
+            </Menu.Item>
           </div>
         </Menu.Items>
       </Transition>
