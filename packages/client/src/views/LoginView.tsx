@@ -114,7 +114,7 @@ const LoginView = () => {
                         </div>
                         <div className="flex items-center justify-between">
                           <a
-                            href="#"
+                            href="mailto:hunterpruett2003@gmail.com?subject=Forgot%20PMS%20Password"
                             className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                           >
                             Forgot password?
@@ -134,7 +134,7 @@ const LoginView = () => {
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Need an account?{" "}
                   <a
-                    href="#"
+                    href="mailto:hunterpruett2003@gmail.com?subject=PMS%Account%Creation"
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     Request Creation
