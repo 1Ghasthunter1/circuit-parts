@@ -7,9 +7,7 @@ import ProjectView from "./views/ProjectView";
 import AssemblyView from "./views/AssemblyView";
 import LoginView from "./views/LoginView";
 import UnderConstruction from "./components/components/UnderConstruction";
-
 import AppLayout from "./layouts/AppLayout";
-
 const App = () => {
   return (
     <Router>

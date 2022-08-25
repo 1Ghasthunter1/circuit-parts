@@ -1,4 +1,5 @@
 // Type constants =======================
+const userRoles = ["admin", "user"] as const;
 
 export const childTypes = ["assembly", "part"] as const;
 
@@ -29,6 +30,7 @@ export const componentTypes = ["assembly", "project", "part"];
 //========================================
 
 //Type delcarations
+export type UserRole = typeof userRoles[number];
 export type PartStatus = typeof partStatuses[number];
 export type AssemblyStatus = typeof assemblyStatuses[number];
 export type ChildType = typeof childTypes[number];
@@ -37,6 +39,9 @@ export type ParentType = typeof parentTypes[number];
 export type ComponentType = typeof componentTypes[number];
 
 //type guards and validators
+export const isUserRole = (value: string): value is UserRole => {
+  return userRoles.includes(value as UserRole);
+};
 export const isChildType = (value: string): value is ChildType => {
   return childTypes.includes(value as ChildType);
 };
