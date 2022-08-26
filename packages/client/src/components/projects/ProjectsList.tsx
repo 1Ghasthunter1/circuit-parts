@@ -1,5 +1,5 @@
 import { Project } from "../../types/projectTypes";
-import ProjectComponent from "./ProjectCard";
+import ProjectCard from "./ProjectCard";
 
 interface ProjectListProps {
   projects: Project[] | undefined;
@@ -12,11 +12,13 @@ const ProjectList = ({ projects }: ProjectListProps) => {
         {projects &&
           projects.map((project) => (
             <li key={project.id}>
-              <ProjectComponent project={project} />
+              <ProjectCard project={project} />
             </li>
           ))}{" "}
       </ol>
-      {projects && projects.length === 0 && <div>No projects exist. Why not make one?</div>}
+      {projects && projects.length === 0 && (
+        <div>No projects exist. Why not make one?</div>
+      )}
     </div>
   );
 };

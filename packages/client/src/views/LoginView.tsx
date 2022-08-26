@@ -1,4 +1,4 @@
-import LoginLogo from "./loginlogo.png";
+import LoginLogo from "../media/loginlogo.png";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import { loginUser } from "../services/loginService";
 import { useState } from "react";

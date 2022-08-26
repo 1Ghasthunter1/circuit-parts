@@ -52,11 +52,6 @@ export const createProject = async (
   }
 };
 
-export const deleteProjectById = async (
-  projectId: string
-): Promise<Express.Response> => {
-  const { data } = await axios.delete<Project>(
-    `${apiBaseUrl}/projects/${projectId}`
-  );
-  return data;
+export const deleteProjectById = async (projectId: string) => {
+  return await axios.delete<Project>(`${apiBaseUrl}/projects/${projectId}`);
 };

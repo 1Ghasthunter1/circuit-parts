@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import Modal from "react-modal";
 
 import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
@@ -8,9 +7,11 @@ import CustomStatusBox from "../components/TypeBox";
 import TableParent from "./TableParent";
 import StatusBox from "../components/StatusBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CasualDeleteModal from "../modals/DeleteModalCasual";
+import CasualDeleteModal from "../modals/DeleteModal";
 import { useState } from "react";
-import { UseQueryResult } from "react-query";
+import { useMutation, UseQueryResult } from "react-query";
+import { deletePartById } from "../../services/partsServices";
+import { deleteAssemblyById } from "../../services/assemblyServices";
 
 interface intProps {
   rowItem: Part | Assembly;
@@ -21,9 +22,13 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const refetch = async () => {
-    await queryToRefresh.refetch();
-  };
+  const mutation = useMutation(
+    async () =>
+      rowItem.type === "part"
+        ? await deletePartById(rowItem.id)
+        : await deleteAssemblyById(rowItem.id),
+    { onSuccess: async () => await queryToRefresh.refetch() }
+  );
 
   return (
     <>
@@ -82,42 +87,12 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
           </div>
         </td>
       </tr>
-      <Modal
-        isOpen={deleteModalVis}
-        onRequestClose={() => {
-          setDeleteModalVis(false);
-        }}
-        style={{
-          overlay: {
-            position: "absolute",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: `rgba(0,0,0,0.2)`,
-          },
-          content: {
-            position: "absolute",
-            top: "40%",
-            bottom: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            background: "rgba(0,0,0,0)",
-            borderRadius: 0,
-            padding: 0,
-            width: "fit-content",
-            height: "fit-content",
-            border: 0,
-          },
-        }}
-        shouldCloseOnOverlayClick={true}
-      >
-        <CasualDeleteModal
-          component={rowItem}
-          closeModal={() => setDeleteModalVis(false)}
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          afterDelete={refetch}
-        />
-      </Modal>
+      <CasualDeleteModal
+        component={rowItem}
+        modalVisibility={deleteModalVis}
+        setModalVisibility={(vis) => setDeleteModalVis(vis)}
+        deleteMutation={mutation}
+      />
     </>
   );
 };

@@ -1,6 +1,6 @@
 import { Project } from "../../types/projectTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { deleteProjectById } from "../../services/projectsServices";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -21,11 +21,10 @@ const ProjectCard = ({ project }: ProjectTypes) => {
   const queryClient = useQueryClient();
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
 
-  const deleteProject = async (projectId: string) => {
-    await deleteProjectById(projectId);
-    await queryClient.invalidateQueries("projects");
-    setDeleteModalVis(false);
-  };
+  const mutation = useMutation(
+    async () => await deleteProjectById(project.id),
+    { onSuccess: async () => await queryClient.invalidateQueries("projects") }
+  );
 
   return (
     <>
@@ -86,8 +85,10 @@ const ProjectCard = ({ project }: ProjectTypes) => {
       >
         <DeleteModal
           component={project}
-          closeModal={() => setDeleteModalVis(false)}
-          onDelete={() => deleteProject(project.id)}
+          setModalVisibility={() => setDeleteModalVis(false)}
+          modalVisibility={deleteModalVis}
+          deleteMutation={mutation}
+          serious={true}
         />
       </Modal>
     </>
