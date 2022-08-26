@@ -2,7 +2,8 @@ import { Assembly } from "../../types/assemblyTypes";
 import { Part } from "../../types/partsTypes";
 import { Project } from "../../types/projectTypes";
 
-import GenericModal from "./layouts/GenericModal";
+import GenericModalLayout from "./layouts/GenericModalLayout";
+import BaseModal from "./base/BaseModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../elements/Button";
 import { UseMutationResult } from "react-query";
@@ -33,36 +34,11 @@ const DeleteModal = ({
   const mutationErrorObj = deleteMutation.error as AxiosError | undefined;
 
   return (
-    <Modal
-      isOpen={modalVisibility}
-      onRequestClose={() => {
-        setModalVisibility(false);
-      }}
-      style={{
-        overlay: {
-          position: "absolute",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: `rgba(0,0,0,0.2)`,
-        },
-        content: {
-          position: "absolute",
-          top: "40%",
-          bottom: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          background: "rgba(0,0,0,0)",
-          borderRadius: 0,
-          padding: 0,
-          width: "fit-content",
-          height: "fit-content",
-          border: 0,
-        },
-      }}
-      shouldCloseOnOverlayClick={true}
+    <BaseModal
+      modalVisibility={modalVisibility}
+      setModalVisibility={setModalVisibility}
     >
-      <GenericModal
+      <GenericModalLayout
         title={`Delete ${component.name}?`}
         closeModal={() => setModalVisibility(false)}
       >
@@ -122,8 +98,8 @@ const DeleteModal = ({
             </div>
           )}
         </div>
-      </GenericModal>
-    </Modal>
+      </GenericModalLayout>
+    </BaseModal>
   );
 };
 
