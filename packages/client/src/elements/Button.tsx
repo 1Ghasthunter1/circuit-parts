@@ -10,6 +10,7 @@ interface ButtonPropsTypes {
   style?: string;
   className?: string;
   disabled?: boolean;
+  type?: "button" | "submit" | "reset";
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -23,10 +24,12 @@ const Button = ({
   style,
   className,
   disabled,
+  type,
   onClick,
 }: ButtonPropsTypes) => {
   return (
     <button
+      type={type}
       className={`text-sm text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center disabled:bg-gray-200 ${
         bgColor ? bgColor : "bg-gray-300"
       } ${txtColor ? txtColor : "text-black"} ${
