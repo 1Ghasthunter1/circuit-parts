@@ -3,8 +3,19 @@ import {
   createColumnHelper,
   getCoreRowModel,
   flexRender,
+  RowData,
 } from "@tanstack/react-table";
 import { User } from "../../types/userTypes";
+import UserActions from "./UserActions";
+import { userState } from "../../state/state";
+import { useSnapshot } from "valtio";
+
+declare module "@tanstack/react-table" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface TableMeta<TData extends RowData> {
+    activeUser: User;
+  }
+}
 
 type TableUser = Omit<User, "token">;
 
@@ -21,7 +32,11 @@ const columns = [
     footer: (info) => info.column.id,
     header: "Last Name",
   }),
-
+  columnHelper.accessor("email", {
+    cell: (info) => info.getValue<string>(),
+    footer: (info) => info.column.id,
+    header: "Email",
+  }),
   columnHelper.accessor("username", {
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
@@ -32,16 +47,25 @@ const columns = [
   }),
   columnHelper.display({
     header: "Edit",
-    cell: (props) => <div>{props.row.original.firstName}</div>,
+    cell: (props) => (
+      <UserActions
+        user={props.row.original}
+        activeUser={props.table.options.meta?.activeUser}
+      />
+    ),
     footer: (info) => info.column.id,
   }),
 ];
 
 const UsersTable = ({ data }: { data: TableUser[] }) => {
+  const activeUser = useSnapshot(userState).user;
+  if (!activeUser) return null;
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    meta: { activeUser },
   });
   return (
     <div className="overflow-x-auto relative sm:rounded-md">

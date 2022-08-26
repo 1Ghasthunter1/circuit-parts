@@ -7,6 +7,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NewUser } from "../../types/userTypes";
 import { UserRole } from "../../types/universalTypes";
 import { createNewUser } from "../../services/usersService";
+import { useQueryClient } from "react-query";
 import * as Yup from "yup";
 
 interface CreateModalProps {
@@ -44,7 +45,11 @@ const NewUserModal = ({
   modalVisibility,
   setModalVisibility,
 }: CreateModalProps) => {
-  const mutation = useMutation((newUser: NewUser) => createNewUser(newUser));
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation((newUser: NewUser) => createNewUser(newUser), {
+    onSuccess: async () => queryClient.invalidateQueries("allUsers"),
+  });
   return (
     <BaseModal
       modalVisibility={modalVisibility}

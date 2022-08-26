@@ -6,7 +6,7 @@ interface ButtonPropsTypes {
   bgColor?: string;
   txtColor?: string;
   hoverColor?: string;
-  children?: string;
+  children?: string | never[];
   style?: string;
   className?: string;
   disabled?: boolean;
@@ -32,14 +32,16 @@ const Button = ({
       type={type}
       className={`text-sm text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center disabled:bg-gray-200 ${
         bgColor ? bgColor : "bg-gray-300"
-      } ${txtColor ? txtColor : "text-black"} ${
-        hoverColor ? hoverColor : "hover:bg-pink-300"
-      } ${style || ""} ${className || ""}`}
+      } ${txtColor ? txtColor : "text-black"} ${hoverColor ? hoverColor : ""} ${
+        style || ""
+      } ${className || ""}`}
       onClick={onClick}
       disabled={disabled}
     >
-      {iconName && <FontAwesomeIcon icon={iconName} className="pr-2" />}
-      <span>{children}</span>
+      {iconName && (
+        <FontAwesomeIcon icon={iconName} className={children ? "pr-2" : ""} />
+      )}
+      <span>{children || ""}</span>
     </button>
   );
 };
