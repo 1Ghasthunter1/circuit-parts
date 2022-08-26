@@ -9,6 +9,7 @@ import { User } from "../../types/userTypes";
 import UserActions from "./UserActions";
 import { userState } from "../../state/state";
 import { useSnapshot } from "valtio";
+import AttributeBox from "../../elements/AttributeBox";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,7 +43,15 @@ const columns = [
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("role", {
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <div>
+        {info.getValue() === "admin" ? (
+          <AttributeBox color="red">Admin</AttributeBox>
+        ) : (
+          <AttributeBox color="violet">User</AttributeBox>
+        )}
+      </div>
+    ),
     footer: (info) => info.column.id,
   }),
   columnHelper.display({
