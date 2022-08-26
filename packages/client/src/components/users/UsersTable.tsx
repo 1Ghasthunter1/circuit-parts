@@ -12,19 +12,27 @@ const columnHelper = createColumnHelper<TableUser>();
 
 const columns = [
   columnHelper.accessor("firstName", {
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue<string>(),
     footer: (info) => info.column.id,
+    header: "First Name",
   }),
   columnHelper.accessor("lastName", {
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue<string>(),
     footer: (info) => info.column.id,
+    header: "Last Name",
   }),
+
   columnHelper.accessor("username", {
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("role", {
     cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.display({
+    header: "Edit",
+    cell: (props) => <div>{props.row.original.firstName}</div>,
     footer: (info) => info.column.id,
   }),
 ];
@@ -64,15 +72,10 @@ const UsersTable = ({ data }: { data: TableUser[] }) => {
               className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
             >
               {row.getVisibleCells().map((cell) => {
-                console.log(cell);
                 return (
                   <td
                     key={cell.id}
-                    className={
-                      cell.column.id === "firstName"
-                        ? "h-12 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        : "h-12"
-                    }
+                    className="h-12 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
