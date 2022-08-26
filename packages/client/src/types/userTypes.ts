@@ -1,7 +1,6 @@
 import { UserRole } from "./universalTypes";
 
 export interface User {
-  token: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -9,7 +8,9 @@ export interface User {
   role: UserRole;
 }
 
+export interface AuthUser extends User {
+  token: string;
+}
 export interface NewUser extends Omit<User, "id"> {
   password: string;
 }
-

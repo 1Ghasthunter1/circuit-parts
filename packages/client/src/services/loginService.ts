@@ -1,10 +1,10 @@
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
-import { User } from "../types/userTypes";
+import { AuthUser } from "../types/userTypes";
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    const { data } = await axios.post<User>(`${apiBaseUrl}/login`, {
+    const { data } = await axios.post<AuthUser>(`${apiBaseUrl}/login`, {
       email,
       password,
     });

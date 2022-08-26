@@ -10,7 +10,7 @@ import LoginView from "./views/LoginView";
 import UnderConstruction from "./components/components/UnderConstruction";
 import AppLayout from "./layouts/AppLayout";
 import AccountView from "./views/AccountView";
-
+import UsersView from "./views/UsersView";
 
 const App = () => {
   return (
@@ -27,7 +27,7 @@ const App = () => {
           <Route path="/parts/:id" element={<PartView />}></Route>
           <Route path="/assemblies/:id" element={<AssemblyView />}></Route>
           <Route path="/orders" element={<UnderConstruction />}></Route>
-          <Route path="/users" element={<UnderConstruction />}></Route>
+          <Route path="/users" element={<UsersView />}></Route>
           <Route path="/account" element={<AccountView />}></Route>
         </Route>
       </Routes>
