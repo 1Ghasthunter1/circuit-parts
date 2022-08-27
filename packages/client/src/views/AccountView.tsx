@@ -7,9 +7,11 @@ import { getUserById, updateUserById } from "../services/usersService";
 import { useState } from "react";
 import AttributeBox from "../elements/AttributeBox";
 import { useParams } from "react-router-dom";
+import UnderConstruction from "../components/components/UnderConstruction";
 
 const AccountView = () => {
   const [editModalVis, setEditModalVis] = useState<boolean>(false);
+  const [cat, setCat] = useState<boolean>(false);
   const { id } = useParams();
 
   const editMutation = useMutation((user: EditedUser) => updateUserById(user), {
@@ -87,9 +89,11 @@ const AccountView = () => {
           <Button
             iconName="lock"
             style="bg-blue-500 hover:bg-blue-600 text-white"
+            onClick={() => setCat(true)}
           >
             Reset Password
           </Button>
+          {cat && <UnderConstruction />}
         </div>
       </div>
     </div>
