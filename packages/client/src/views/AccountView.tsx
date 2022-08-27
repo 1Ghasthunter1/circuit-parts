@@ -2,28 +2,48 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../elements/Button";
 import EditUserModal from "../components/users/EditUserModal";
 import { useMutation, useQuery } from "react-query";
-import { EditedUser, User } from "../types/userTypes";
-import { getUserById, updateUserById } from "../services/usersService";
+import { EditedUser, NewUserPassword, User } from "../types/userTypes";
+import {
+  changeUserPassword,
+  getUserById,
+  updateUserById,
+} from "../services/usersService";
 import { useState } from "react";
 import AttributeBox from "../elements/AttributeBox";
 import { useParams } from "react-router-dom";
-import UnderConstruction from "../components/components/UnderConstruction";
-
+import ChangePasswordModal from "../components/users/ChangePasswordModal";
+import { userState } from "../state/state";
+import { useNavigate } from "react-router-dom";
 const AccountView = () => {
   const [editModalVis, setEditModalVis] = useState<boolean>(false);
-  const [cat, setCat] = useState<boolean>(false);
+  const [passwordModalVis, setPasswordModalVis] = useState<boolean>(false);
+  const navigate = useNavigate();
   const { id } = useParams();
-
-  const editMutation = useMutation((user: EditedUser) => updateUserById(user), {
-    onSuccess: () => {
-      setEditModalVis(false);
-    },
-  });
 
   const userQuery = useQuery<User>(
     `/users/${id || ""}`,
     async () => await getUserById(id as string),
     { enabled: !!id }
+  );
+
+  const editMutation = useMutation((user: EditedUser) => updateUserById(user), {
+    onSuccess: async () => {
+      await userQuery.refetch();
+      setEditModalVis(false);
+    },
+  });
+
+  const changePasswordMutation = useMutation(
+    (pwdParams: NewUserPassword) => changeUserPassword(id, pwdParams),
+    {
+      onSuccess: async () => {
+        await userQuery.refetch();
+        setPasswordModalVis(false);
+        window.localStorage.clear();
+        userState.user = null;
+        navigate("/login");
+      },
+    }
   );
 
   const user = userQuery.data;
@@ -88,12 +108,16 @@ const AccountView = () => {
           <div className="text-gray-400 font-bold text-lg">Password</div>
           <Button
             iconName="lock"
-            style="bg-blue-500 hover:bg-blue-600 text-white"
-            onClick={() => setCat(true)}
+            style="bg-blue-500 hover:bg-blue-600 text-white my-4"
+            onClick={() => setPasswordModalVis(true)}
           >
             Reset Password
           </Button>
-          {cat && <UnderConstruction />}
+          <ChangePasswordModal
+            modalVisibility={passwordModalVis}
+            setModalVisibility={setPasswordModalVis}
+            editMutation={changePasswordMutation}
+          />
         </div>
       </div>
     </div>

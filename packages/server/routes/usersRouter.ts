@@ -1,6 +1,11 @@
 require("express-async-errors");
 import express, { RequestHandler } from "express";
-import { checkSchema, validationResult, matchedData } from "express-validator";
+import {
+  checkSchema,
+  validationResult,
+  matchedData,
+  body,
+} from "express-validator";
 import bcrypt from "bcrypt";
 import { NewUser, DatabaseUser } from "../types/userTypes";
 import UserModel from "../models/user";
@@ -20,11 +25,52 @@ usersRouter.get("/:id", (async (req: IGetUserAuthInfoRequest, res) => {
   const userIdToFind = req.params.id;
   if (!currentUser) return res.status(500).end();
   if (currentUser.id !== userIdToFind && currentUser.role !== "admin")
-    return res.status(404).end();
+    return res.status(403).end();
   const responseUser = await UserModel.findById(userIdToFind);
   if (!responseUser) return res.status(404).end();
   return res.status(200).json(responseUser);
 }) as RequestHandler);
+
+usersRouter.put(
+  "/:id/changepassword",
+  body("oldPassword").isLength({ min: 6, max: 255 }),
+  body("newPassword").isLength({ min: 6, max: 255 }),
+  (async (req: IGetUserAuthInfoRequest, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const currentUser = req.user;
+    const userIdToFind = req.params.id;
+    if (!currentUser) return res.status(500).end();
+    if (currentUser.id !== userIdToFind && currentUser.role !== "admin")
+      return res.status(403).end();
+
+    const { oldPassword, newPassword } = <
+      { oldPassword: string; newPassword: string }
+    >matchedData(req, {
+      locations: ["body"],
+      includeOptionals: true,
+    });
+
+    const userToChange = await UserModel.findById(userIdToFind);
+    if (!userToChange) return res.status(404).json({ error: "user not found" });
+    const passwordCorrect =
+      userToChange === null
+        ? false
+        : await bcrypt.compare(oldPassword, userToChange.hash);
+
+    if (!passwordCorrect)
+      return res.status(403).json({ error: "original password is incorrect" });
+
+    userToChange.hash = await bcrypt.hash(newPassword, 10);
+
+    await userToChange.save();
+
+    return res.status(204).json(userToChange);
+  }) as RequestHandler
+);
 
 usersRouter.delete("/:id", (async (req, res) => {
   const id = req.params.id;

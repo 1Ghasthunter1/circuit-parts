@@ -19,3 +19,8 @@ export interface NewUser extends Omit<User, "id"> {
 export interface EditedUser extends Omit<User, "password"> {
   password?: string;
 }
+
+export interface NewUserPassword {
+  oldPassword: string;
+  newPassword: string;
+}
