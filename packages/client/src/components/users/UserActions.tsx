@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Button from "../../elements/Button";
 import DeleteUserModal from "./DeleteUserModal";
-import { User } from "../../types/userTypes";
+import EditUserModal from "./EditUserModal";
+import { User, EditedUser } from "../../types/userTypes";
 import { useQueryClient, useMutation } from "react-query";
-import { deleteUserById } from "../../services/usersService";
+import { deleteUserById, updateUserById } from "../../services/usersService";
 
 const UserActions = ({
   user,
@@ -14,21 +15,27 @@ const UserActions = ({
 }) => {
   const queryClient = useQueryClient();
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
+  const [editModalVis, setEditModalVis] = useState<boolean>(false);
+
   const deleteMutation = useMutation(() => deleteUserById(user.id), {
     onSuccess: () => queryClient.invalidateQueries("allUsers"),
   });
+  const editMutation = useMutation((user: EditedUser) => updateUserById(user), {
+    onSuccess: () => queryClient.invalidateQueries("allUsers"),
+  });
+
   return (
     <div>
       <Button
         iconName="trash"
         className="bg-red-500 hover:bg-red-600 text-white m-1 disabled:bg-gray-400"
-        disabled={user.id === activeUser?.id }
+        disabled={user.id === activeUser?.id}
         onClick={() => setDeleteModalVis(true)}
       ></Button>
       <Button
         iconName="pencil"
         className="bg-blue-500 hover:bg-blue-600 text-white m-1 disabled:bg-gray-400"
-        onClick={() => console.log(user)}
+        onClick={() => setEditModalVis(true)}
       ></Button>
       <DeleteUserModal
         user={user}
@@ -36,6 +43,12 @@ const UserActions = ({
         setModalVisibility={setDeleteModalVis}
         deleteMutation={deleteMutation}
         serious={user.role === "admin"}
+      />
+      <EditUserModal
+        modalVisibility={editModalVis}
+        setModalVisibility={setEditModalVis}
+        user={user}
+        editMutation={editMutation}
       />
     </div>
   );

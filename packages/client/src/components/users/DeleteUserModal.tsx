@@ -34,18 +34,16 @@ const DeleteUserModal = ({
       setModalVisibility={setModalVisibility}
     >
       <GenericModalLayout
-        title={`Delete Admin ${user.firstName} ${user.lastName}'s Account?`}
+        title={`Delete ${user.firstName} ${user.lastName}'s Account?`}
         closeModal={() => setModalVisibility(false)}
       >
         <div>
           <div className="mb-4">
             {serious ? (
-              <div>
+              <div className="select-none">
                 You{"'"}re about to delete {user.firstName} {user.lastName}
                 {"'"}s account. Type {'"'}
-                <b>
-                  {user.firstName} {user.lastName}
-                </b>
+                <b>{upperName}</b>
                 {'"'} below to confirm:
                 <input
                   className={`peer bg-gray-50 border-2 mt-4 ${

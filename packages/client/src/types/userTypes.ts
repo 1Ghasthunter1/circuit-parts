@@ -15,3 +15,7 @@ export interface AuthUser extends User {
 export interface NewUser extends Omit<User, "id"> {
   password: string;
 }
+
+export interface EditedUser extends Omit<User, "password"> {
+  password?: string;
+}

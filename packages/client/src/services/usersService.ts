@@ -1,5 +1,5 @@
 import axios from "axios";
-import { NewUser, User } from "../types/userTypes";
+import { NewUser, User, EditedUser } from "../types/userTypes";
 import { apiBaseUrl } from "../constants";
 
 export const fetchAllUsers = async () => {
@@ -10,7 +10,11 @@ export const fetchAllUsers = async () => {
 };
 
 export const createNewUser = async (user: NewUser) => {
-  return await axios.post<NewUser>(`${apiBaseUrl}/users`, user);
+  return await axios.post<User>(`${apiBaseUrl}/users`, user);
+};
+
+export const updateUserById = async (user: EditedUser) => {
+  return await axios.put<User>(`${apiBaseUrl}/users/${user.id}`, user);
 };
 
 export const deleteUserById = async (userId: string) => {

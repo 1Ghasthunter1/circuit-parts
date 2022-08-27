@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { NewUser, DatabaseUser } from "../types/userTypes";
 import UserModel from "../models/user";
 
-import { newUserSchema } from "../validation/userValidation";
+import { newUserSchema, updateUserSchema } from "../validation/userValidation";
 
 const usersRouter = express.Router();
 
@@ -39,6 +39,8 @@ usersRouter.post("/", checkSchema(newUserSchema), (async (req, res) => {
     includeOptionals: true,
   });
 
+  console.log(newUser);
+
   const passwordHash = await bcrypt.hash(newUser.password, 10);
 
   const newUserObject: Omit<DatabaseUser, "id"> = {
@@ -53,4 +55,37 @@ usersRouter.post("/", checkSchema(newUserSchema), (async (req, res) => {
   const user = await new UserModel(newUserObject).save();
   return res.status(200).json(user);
 }) as RequestHandler);
+
+usersRouter.put("/:id", checkSchema(updateUserSchema), (async (req, res) => {
+  const id = req.params.id;
+  const oldUser = await UserModel.findById(id);
+
+  if (!oldUser) return res.status(404).json({ error: "user not found" });
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const modifiedUser = <Omit<NewUser, "password"> & { password?: string }>(
+    matchedData(req, {
+      locations: ["body"],
+      includeOptionals: true,
+    })
+  );
+
+  oldUser.username = modifiedUser.username;
+  oldUser.firstName = modifiedUser.firstName;
+  oldUser.lastName = modifiedUser.lastName;
+  oldUser.email = modifiedUser.email;
+  oldUser.role = modifiedUser.role;
+
+  if (modifiedUser.password)
+    oldUser.hash = await bcrypt.hash(modifiedUser.password, 10);
+
+  const user = await oldUser.save();
+
+  return res.status(200).json(user);
+}) as RequestHandler);
+
 export default usersRouter;
