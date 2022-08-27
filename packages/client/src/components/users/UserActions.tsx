@@ -21,7 +21,10 @@ const UserActions = ({
     onSuccess: () => queryClient.invalidateQueries("allUsers"),
   });
   const editMutation = useMutation((user: EditedUser) => updateUserById(user), {
-    onSuccess: () => queryClient.invalidateQueries("allUsers"),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries("allUsers");
+      setEditModalVis(false);
+    },
   });
 
   return (

@@ -3,7 +3,6 @@ import { useState } from "react";
 import NewUserModal from "../modals/NewUserModal";
 const NewUser = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  console.log(showModal);
   return (
     <>
       <Button

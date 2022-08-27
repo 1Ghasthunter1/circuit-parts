@@ -6,7 +6,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import { EditedUser, User } from "../../types/userTypes";
 import { UseMutationResult } from "react-query";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 
 import * as Yup from "yup";
 
@@ -51,6 +51,10 @@ const EditUserModal = ({
   user,
   editMutation,
 }: CreateModalProps) => {
+  const mutationErrorObj = editMutation.error as
+    | AxiosError<{ error: string }>
+    | undefined;
+
   return (
     <BaseModal
       modalVisibility={modalVisibility}
@@ -67,8 +71,7 @@ const EditUserModal = ({
             confirmPassword: "",
           }}
           validationSchema={NewUserSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
+          onSubmit={(values) => {
             const updatedUserFormValues: EditedUser = {
               firstName: values.firstName,
               lastName: values.lastName,
@@ -81,11 +84,9 @@ const EditUserModal = ({
               updatedUserFormValues.password = values.password;
 
             editMutation.mutate(updatedUserFormValues);
-            setModalVisibility(false);
-            setSubmitting(false);
           }}
         >
-          {({ isSubmitting, dirty }) => (
+          {({ dirty, isValid }) => (
             <Form>
               {/* FIRST NAME */}
               <div className="mb-4">
@@ -212,15 +213,30 @@ const EditUserModal = ({
                 />
               </div>
 
+              {mutationErrorObj && (
+                <div className="mt-2 text-rose-400 text-md pb-2">
+                  <span>
+                    {mutationErrorObj.response?.status === 409 ? (
+                      <span>
+                        {mutationErrorObj.response.data?.error ||
+                          "Unknown Error"}
+                      </span>
+                    ) : (
+                      "Unknown error"
+                    )}
+                  </span>
+                </div>
+              )}
+
               <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                 <Button
                   // className="bg-emerald-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
-                  bgColor="bg-green-500"
-                  hoverColor="hover:bg-green-600"
+                  bgColor="bg-green-600"
+                  hoverColor="hover:bg-green-700"
                   txtColor="text-white"
-                  iconName="user-plus"
-                  disabled={isSubmitting || !dirty}
+                  iconName="pencil"
+                  disabled={editMutation.isLoading || !dirty || !isValid}
                 >
                   Save User
                 </Button>
