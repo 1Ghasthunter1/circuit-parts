@@ -28,7 +28,7 @@ const App = () => {
           <Route path="/assemblies/:id" element={<AssemblyView />}></Route>
           <Route path="/orders" element={<UnderConstruction />}></Route>
           <Route path="/users" element={<UsersView />}></Route>
-          <Route path="/account" element={<AccountView />}></Route>
+          <Route path="/users/:id" element={<AccountView />}></Route>
         </Route>
       </Routes>
     </Router>

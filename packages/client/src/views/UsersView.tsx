@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { fetchAllUsers } from "../services/usersService";
 import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
 import NewUser from "../components/users/NewUser";
+
 const UsersView = () => {
   const usersQuery = useQuery("allUsers", () => fetchAllUsers());
   const users = usersQuery.data;

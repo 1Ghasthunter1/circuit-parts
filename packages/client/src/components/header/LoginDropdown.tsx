@@ -49,7 +49,7 @@ export default function Example() {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  onClick={() => navigate("/account")}
+                  onClick={() => navigate(`/users/${user.id}`)}
                   className={classNames(
                     active
                       ? "bg-gray-100 text-gray-900 cursor-pointer"

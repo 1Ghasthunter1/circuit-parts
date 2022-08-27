@@ -4,6 +4,7 @@ import { checkSchema, validationResult, matchedData } from "express-validator";
 import bcrypt from "bcrypt";
 import { NewUser, DatabaseUser } from "../types/userTypes";
 import UserModel from "../models/user";
+import { IGetUserAuthInfoRequest } from "../types/reuqestTypes";
 
 import { newUserSchema, updateUserSchema } from "../validation/userValidation";
 
@@ -14,11 +15,15 @@ usersRouter.get("/", (async (_req, res) => {
   res.status(200).json(allUsers);
 }) as RequestHandler);
 
-usersRouter.get("/:id", (async (req, res) => {
-  const id = req.params.id;
-  const user = await UserModel.findById(id);
-  if (!user) return res.status(404).end();
-  return res.status(200).json(user);
+usersRouter.get("/:id", (async (req: IGetUserAuthInfoRequest, res) => {
+  const currentUser = req.user;
+  const userIdToFind = req.params.id;
+  if (!currentUser) return res.status(500).end();
+  if (currentUser.id !== userIdToFind && currentUser.role !== "admin")
+    return res.status(404).end();
+  const responseUser = await UserModel.findById(userIdToFind);
+  if (!responseUser) return res.status(404).end();
+  return res.status(200).json(responseUser);
 }) as RequestHandler);
 
 usersRouter.delete("/:id", (async (req, res) => {
@@ -38,8 +43,6 @@ usersRouter.post("/", checkSchema(newUserSchema), (async (req, res) => {
     locations: ["body"],
     includeOptionals: true,
   });
-
-  console.log(newUser);
 
   const passwordHash = await bcrypt.hash(newUser.password, 10);
 

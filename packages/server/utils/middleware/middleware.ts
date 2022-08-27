@@ -6,6 +6,7 @@ import { IGetUserAuthInfoRequest } from "../../types/reuqestTypes";
 
 import jwt from "jsonwebtoken";
 import UserModel from "../../models/user";
+
 export const tokenExtractor: RequestHandler = (
   req: IGetUserAuthInfoRequest,
   _res,

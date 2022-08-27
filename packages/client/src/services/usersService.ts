@@ -9,6 +9,11 @@ export const fetchAllUsers = async () => {
   return data;
 };
 
+export const getUserById = async (userId: string) => {
+  const { data } = await axios.get<User>(`${apiBaseUrl}/users/${userId}`);
+  return data;
+};
+
 export const createNewUser = async (user: NewUser) => {
   return await axios.post<User>(`${apiBaseUrl}/users`, user);
 };
