@@ -12,10 +12,12 @@ import UserModel from "../models/user";
 import { IGetUserAuthInfoRequest } from "../types/reuqestTypes";
 
 import { newUserSchema, updateUserSchema } from "../validation/userValidation";
+import { UserRole } from "../types/universalTypes";
 
+import { adminRequired } from "../utils/middleware/middleware";
 const usersRouter = express.Router();
 
-usersRouter.get("/", (async (_req, res) => {
+usersRouter.get("/", adminRequired, (async (_req, res) => {
   const allUsers = await UserModel.find({});
   res.status(200).json(allUsers);
 }) as RequestHandler);
@@ -72,7 +74,7 @@ usersRouter.put(
   }) as RequestHandler
 );
 
-usersRouter.delete("/:id", (async (req, res) => {
+usersRouter.delete("/:id", adminRequired, (async (req, res) => {
   const id = req.params.id;
   const user = await UserModel.findByIdAndDelete(id);
   if (!user) return res.status(404).end();
@@ -105,8 +107,12 @@ usersRouter.post("/", checkSchema(newUserSchema), (async (req, res) => {
   return res.status(200).json(user);
 }) as RequestHandler);
 
-usersRouter.put("/:id", checkSchema(updateUserSchema), (async (req, res) => {
+usersRouter.put("/:id", checkSchema(updateUserSchema), (async (
+  req: IGetUserAuthInfoRequest,
+  res
+) => {
   const id = req.params.id;
+  const currentUser = req.user as DatabaseUser;
   const oldUser = await UserModel.findById(id);
 
   if (!oldUser) return res.status(404).json({ error: "user not found" });
@@ -116,21 +122,33 @@ usersRouter.put("/:id", checkSchema(updateUserSchema), (async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const modifiedUser = <Omit<NewUser, "password"> & { password?: string }>(
-    matchedData(req, {
-      locations: ["body"],
-      includeOptionals: true,
-    })
-  );
+  const modifiedUser = <
+    Omit<NewUser, "password" | "role"> & { password?: string; role?: UserRole }
+  >matchedData(req, {
+    locations: ["body"],
+    includeOptionals: true,
+  });
 
-  oldUser.username = modifiedUser.username;
-  oldUser.firstName = modifiedUser.firstName;
-  oldUser.lastName = modifiedUser.lastName;
-  oldUser.email = modifiedUser.email;
-  oldUser.role = modifiedUser.role;
+  if (currentUser.role === "admin") {
+    oldUser.username = modifiedUser.username;
+    oldUser.firstName = modifiedUser.firstName;
+    oldUser.lastName = modifiedUser.lastName;
+    oldUser.email = modifiedUser.email;
+    oldUser.role = modifiedUser.role ?? oldUser.role;
+    if (modifiedUser.password)
+      oldUser.hash = await bcrypt.hash(modifiedUser.password, 10);
+  } else {
+    oldUser.username = modifiedUser.username;
+    oldUser.firstName = modifiedUser.firstName;
+    oldUser.lastName = modifiedUser.lastName;
+    oldUser.email = modifiedUser.email;
 
-  if (modifiedUser.password)
-    oldUser.hash = await bcrypt.hash(modifiedUser.password, 10);
+    if (oldUser.role !== modifiedUser.role || modifiedUser.password)
+      return res.status(403).json({
+        error:
+          "cannot change role or change other user's password without satisfied perms",
+      });
+  }
 
   const user = await oldUser.save();
 

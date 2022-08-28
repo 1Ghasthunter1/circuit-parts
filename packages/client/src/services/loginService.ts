@@ -1,7 +1,7 @@
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
 import { AuthUser } from "../types/userTypes";
-
+import { userState } from "../state/state";
 export const loginUser = async (email: string, password: string) => {
   try {
     const { data } = await axios.post<AuthUser>(`${apiBaseUrl}/login`, {
@@ -15,4 +15,9 @@ export const loginUser = async (email: string, password: string) => {
         return { error: "Your username or password is incorrect" };
     } else return { error: "Unknown error" };
   }
+};
+
+export const logoutUser = () => {
+  window.localStorage.clear();
+  userState.user = null;
 };

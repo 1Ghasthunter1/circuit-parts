@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../elements/Button";
-import EditUserModal from "../components/users/EditUserModal";
 import { useMutation, useQuery } from "react-query";
 import { EditedUser, NewUserPassword, User } from "../types/userTypes";
 import {
@@ -11,9 +10,11 @@ import {
 import { useState } from "react";
 import AttributeBox from "../elements/AttributeBox";
 import { useParams } from "react-router-dom";
+import EditDetails from "../components/users/EditDetailsModal";
 import ChangePasswordModal from "../components/users/ChangePasswordModal";
 import { userState } from "../state/state";
 import { useNavigate } from "react-router-dom";
+
 const AccountView = () => {
   const [editModalVis, setEditModalVis] = useState<boolean>(false);
   const [passwordModalVis, setPasswordModalVis] = useState<boolean>(false);
@@ -74,7 +75,7 @@ const AccountView = () => {
             Edit Details
           </Button>
         </div>
-        <EditUserModal
+        <EditDetails
           modalVisibility={editModalVis}
           setModalVisibility={setEditModalVis}
           user={user}

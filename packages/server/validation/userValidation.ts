@@ -36,7 +36,7 @@ export const updateUserSchema: Schema = {
   },
   role: {
     isString: true,
-    notEmpty: true,
+    optional: true,
     custom: {
       options: (value: string) => isUserRole(value),
       errorMessage: "role must be user or admin",
