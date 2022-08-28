@@ -1,10 +1,14 @@
 import express from "express";
 import { checkSchema, validationResult, matchedData } from "express-validator";
-import { newPartSchema } from "../validation/partsValidation";
+import { editedPartSchema, newPartSchema } from "../validation/partsValidation";
 import { RequestHandler } from "express";
 import PartModel from "../models/part";
 import { findParent, findProject } from "../utils/generic";
-import { NewPart, ToDatabasePart } from "../types/partsTypes";
+import {
+  EditedPart,
+  NewPart,
+  ToDatabasePart,
+} from "../types/partsTypes";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
 import AssemblyModel from "../models/assembly";
 import mongoose from "mongoose";
@@ -13,8 +17,6 @@ import { getPartForUser } from "../utils/population";
 require("express-async-errors");
 
 const partsRouter = express.Router();
-
-
 
 partsRouter.get("/", (async (_req, res) => {
   const parts = await PartModel.find({});
@@ -93,6 +95,38 @@ partsRouter.post(
     return res.json(savedPart).end();
   }
 );
+
+partsRouter.put("/:id", checkSchema(editedPartSchema), (async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const editedPart = <EditedPart>matchedData(req, {
+    locations: ["body"],
+    includeOptionals: true,
+  });
+
+  const currentPartId = req.params.id;
+
+  const foundPart = await PartModel.findById(currentPartId);
+  if (!foundPart)
+    return res
+      .status(404)
+      .json({ error: `part not found with id ${currentPartId}` });
+
+  foundPart.name = editedPart.name;
+  foundPart.status = editedPart.status;
+  foundPart.priority = editedPart.priority;
+  foundPart.notes = editedPart.notes;
+  foundPart.sourceMaterial = editedPart.sourceMaterial;
+  foundPart.haveMaterial = editedPart.haveMaterial;
+  foundPart.materialCutLength = editedPart.materialCutLength;
+  foundPart.quantityRequired = editedPart.quantityRequired;
+
+  await foundPart.save();
+  return res.status(204).end();
+}) as RequestHandler);
 
 partsRouter.delete("/:id", (async (req, res) => {
   const partId = req.params.id;

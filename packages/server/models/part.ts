@@ -54,9 +54,9 @@ const partSchema = new mongoose.Schema<DatabasePart>({
   creationDate: { type: Date, required: true },
   notes: { type: String, default: "" },
   sourceMaterial: { type: String, default: "" },
-  haveMaterial: { type: String, default: "" },
+  haveMaterial: { type: Boolean, default: "" },
   materialCutLength: { type: String, default: "" },
-  quantityRequired: { type: String, default: "" },
+  quantityRequired: { type: Number, default: "" },
 });
 
 partSchema.set("toJSON", {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { Types } from "mongoose";
 import { DatabaseAssembly } from "./assemblyTypes";
 import { DatabaseProject } from "./projectTypes";
@@ -23,13 +24,12 @@ export interface DatabasePart {
   quantityRequired?: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ToDatabasePart extends Omit<DatabasePart, "id"> {}
 export interface Part extends Omit<DatabasePart, "parent"> {
   parent: DatabaseAssembly | DatabaseProject;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export type EditedPart = Omit<DatabasePart, "id" | "partNumber" | "type" | "parent" | "project" | "creationDate">;
 export interface NewPart
   extends Omit<
     DatabasePart,

@@ -1,6 +1,7 @@
 import { Schema } from "express-validator";
-import { isParentType } from "../types/universalTypes";
+import { isParentType, isPriority } from "../types/universalTypes";
 import { isValidObjectId } from "mongoose";
+import { isPartStatus } from "../types/partsTypes";
 export const newPartSchema: Schema = {
   name: {
     isString: true,
@@ -36,5 +37,51 @@ export const newPartSchema: Schema = {
         return true;
       },
     },
+  },
+};
+
+export const editedPartSchema: Schema = {
+  name: newPartSchema.name,
+  status: {
+    custom: {
+      options: (value: string) => {
+        if (!isPartStatus(value))
+          throw new Error("field `status` is not a valid part status");
+        return true;
+      },
+    },
+  },
+  priority: {
+    custom: {
+      options: (value: string) => {
+        if (!isPriority(value))
+          throw new Error("field `priority` is not a valid priority");
+        return true;
+      },
+    },
+  },
+  notes: {
+    isLength: {
+      options: { max: 2000 },
+      errorMessage: "notes cannot exceed 2000 chars",
+    },
+  },
+  sourceMaterial: {
+    isLength: {
+      options: { max: 2000 },
+      errorMessage: "`notes` cannot exceed 2000 chars",
+    },
+  },
+  haveMaterial: {
+    isBoolean: true,
+  },
+  materialCutLength: {
+    isLength: {
+      options: { max: 250 },
+      errorMessage: "`materialCutLength` cannot exceed 250 chars",
+    },
+  },
+  quantityRequired: {
+    isInt: true,
   },
 };
