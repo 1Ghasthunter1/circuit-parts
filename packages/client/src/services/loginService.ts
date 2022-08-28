@@ -4,11 +4,11 @@ import { AuthUser } from "../types/userTypes";
 import { userState } from "../state/state";
 export const loginUser = async (email: string, password: string) => {
   try {
-    const { data } = await axios.post<AuthUser>(`${apiBaseUrl}/login`, {
+    const resp = await axios.post<AuthUser>(`${apiBaseUrl}/login`, {
       email,
       password,
     });
-    return data;
+    return resp.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       if (e.response?.status === 401)

@@ -17,8 +17,8 @@ const AppLayout = ({ header }: { header?: JSX.Element }) => {
       },
       (error) => {
         if (error.response?.data?.error === "jwt expired") logoutUser();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return error;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
+        return Promise.reject(error);
       }
     );
     axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
