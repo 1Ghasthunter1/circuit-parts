@@ -1,6 +1,6 @@
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
-import { NewPart, Part } from "../types/partsTypes";
+import { EditedPart, NewPart, Part } from "../types/partsTypes";
 
 export async function fetchParts() {
   const { data } = await axios.get<Part[]>(`${apiBaseUrl}/parts`);
@@ -19,6 +19,10 @@ export const fetchPart = async (partId: string | undefined) => {
 export const createPart = async (newPart: NewPart) => {
   const { data } = await axios.post<Part>(`${apiBaseUrl}/parts`, newPart);
   return data;
+};
+
+export const editPart = async (partId: string, editedPart: EditedPart) => {
+  return await axios.put(`${apiBaseUrl}/parts/${partId}`, editedPart);
 };
 
 export const deletePartById = async (partId: string) => {

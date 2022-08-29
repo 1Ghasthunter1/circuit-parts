@@ -27,6 +27,28 @@ export interface Part extends Omit<UnpopulatedPart, "parent"> {
   parent: UnpopulatedAssembly | UnpopulatedProject;
 }
 
+export interface EditedPart
+  extends Omit<
+    UnpopulatedPart,
+    | "id"
+    | "partNumber"
+    | "type"
+    | "parent"
+    | "project"
+    | "creationDate"
+    | "notes"
+    | "sourceMaterial"
+    | "haveMaterial"
+    | "materialCutLength"
+    | "quantityRequired"
+  > {
+  notes: string;
+  sourceMaterial: string;
+  haveMaterial: boolean;
+  materialCutLength: string;
+  quantityRequired: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface NewPart
   extends Omit<

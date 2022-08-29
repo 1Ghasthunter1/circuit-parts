@@ -6,7 +6,7 @@ interface ButtonPropsTypes {
   bgColor?: string;
   txtColor?: string;
   hoverColor?: string;
-  children?: string | never[];
+  children?: string | JSX.Element | never[];
   style?: string;
   className?: string;
   disabled?: boolean;

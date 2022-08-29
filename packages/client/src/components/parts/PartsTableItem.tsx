@@ -8,6 +8,7 @@ import TableParent from "./TableParent";
 import StatusBox from "../components/StatusBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CasualDeleteModal from "../modals/DeleteModal";
+import EditPartModal from "../parts/EditPartModal";
 import { useState } from "react";
 import { useMutation, UseQueryResult } from "react-query";
 import { deletePartById } from "../../services/partsServices";
@@ -20,9 +21,11 @@ interface intProps {
 
 const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
+  const [editPartModalVis, setEditPartModalVis] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
-  const mutation = useMutation(
+  const deleteComponentMutation = useMutation(
     async () =>
       rowItem.type === "part"
         ? await deletePartById(rowItem.id)
@@ -56,11 +59,13 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
         <td className="px-6 whitespace-nowrap">
           <StatusBox inpStatus={rowItem.status} />
         </td>
-        <td className="px-6">
-          <div className="grid grid-cols-2 justify-center">
+        <td className="mx-6">
+          <div
+            className="grid grid-cols-2 justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={() => {
                 setDeleteModalVis(true);
               }}
             >
@@ -73,8 +78,8 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
             </div>
 
             <div
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={() => {
+                setEditPartModalVis(true);
               }}
             >
               <FontAwesomeIcon
@@ -90,9 +95,17 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
       <CasualDeleteModal
         component={rowItem}
         modalVisibility={deleteModalVis}
-        setModalVisibility={(vis) => setDeleteModalVis(vis)}
-        deleteMutation={mutation}
+        setModalVisibility={setDeleteModalVis}
+        deleteMutation={deleteComponentMutation}
       />
+      {rowItem.type === "part" && (
+        <EditPartModal
+          modalVisibility={editPartModalVis}
+          setModalVisibility={setEditPartModalVis}
+          part={rowItem}
+          queryToRefresh={queryToRefresh}
+        />
+      )}
     </>
   );
 };
