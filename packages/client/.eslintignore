@@ -2,3 +2,6 @@ node_modules
 dist
 tailwind.config.js
 tsconfig.json
+vite.config.ts
+postcss.config.cjs
+tailwind.config.cjs

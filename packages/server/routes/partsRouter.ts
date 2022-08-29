@@ -4,11 +4,7 @@ import { editedPartSchema, newPartSchema } from "../validation/partsValidation";
 import { RequestHandler } from "express";
 import PartModel from "../models/part";
 import { findParent, findProject } from "../utils/generic";
-import {
-  EditedPart,
-  NewPart,
-  ToDatabasePart,
-} from "../types/partsTypes";
+import { EditedPart, NewPart, ToDatabasePart } from "../types/partsTypes";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
 import AssemblyModel from "../models/assembly";
 import mongoose from "mongoose";

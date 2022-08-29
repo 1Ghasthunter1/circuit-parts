@@ -57,7 +57,7 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
           <TableParent rowItem={rowItem} />
         </td>
         <td className="px-6 whitespace-nowrap">
-          <StatusBox inpStatus={rowItem.status} />
+          <StatusBox inpStatus={rowItem.status} componentType={rowItem.type} />
         </td>
         <td className="mx-6">
           <div
