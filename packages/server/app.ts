@@ -35,7 +35,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static("build"));
-
+app.get("*", (_req, res) => {
+  res.sendFile("index.html", {
+    root: "./build/",
+  });
+});
 app.use("/api/login", loginRouter);
 
 app.use(tokenExtractor);
