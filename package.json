@@ -1,0 +1,21 @@
+{
+  "name": "circuit-parts",
+  "version": "1.0.0",
+  "description": "Circuit parts is a next-generation parts management server for FRC teams based on Team 254's Cheesy Parts system.",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd ./packages/server && npm run build",
+    "start": "cd ./packages/server && npm start",
+    "deploy": "git add . && git commit -m herokuBuild && git push heroku master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1Ghasthunter1/circuit-parts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1Ghasthunter1/circuit-parts/issues"
+  },
+  "homepage": "https://github.com/1Ghasthunter1/circuit-parts#readme"
+}
