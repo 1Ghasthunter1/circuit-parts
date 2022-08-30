@@ -1,31 +1,70 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { editPart } from "../../services/partsServices";
 import { Assembly } from "../../types/assemblyTypes";
 import { Part } from "../../types/partsTypes";
-import {
-  AssemblyStatus,
-  assemblyStatuses,
-  PartStatus,
-  partStatuses,
-} from "../../types/universalTypes";
+import { PartStatus, partStatuses } from "../../types/universalTypes";
+import TopLeftNotif from "../notifications/TopLeftNotification";
+import { cssTransition, toast } from "react-toastify";
+import "animate.css/animate.min.css";
+import "react-toastify/dist/ReactToastify.css";
 
 interface StatusProps {
-  component: Part | Assembly;
+  part: Part;
+  queryKey: string;
 }
 
-const StatusBox = ({ component }: StatusProps) => {
+const PartStatusBox = ({ part, queryKey }: StatusProps) => {
   const [onInput, setOnInput] = useState<boolean>(false);
-  const [newStatus, setNewStatus] = useState<AssemblyStatus | PartStatus>(
-    "assembly in progress"
-  );
+  const [newStatus, setNewStatus] = useState<PartStatus>(part.status);
 
-  useEffect(() => {
-    setNewStatus(component.status);
-  }, [component]);
+  const queryClient = useQueryClient();
+
+  const tranny = cssTransition({
+    enter: "animate__animated animate__bounceIn",
+    exit: "animate__animated animate__bounceOut",
+  });
+
+  const editMutation = useMutation(
+    async () => {
+      await editPart(part.id, {
+        ...part,
+        notes: part.notes || "",
+        sourceMaterial: part.sourceMaterial || "",
+        haveMaterial: part.haveMaterial || false,
+        materialCutLength: part.materialCutLength || "",
+        quantityRequired: part.quantityRequired || 0,
+        status: newStatus,
+      });
+    },
+    {
+      onMutate: () =>
+        queryClient.setQueryData<(Part | Assembly)[]>(
+          [queryKey],
+          (previous) => {
+            if (previous)
+              return previous.map((rowItem) => {
+                if (rowItem.id === part.id)
+                  return { ...part, status: newStatus };
+                return rowItem;
+              });
+            return [];
+          }
+        ),
+      onError: () => console.log("tehre was an errro!"),
+      onSettled: () => {
+        toast.success("Status changed successfully", {
+          autoClose: 2500,
+          transition: tranny,
+        });
+      },
+    }
+  );
 
   let content;
   let color;
-  switch (component.status) {
+  switch (part.status) {
     case "design in progress":
       content = "Design In Progress";
       color = "bg-blue-600";
@@ -73,28 +112,21 @@ const StatusBox = ({ component }: StatusProps) => {
       className="whitespace-nowrap w-min"
       onClick={(e) => e.stopPropagation()}
     >
+      <TopLeftNotif />
       {onInput ? (
         <div className="flex items-center">
           <select
             className={inputStyle}
             value={newStatus}
             onChange={(e) => {
-              console.log(e.target.value);
-              setNewStatus(e.target.value as AssemblyStatus | PartStatus);
+              setNewStatus(e.target.value as PartStatus);
             }}
           >
-            {component.type === "part" &&
-              partStatuses.map((status) => (
-                <option key={status} value={status}>
-                  {`${status.charAt(0).toUpperCase()}${status.slice(1)}`}
-                </option>
-              ))}
-            {component.type === "assembly" &&
-              assemblyStatuses.map((status) => (
-                <option key={status} value={status}>
-                  {`${status.charAt(0).toUpperCase()}${status.slice(1)}`}
-                </option>
-              ))}
+            {partStatuses.map((status) => (
+              <option key={status} value={status}>
+                {`${status.charAt(0).toUpperCase()}${status.slice(1)}`}
+              </option>
+            ))}
           </select>
           <FontAwesomeIcon
             icon={"check-circle"}
@@ -102,6 +134,7 @@ const StatusBox = ({ component }: StatusProps) => {
             size="2x"
             color="green"
             onClick={() => {
+              editMutation.mutate();
               setOnInput(false);
             }}
           />
@@ -118,4 +151,4 @@ const StatusBox = ({ component }: StatusProps) => {
   );
 };
 
-export default StatusBox;
+export default PartStatusBox;

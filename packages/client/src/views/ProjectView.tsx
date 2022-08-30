@@ -50,7 +50,10 @@ const ProjectView = () => {
       topLeftContent={topLeftStuff}
       topRightContent={topRightStuff}
     >
-      <PartsTable query={projectComponentsQuery} />
+      <PartsTable
+        data={projectComponentsQuery.data || []}
+        queryKeyToRefresh={`/projects/${id}/components`}
+      />
     </TopLeftRightAndMiddle>
   );
 };

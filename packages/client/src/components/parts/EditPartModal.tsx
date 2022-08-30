@@ -4,7 +4,7 @@ import BaseModal from "../modals/base/BaseModal";
 import Modal from "react-modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-import { useMutation, UseQueryResult } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 import * as Yup from "yup";
 import { EditedPart, isPartStatus, Part } from "../../types/partsTypes";
@@ -13,7 +13,6 @@ import {
   partStatuses,
   priorities,
 } from "../../types/universalTypes";
-import { Assembly } from "../../types/assemblyTypes";
 import { editPart } from "../../services/partsServices";
 import Button from "../../elements/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,7 +21,7 @@ interface CreateModalProps {
   modalVisibility: boolean;
   setModalVisibility: (inp: boolean) => void;
   part: Part;
-  queryToRefresh: UseQueryResult<(Part | Assembly)[], unknown>;
+  queryKey: string;
 }
 
 const EditedPartSchema = Yup.object().shape({
@@ -53,13 +52,14 @@ const EditDetails = ({
   modalVisibility,
   setModalVisibility,
   part,
-  queryToRefresh,
+  queryKey,
 }: CreateModalProps) => {
+  const queryClient = useQueryClient();
   const editPartMutation = useMutation(
     async (values: EditedPart) => await editPart(part.id, values),
     {
       onSuccess: async () => {
-        await queryToRefresh.refetch();
+        await queryClient.invalidateQueries([queryKey]);
         setModalVisibility(false);
       },
     }

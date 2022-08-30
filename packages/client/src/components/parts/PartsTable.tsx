@@ -1,16 +1,13 @@
 import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
 import PartsTableItem from "./PartsTableItem";
-import { UseQueryResult } from "react-query";
 
 interface PartsTableProps {
-  query: UseQueryResult<(Part | Assembly)[], unknown>;
+  data: (Part | Assembly)[];
+  queryKeyToRefresh: string;
 }
 
-const PartsTable = ({ query }: PartsTableProps) => {
-  const data = query.data;
-  if (!data) return null;
-
+const PartsTable = ({ data, queryKeyToRefresh }: PartsTableProps) => {
   return (
     <div className="overflow-x-auto relative sm:rounded-md">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -39,7 +36,13 @@ const PartsTable = ({ query }: PartsTableProps) => {
         <tbody>
           {data &&
             data.map((rowItem) => {
-              return <PartsTableItem key={rowItem.id} rowItem={rowItem} queryToRefresh={query}/>;
+              return (
+                <PartsTableItem
+                  key={rowItem.id}
+                  rowItem={rowItem}
+                  componentsQueryKey={queryKeyToRefresh}
+                />
+              );
             })}
         </tbody>
       </table>

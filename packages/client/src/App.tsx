@@ -12,26 +12,32 @@ import AppLayout from "./layouts/AppLayout";
 import AccountView from "./views/AccountView";
 import UsersView from "./views/UsersView";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="*" element={<Navigate to="/login" />} />
-        <Route element={<LoginView />}>
-          <Route path="/login" element={<div>asd</div>}></Route>
-        </Route>
-        <Route element={<AppLayout header={<Header />} />}>
-          <Route path="/dashboard" element={<UnderConstruction />}></Route>
-          <Route path="/projects" element={<ProjectsView />}></Route>
-          <Route path="/projects/:id" element={<ProjectView />}></Route>
-          <Route path="/parts/:id" element={<PartView />}></Route>
-          <Route path="/assemblies/:id" element={<AssemblyView />}></Route>
-          <Route path="/orders" element={<UnderConstruction />}></Route>
-          <Route path="/users" element={<UsersView />}></Route>
-          <Route path="/users/:id" element={<AccountView />}></Route>
-        </Route>
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="*" element={<Navigate to="/login" />} />
+          <Route element={<LoginView />}>
+            <Route path="/login" element={<div>asd</div>}></Route>
+          </Route>
+          <Route element={<AppLayout header={<Header />} />}>
+            <Route path="/dashboard" element={<UnderConstruction />}></Route>
+            <Route path="/projects" element={<ProjectsView />}></Route>
+            <Route path="/projects/:id" element={<ProjectView />}></Route>
+            <Route path="/parts/:id" element={<PartView />}></Route>
+            <Route path="/assemblies/:id" element={<AssemblyView />}></Route>
+            <Route path="/orders" element={<UnderConstruction />}></Route>
+            <Route path="/users" element={<UsersView />}></Route>
+            <Route path="/users/:id" element={<AccountView />}></Route>
+          </Route>
+        </Routes>
+      </Router>
+      <ToastContainer hideProgressBar={true} pauseOnFocusLoss={false} />
+    </>
   );
 };
 

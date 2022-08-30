@@ -5,21 +5,22 @@ import { Assembly } from "../../types/assemblyTypes";
 
 import CustomStatusBox from "../components/TypeBox";
 import TableParent from "./TableParent";
-import StatusBox from "../components/StatusBox";
+import PartStatusBox from "./PartStatusBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CasualDeleteModal from "../modals/DeleteModal";
 import EditPartModal from "../parts/EditPartModal";
 import { useState } from "react";
-import { useMutation, UseQueryResult } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { deletePartById } from "../../services/partsServices";
 import { deleteAssemblyById } from "../../services/assemblyServices";
 
 interface intProps {
   rowItem: Part | Assembly;
-  queryToRefresh: UseQueryResult<(Part | Assembly)[], unknown>;
+  componentsQueryKey: string;
 }
 
-const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
+const PartsTableItem = ({ rowItem, componentsQueryKey }: intProps) => {
+  const queryClient = useQueryClient();
   const [deleteModalVis, setDeleteModalVis] = useState<boolean>(false);
   const [editPartModalVis, setEditPartModalVis] = useState<boolean>(false);
 
@@ -30,7 +31,10 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
       rowItem.type === "part"
         ? await deletePartById(rowItem.id)
         : await deleteAssemblyById(rowItem.id),
-    { onSuccess: async () => await queryToRefresh.refetch() }
+    {
+      onSuccess: async () =>
+        await queryClient.invalidateQueries([componentsQueryKey]),
+    }
   );
 
   return (
@@ -57,7 +61,9 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
           <TableParent rowItem={rowItem} />
         </td>
         <td className="px-6 whitespace-nowrap">
-          <StatusBox inpStatus={rowItem.status} componentType={rowItem.type} />
+          {rowItem.type === "part" && (
+            <PartStatusBox part={rowItem} queryKey={componentsQueryKey} />
+          )}
         </td>
         <td className="mx-6">
           <div
@@ -103,7 +109,7 @@ const PartsTableItem = ({ rowItem, queryToRefresh }: intProps) => {
           modalVisibility={editPartModalVis}
           setModalVisibility={setEditPartModalVis}
           part={rowItem}
-          queryToRefresh={queryToRefresh}
+          queryKey={componentsQueryKey}
         />
       )}
     </>

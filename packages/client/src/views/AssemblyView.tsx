@@ -50,18 +50,21 @@ const AssemblyView = () => {
   );
 
   return (
-      <TopLeftRightAndMiddle
-        topLeftContent={topLeftStuff}
-        topRightContent={
-          <NewComponentButtons
-            project={project}
-            parent={assembly}
-            queriesToInvalidate={[assemblyQuery, assemblyComponentsQuery]}
-          />
-        }
-      >
-        <PartsTable query={assemblyComponentsQuery} />
-      </TopLeftRightAndMiddle>
+    <TopLeftRightAndMiddle
+      topLeftContent={topLeftStuff}
+      topRightContent={
+        <NewComponentButtons
+          project={project}
+          parent={assembly}
+          queriesToInvalidate={[assemblyQuery, assemblyComponentsQuery]}
+        />
+      }
+    >
+      <PartsTable
+        data={assemblyComponentsQuery.data || []}
+        queryKeyToRefresh={`assemblies/${id}/components`}
+      />
+    </TopLeftRightAndMiddle>
   );
 };
 
