@@ -6,7 +6,7 @@
   "scripts": {
     "build": "cd ./packages/server && npm run build",
     "start": "cd ./packages/server && npm start",
-    "deploy": "git add . && git commit -m herokuBuild && git push heroku master"
+    "deploy": "git add . && git commit -m herokuBuild && git push heroku master --force"
   },
   "repository": {
     "type": "git",
