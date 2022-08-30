@@ -6,6 +6,7 @@ const log: Logger = new Logger({ name: "myLogger" });
 
 const server = http.createServer(app);
 
+
 server.listen(config.PORT, () => {
   log.info(`PORT: ${config.PORT}`);
 });
