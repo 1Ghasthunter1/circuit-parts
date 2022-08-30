@@ -13,7 +13,7 @@
     "lint": "eslint --ext .ts .",
     "start": "node ./build/index.js",
     "build:local": "rm -rf build && npm run tsc && npm run build:ui",
-    "deploy": "git add . && git commit -m herokuBuild && npm run build:local && cd ../.. && git subtree push --prefix packages/server heroku master"
+    "deploy": "npm run build:local && git add . && git commit -m herokuBuild && cd ../.. && git subtree push --prefix packages/server heroku master"
   },
   "author": "",
   "license": "ISC",
