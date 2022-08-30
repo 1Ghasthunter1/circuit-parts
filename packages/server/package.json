@@ -15,6 +15,7 @@
     "build": "rm -rf build && npm run tsc && npm run build:ui",
     "deploy": "npm run build && cd ../.. && git subtree push --prefix packages/server heroku master"
   },
+  
   "author": "",
   "license": "ISC",
   "dependencies": {
