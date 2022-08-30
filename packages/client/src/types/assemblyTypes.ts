@@ -36,6 +36,17 @@ export interface Assembly
   project: UnpopulatedProject;
 }
 
+export type EditedAssembly = Omit<
+  UnpopulatedAssembly,
+  | "id"
+  | "partNumber"
+  | "type"
+  | "parent"
+  | "children"
+  | "project"
+  | "creationDate"
+>;
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface NewAssembly
   extends Omit<

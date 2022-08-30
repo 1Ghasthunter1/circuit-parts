@@ -1,9 +1,16 @@
 import express from "express";
 import { checkSchema, validationResult, matchedData } from "express-validator";
-import { newAssemblySchema } from "../validation/assemblyValidation";
+import {
+  newAssemblySchema,
+  editedAssemblySchema,
+} from "../validation/assemblyValidation";
 import { RequestHandler } from "express";
 import AssemblyModel from "../models/assembly";
-import { NewAssembly, ToDatabaseAssembly } from "../types/assemblyTypes";
+import {
+  EditedAssembly,
+  NewAssembly,
+  ToDatabaseAssembly,
+} from "../types/assemblyTypes";
 import { findParent, findProject } from "../utils/generic";
 import { generateNewPartNumber } from "../utils/partNumbers/generatePartNumber";
 import PartModel from "../models/part";
@@ -120,6 +127,37 @@ assemblyRouter.post(
     return res.json(savedAssembly).end();
   }
 );
+
+assemblyRouter.put("/:id", checkSchema(editedAssemblySchema), (async (
+  req,
+  res
+) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const editedAssembly = <EditedAssembly>matchedData(req, {
+    locations: ["body"],
+    includeOptionals: true,
+  });
+
+  const currentAssemblyId = req.params.id;
+
+  const foundAssembly = await AssemblyModel.findById(currentAssemblyId);
+  if (!foundAssembly)
+    return res
+      .status(404)
+      .json({ error: `part not found with id ${currentAssemblyId}` });
+
+  foundAssembly.name = editedAssembly.name;
+  foundAssembly.status = editedAssembly.status;
+  foundAssembly.priority = editedAssembly.priority;
+  foundAssembly.notes = editedAssembly.notes;
+
+  await foundAssembly.save();
+  return res.status(204).end();
+}) as RequestHandler);
 
 assemblyRouter.delete("/:id", (async (req, res) => {
   const assemblyId = req.params.id;

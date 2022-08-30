@@ -1,6 +1,6 @@
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
-import { Assembly, NewAssembly } from "../types/assemblyTypes";
+import { Assembly, EditedAssembly, NewAssembly } from "../types/assemblyTypes";
 import { Part } from "../types/partsTypes";
 
 export const fetchAssembly = async (assemblyId: string) => {
@@ -23,6 +23,16 @@ export const createAssembly = async (newAssembly: NewAssembly) => {
     newAssembly
   );
   return data;
+};
+
+export const editAssemblyById = async (
+  assemblyId: string,
+  editedAssembly: EditedAssembly
+) => {
+  return await axios.put(
+    `${apiBaseUrl}/assemblies/${assemblyId}`,
+    editedAssembly
+  );
 };
 
 export const deleteAssemblyById = async (assemblyId: string) => {

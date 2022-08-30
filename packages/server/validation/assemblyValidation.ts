@@ -1,6 +1,8 @@
 import { Schema } from "express-validator";
-import { isParentType } from "../types/universalTypes";
+import { isParentType, isPriority } from "../types/universalTypes";
+import { isAssemblyStatus } from "../types/assemblyTypes";
 import { isValidObjectId } from "mongoose";
+
 export const newAssemblySchema: Schema = {
   name: {
     isString: true,
@@ -33,6 +35,30 @@ export const newAssemblySchema: Schema = {
         return isValidObjectId(value);
       },
       errorMessage: "project is not a valid mongoose object ID",
+    },
+  },
+};
+
+export const editedAssemblySchema: Schema = {
+  name: newAssemblySchema.name,
+  status: {
+    isString: true,
+    custom: {
+      options: (value: string) => isAssemblyStatus(value),
+      errorMessage: "field `status` must be an assembly status",
+    },
+  },
+  priority: {
+    isString: true,
+    custom: {
+      options: (value: string) => isPriority(value),
+      errorMessage: "field `priority` must be an assembly status",
+    },
+  },
+  notes: {
+    isLength: {
+      options: { max: 2000 },
+      errorMessage: "notes cannot exceed 2000 chars",
     },
   },
 };

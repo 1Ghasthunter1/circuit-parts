@@ -1,23 +1,26 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { editPart } from "../../services/partsServices";
 import { Assembly } from "../../types/assemblyTypes";
-import { Part } from "../../types/partsTypes";
-import { PartStatus, partStatuses } from "../../types/universalTypes";
+import {
+  AssemblyStatus,
+  assemblyStatuses,
+} from "../../types/universalTypes";
 import TopLeftNotif from "../notifications/TopLeftNotification";
 import { cssTransition, toast } from "react-toastify";
 import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
+import { editAssemblyById } from "../../services/assemblyServices";
+import { Part } from "../../types/partsTypes";
 
 interface StatusProps {
-  part: Part;
+  assembly: Assembly;
   queryKey: string;
 }
 
-const PartStatusBox = ({ part, queryKey }: StatusProps) => {
+const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
   const [onInput, setOnInput] = useState<boolean>(false);
-  const [newStatus, setNewStatus] = useState<PartStatus>(part.status);
+  const [newStatus, setNewStatus] = useState<AssemblyStatus>(assembly.status);
 
   const queryClient = useQueryClient();
 
@@ -28,13 +31,8 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
 
   const editMutation = useMutation(
     async () => {
-      await editPart(part.id, {
-        ...part,
-        notes: part.notes || "",
-        sourceMaterial: part.sourceMaterial || "",
-        haveMaterial: part.haveMaterial || false,
-        materialCutLength: part.materialCutLength || "",
-        quantityRequired: part.quantityRequired || 0,
+      await editAssemblyById(assembly.id, {
+        ...assembly,
         status: newStatus,
       });
     },
@@ -44,10 +42,11 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
           [queryKey],
           (previous) => {
             if (previous)
-            return previous.map((rowItem) => {
-              if (rowItem.id === part.id) return { ...part, status: newStatus };
-              return rowItem;
-            });
+              return previous.map((rowItem) => {
+                if (rowItem.id === assembly.id)
+                  return { ...assembly, status: newStatus };
+                return rowItem;
+              });
             return [];
           }
         ),
@@ -68,42 +67,26 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
 
   let content;
   let color;
-  switch (part.status) {
+  switch (assembly.status) {
     case "design in progress":
       content = "Design In Progress";
       color = "bg-blue-600";
       break;
-    case "materials need to be ordered":
-      content = "Materials Need Ordering";
-      color = "bg-red-600";
+    case "ready for assembly":
+      content = "Ready for assembly";
+      color = "bg-cyan-500";
       break;
-    case "waiting for materials":
-      content = "Waiting For Materials";
+    case "assembly in progress":
+      content = "Assembly in progress";
       color = "bg-yellow-500";
       break;
-    case "needs drawing":
-      content = "Needs Drawing";
-      color = "bg-yellow-500";
+    case "design review needed":
+      content = "Design review needed";
+      color = "bg-red-500";
       break;
-    case "ready for manufacture":
-      content = "Ready for manufacture";
-      color = "bg-cyan-500";
-      break;
-    case "ready for cnc":
-      content = "Ready for HAAS Mill";
-      color = "bg-cyan-500";
-      break;
-    case "ready for laser":
-      content = "Ready for laser";
-      color = "bg-cyan-500";
-      break;
-    case "ready for lathe":
-      content = "Ready for lathe";
-      color = "bg-cyan-500";
-      break;
-    case "ready for mill":
-      content = "Ready for mill";
-      color = "bg-cyan-500";
+    case "done":
+      content = "Done";
+      color = "bg-green-500";
       break;
     default:
       content = "Unknown";
@@ -123,10 +106,10 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
             className={inputStyle}
             value={newStatus}
             onChange={(e) => {
-              setNewStatus(e.target.value as PartStatus);
+              setNewStatus(e.target.value as AssemblyStatus);
             }}
           >
-            {partStatuses.map((status) => (
+            {assemblyStatuses.map((status) => (
               <option key={status} value={status}>
                 {`${status.charAt(0).toUpperCase()}${status.slice(1)}`}
               </option>
@@ -155,4 +138,4 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
   );
 };
 
-export default PartStatusBox;
+export default AssemblyStatusBox;

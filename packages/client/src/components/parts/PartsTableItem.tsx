@@ -13,6 +13,8 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { deletePartById } from "../../services/partsServices";
 import { deleteAssemblyById } from "../../services/assemblyServices";
+import AssemblyView from "../../views/AssemblyView";
+import AssemblyStatusBox from "./AssemblyStatusBox";
 
 interface intProps {
   rowItem: Part | Assembly;
@@ -63,6 +65,9 @@ const PartsTableItem = ({ rowItem, componentsQueryKey }: intProps) => {
         <td className="px-6 whitespace-nowrap">
           {rowItem.type === "part" && (
             <PartStatusBox part={rowItem} queryKey={componentsQueryKey} />
+          )}
+          {rowItem.type === "assembly" && (
+            <AssemblyStatusBox assembly={rowItem} queryKey={componentsQueryKey} />
           )}
         </td>
         <td className="mx-6">
