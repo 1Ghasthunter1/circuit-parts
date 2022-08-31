@@ -32,19 +32,19 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.static(path_1.default.join(__dirname, "./build")));
+app.use("/api/login", loginRouter_1.default);
+app.use("/api/*", middleware_2.tokenExtractor);
+app.use("/api/*", middleware_2.userExtractor);
+app.use("/api/users", usersRouter_1.default);
+app.use("/api/parts", partsRouter_1.default);
+app.use("/api/projects", projectsRouter_1.default);
+app.use("/api/assemblies", assemblyRouter_1.default);
+app.use("/api/*", middleware_2.adminRequired);
+app.use("/api/*", middleware_1.errorHandler);
 app.get("*", function (_req, res) {
     res.sendFile("index.html", {
         root: path_1.default.join(__dirname, "./build"),
     });
 });
-app.use("/api/login", loginRouter_1.default);
-app.use(middleware_2.tokenExtractor);
-app.use(middleware_2.userExtractor);
-app.use("/api/users", usersRouter_1.default);
-app.use("/api/parts", partsRouter_1.default);
-app.use("/api/projects", projectsRouter_1.default);
-app.use("/api/assemblies", assemblyRouter_1.default);
-app.use(middleware_2.adminRequired);
-app.use(middleware_1.errorHandler);
 exports.default = app;
 //# sourceMappingURL=app.js.map

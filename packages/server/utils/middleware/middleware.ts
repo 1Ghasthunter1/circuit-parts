@@ -25,7 +25,6 @@ export const userExtractor: RequestHandler = async (
   res,
   next
 ) => {
-  console.log("thin");
   if (!req.token) {
     return res.status(401).json({ error: "token missing" });
   }

@@ -25,7 +25,6 @@ const tokenExtractor = (req, _res, next) => {
 exports.tokenExtractor = tokenExtractor;
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 const userExtractor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("thin");
     if (!req.token) {
         return res.status(401).json({ error: "token missing" });
     }

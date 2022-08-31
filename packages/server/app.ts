@@ -37,24 +37,24 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "./build")));
 
-app.get("*", function (_req, res) {
-  res.sendFile("index.html", {
-    root: path.join(__dirname, "./build"),
-  });
-});
-
 app.use("/api/login", loginRouter);
 
-app.use(tokenExtractor);
-app.use(userExtractor);
+app.use("/api/*", tokenExtractor);
+app.use("/api/*", userExtractor);
 
 app.use("/api/users", usersRouter);
 app.use("/api/parts", partsRouter);
 app.use("/api/projects", projectsRouter);
 app.use("/api/assemblies", assemblyRouter);
 
-app.use(adminRequired);
+app.use("/api/*", adminRequired);
 
-app.use(errorHandler);
+app.use("/api/*", errorHandler);
+
+app.get("*", function (_req, res) {
+  res.sendFile("index.html", {
+    root: path.join(__dirname, "./build"),
+  });
+});
 
 export default app;
