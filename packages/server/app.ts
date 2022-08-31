@@ -17,6 +17,7 @@ import {
 } from "./utils/middleware/middleware";
 
 import { Logger } from "tslog";
+import path from "path";
 const log: Logger = new Logger({ name: "myLogger" });
 
 log.info(`MONGO_URI: ${config.MONGODB_URI}`);
@@ -34,7 +35,13 @@ mongoose
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static("build"));
+app.use(express.static(path.join(__dirname, "./build")));
+
+app.get("*", function (_req, res) {
+  res.sendFile("index.html", {
+    root: path.join(__dirname, "./build"),
+  });
+});
 
 app.use("/api/login", loginRouter);
 

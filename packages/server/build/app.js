@@ -16,6 +16,7 @@ require("express-async-errors");
 const middleware_1 = require("./utils/middleware/middleware");
 const middleware_2 = require("./utils/middleware/middleware");
 const tslog_1 = require("tslog");
+const path_1 = __importDefault(require("path"));
 const log = new tslog_1.Logger({ name: "myLogger" });
 log.info(`MONGO_URI: ${config_1.default.MONGODB_URI}`);
 log.info(`NODE_ENV: ${process.env.NODE_ENV}`);
@@ -30,7 +31,12 @@ mongoose_1.default
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use(express_1.default.static("build"));
+app.use(express_1.default.static(path_1.default.join(__dirname, "./build")));
+app.get("*", function (_req, res) {
+    res.sendFile("index.html", {
+        root: path_1.default.join(__dirname, "./build"),
+    });
+});
 app.use("/api/login", loginRouter_1.default);
 app.use(middleware_2.tokenExtractor);
 app.use(middleware_2.userExtractor);
