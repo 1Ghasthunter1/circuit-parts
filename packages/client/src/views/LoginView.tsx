@@ -22,6 +22,7 @@ const LoginView = () => {
     password: string;
   }) => {
     const userObj = await loginUser(email, password);
+    console.log(userObj);
     if (!userObj) return null;
     if ("error" in userObj) {
       setLoginStatus(userObj.error);
