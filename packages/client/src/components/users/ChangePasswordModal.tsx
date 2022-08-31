@@ -3,6 +3,7 @@ import BaseModal from "../modals/base/BaseModal";
 import Button from "../../elements/Button";
 import Modal from "react-modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import PasswordStrengthBar from "react-password-strength-bar";
 
 import { NewUserPassword, User } from "../../types/userTypes";
 import { UseMutationResult } from "react-query";
@@ -71,7 +72,7 @@ const ChangePasswordModal = ({
             editMutation.mutate(newPasswordFormValues);
           }}
         >
-          {({ dirty, isValid }) => (
+          {({ dirty, isValid, values }) => (
             <Form>
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -106,6 +107,16 @@ const ChangePasswordModal = ({
                   className="text-xs text-red-400"
                 />
               </div>
+              <PasswordStrengthBar
+                password={values.newPassword}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: 38,
+                  padding: "6px 10px",
+                  fontSize: 24,
+                }}
+              />
 
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
