@@ -31,11 +31,6 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.static("build"));
-app.get("*", (_req, res) => {
-    res.sendFile("index.html", {
-        root: __dirname + "/build",
-    });
-});
 app.use("/api/login", loginRouter_1.default);
 app.use(middleware_2.tokenExtractor);
 app.use(middleware_2.userExtractor);
