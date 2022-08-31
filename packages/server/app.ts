@@ -37,7 +37,7 @@ app.use(express.json());
 app.use(express.static("build"));
 app.get("*", (_req, res) => {
   res.sendFile("index.html", {
-    root: "build",
+    root: __dirname + "/build",
   });
 });
 app.use("/api/login", loginRouter);

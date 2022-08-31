@@ -33,7 +33,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.static("build"));
 app.get("*", (_req, res) => {
     res.sendFile("index.html", {
-        root: "build",
+        root: __dirname + "/build",
     });
 });
 app.use("/api/login", loginRouter_1.default);
