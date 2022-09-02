@@ -3,8 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 const PORT = process.env.PORT;
 const ENVIRONMENT = process.env.NODE_ENV;
-const MONGODB_URI = ((process.env.NODE_ENV === "test"
-    ? process.env.TEST_MONGODB_URI
-    : process.env.MONGODB_URI));
+const getMongoURI = () => {
+    switch (ENVIRONMENT) {
+        case "test":
+            return process.env.TEST_MONGODB_URI;
+        case "development":
+            return process.env.DEV_MONGODB_URI;
+        case "production":
+            return process.env.MONGODB_URI;
+        default:
+            throw new Error(`NODE_ENV is '${ENVIRONMENT}' is not configured correctly `);
+    }
+};
+const MONGODB_URI = getMongoURI();
 exports.default = { PORT, ENVIRONMENT, MONGODB_URI };
 //# sourceMappingURL=config.js.map

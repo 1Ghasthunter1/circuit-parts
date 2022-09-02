@@ -21,7 +21,7 @@ const log = new tslog_1.Logger({ name: "myLogger" });
 log.info(`MONGO_URI: ${config_1.default.MONGODB_URI}`);
 log.info(`NODE_ENV: ${process.env.NODE_ENV}`);
 mongoose_1.default
-    .connect(config_1.default.MONGODB_URI)
+    .connect(config_1.default.MONGODB_URI || "")
     .then(() => {
     log.info("connected to MongoDB");
 })
