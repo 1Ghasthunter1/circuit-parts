@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { userRoles } from "../types/universalTypes";
 import { DatabaseUser } from "../types/userTypes";
 
 const userSchema = new mongoose.Schema<DatabaseUser>({
@@ -34,7 +35,7 @@ const userSchema = new mongoose.Schema<DatabaseUser>({
   },
   role: {
     type: String,
-    enum: ["admin", "user"],
+    enum: [...userRoles],
     required: true,
     errorMessage: "role must be either admin or user",
   },

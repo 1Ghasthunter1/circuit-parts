@@ -106,7 +106,7 @@ usersRouter.put("/:id", (0, express_validator_1.checkSchema)(userValidation_1.up
         locations: ["body"],
         includeOptionals: true,
     });
-    if (currentUser.role === "admin") {
+    if (currentUser.role === "admin" || currentUser.role === "owner") {
         oldUser.username = modifiedUser.username;
         oldUser.firstName = modifiedUser.firstName;
         oldUser.lastName = modifiedUser.lastName;

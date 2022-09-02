@@ -129,7 +129,7 @@ usersRouter.put("/:id", checkSchema(updateUserSchema), (async (
     includeOptionals: true,
   });
 
-  if (currentUser.role === "admin") {
+  if (currentUser.role === "admin" || currentUser.role === "owner") {
     oldUser.username = modifiedUser.username;
     oldUser.firstName = modifiedUser.firstName;
     oldUser.lastName = modifiedUser.lastName;

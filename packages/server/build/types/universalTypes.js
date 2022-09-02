@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isComponentType = exports.isParentType = exports.isPriority = exports.isChildType = exports.isUserRole = exports.componentTypes = exports.parentTypes = exports.priorities = exports.partStatuses = exports.assemblyStatuses = exports.childTypes = void 0;
+exports.isComponentType = exports.isParentType = exports.isPriority = exports.isChildType = exports.isUserRole = exports.componentTypes = exports.parentTypes = exports.priorities = exports.partStatuses = exports.assemblyStatuses = exports.childTypes = exports.userRoles = void 0;
 // Type constants =======================
-const userRoles = ["admin", "user"];
+exports.userRoles = ["admin", "user", "owner"];
 exports.childTypes = ["assembly", "part"];
 exports.assemblyStatuses = [
     "design in progress",
@@ -27,7 +27,7 @@ exports.parentTypes = ["assembly", "project"];
 exports.componentTypes = ["assembly", "project", "part"];
 //type guards and validators
 const isUserRole = (value) => {
-    return userRoles.includes(value);
+    return exports.userRoles.includes(value);
 };
 exports.isUserRole = isUserRole;
 const isChildType = (value) => {

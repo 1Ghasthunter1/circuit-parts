@@ -38,8 +38,8 @@ const userExtractor = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 });
 exports.userExtractor = userExtractor;
 const adminRequired = (req, res, next) => {
-    var _a;
-    if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== "admin")
+    var _a, _b;
+    if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== "admin" && ((_b = req.user) === null || _b === void 0 ? void 0 : _b.role) !== "owner")
         return res.status(403).json({ error: "forbidden" });
     return next();
 };
