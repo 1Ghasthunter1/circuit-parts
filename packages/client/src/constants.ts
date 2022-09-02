@@ -1,6 +1,9 @@
 type NODE_ENV_TYPES = "development_vm" | "development_local" | "production";
 
 const getApiBaseUrl = () => {
+  console.log(
+    `VITE running in '${import.meta.env.VITE_NODE_ENV as NODE_ENV_TYPES}'`
+  );
   switch (import.meta.env.VITE_NODE_ENV as NODE_ENV_TYPES) {
     case "production":
       return "/api";
@@ -10,7 +13,9 @@ const getApiBaseUrl = () => {
       return "http://localhost:3001/api";
     default:
       throw new Error(
-        `VITE_NODE_ENV is not configured directly. It should be 'development_vm', 'development_local', or 'production', not ${import.meta.env.VITE_NODE_ENV as NODE_ENV_TYPES}`
+        `VITE_NODE_ENV is not configured directly. It should be 'development_vm', 'development_local', or 'production', not ${
+          import.meta.env.VITE_NODE_ENV as NODE_ENV_TYPES
+        }`
       );
   }
 };
