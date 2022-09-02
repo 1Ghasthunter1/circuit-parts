@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 interface StatusProps {
   part: Part;
-  queryKey: string;
+  queryKey?: string;
 }
 
 const PartStatusBox = ({ part, queryKey }: StatusProps) => {
@@ -117,7 +117,7 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
       onClick={(e) => e.stopPropagation()}
     >
       <TopLeftNotif />
-      {onInput ? (
+      {onInput && queryKey ? (
         <div className="flex items-center">
           <select
             className={inputStyle}
@@ -145,7 +145,7 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
         </div>
       ) : (
         <div
-          className={`px-2 py-1 text-white ${color} rounded-md`}
+          className={`px-2 py-1 text-white ${color} rounded-md select-none`}
           onClick={() => setOnInput(true)}
         >
           {content}

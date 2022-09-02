@@ -5,7 +5,6 @@ import { Part } from "../types/partsTypes";
 import { Assembly } from "../types/assemblyTypes";
 export async function fetchProjects() {
   const { data } = await axios.get<Project[]>(`${apiBaseUrl}/projects`);
-  console.log(data);
   return data;
 }
 

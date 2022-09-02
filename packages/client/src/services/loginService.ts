@@ -3,7 +3,6 @@ import { apiBaseUrl } from "../constants";
 import { AuthUser } from "../types/userTypes";
 import { userState } from "../state/state";
 
-console.log(apiBaseUrl);
 export const loginUser = async (email: string, password: string) => {
   try {
     const resp = await axios.post<AuthUser>(`${apiBaseUrl}/login`, {

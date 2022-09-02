@@ -24,7 +24,7 @@ log.info(`MONGO_URI: ${config.MONGODB_URI}`);
 log.info(`NODE_ENV: ${process.env.NODE_ENV}`);
 
 mongoose
-  .connect(config.MONGODB_URI)
+  .connect(config.MONGODB_URI || "")
   .then(() => {
     log.info("connected to MongoDB");
   })

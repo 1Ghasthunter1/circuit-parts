@@ -13,7 +13,6 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { deletePartById } from "../../services/partsServices";
 import { deleteAssemblyById } from "../../services/assemblyServices";
-import AssemblyView from "../../views/AssemblyView";
 import AssemblyStatusBox from "./AssemblyStatusBox";
 
 interface intProps {

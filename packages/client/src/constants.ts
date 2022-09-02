@@ -8,14 +8,14 @@ const getApiBaseUrl = () => {
     case "production":
       return "/api";
     case "development_local":
-      return "/api";
+      return "http://localhost:3001/api";
     case "development_vm":
       return "http://localhost:3001/api";
     default:
       throw new Error(
-        `VITE_NODE_ENV is not configured directly. It should be 'development_vm', 'development_local', or 'production', not ${
-          import.meta.env.VITE_NODE_ENV as NODE_ENV_TYPES
-        }`
+        `VITE_NODE_ENV of '${
+          import.meta.env.VITE_NODE_ENV
+        }' is not configured directly. It should be 'development_vm', 'development_local', or 'production'`
       );
   }
 };

@@ -23,8 +23,9 @@ export interface UnpopulatedPart {
   quantityRequired?: number;
 }
 
-export interface Part extends Omit<UnpopulatedPart, "parent"> {
+export interface Part extends Omit<UnpopulatedPart, "parent" | "project"> {
   parent: UnpopulatedAssembly | UnpopulatedProject;
+  project: UnpopulatedProject;
 }
 
 export interface EditedPart
