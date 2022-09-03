@@ -9,6 +9,8 @@ import CasualDeleteModal from "../components/modals/DeleteModal";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import EditPartModal from "../components/parts/EditPartModal";
+
 const PartView = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -54,6 +56,7 @@ const PartView = () => {
       <Button
         iconName="pencil"
         className="bg-blue-500 hover:bg-blue-600 text-white"
+        onClick={() => setEditPartModalVis(true)}
       >
         Edit
       </Button>
@@ -80,6 +83,12 @@ const PartView = () => {
         modalVisibility={deleteModalVis}
         setModalVisibility={setDeleteModalVis}
         deleteMutation={deleteComponentMutation}
+      />
+      <EditPartModal
+        modalVisibility={editPartModalVis}
+        setModalVisibility={setEditPartModalVis}
+        part={part}
+        queryKey={`/parts/${id}`}
       />
     </div>
   );

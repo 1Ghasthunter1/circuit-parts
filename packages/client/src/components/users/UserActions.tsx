@@ -32,12 +32,13 @@ const UserActions = ({
       <Button
         iconName="trash"
         className="bg-red-500 hover:bg-red-600 text-white m-1 disabled:bg-gray-400"
-        disabled={user.id === activeUser?.id}
+        disabled={(user.id === activeUser?.id || user.role === "owner") && activeUser?.role !== "owner"}
         onClick={() => setDeleteModalVis(true)}
       ></Button>
       <Button
         iconName="pencil"
         className="bg-blue-500 hover:bg-blue-600 text-white m-1 disabled:bg-gray-400"
+        disabled={user.role === "owner" && activeUser?.role !== "owner"}
         onClick={() => setEditModalVis(true)}
       ></Button>
       <DeleteUserModal

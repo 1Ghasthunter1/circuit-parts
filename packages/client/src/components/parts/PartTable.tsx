@@ -46,16 +46,20 @@ const PartTable = ({ part }: PropType) => {
             }
           />
           <PartTableEntry
-            title="Source Material"
-            content={part.sourceMaterial}
+            title="Quantity Required"
+            content={part.quantityRequired?.toString()}
           />
           <PartTableEntry
             title="Material Cut Length"
             content={part.materialCutLength}
           />
           <PartTableEntry
-            title="Quantity Required"
-            content={part.quantityRequired?.toString()}
+            title="Source Material"
+            content={part.sourceMaterial}
+          />
+          <PartTableEntry
+            title="Notes"
+            content={part.notes}
           />
         </tbody>
       </table>

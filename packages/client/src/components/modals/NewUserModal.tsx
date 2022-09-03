@@ -5,9 +5,10 @@ import { useMutation } from "react-query";
 import Modal from "react-modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NewUser } from "../../types/userTypes";
-import { UserRole } from "../../types/universalTypes";
+import { UserRole, userRoles } from "../../types/universalTypes";
 import { createNewUser } from "../../services/usersService";
 import { useQueryClient } from "react-query";
+
 import * as Yup from "yup";
 
 interface CreateModalProps {
@@ -203,8 +204,11 @@ const NewUserModal = ({
                   name="role"
                   placeholder="New Project"
                 >
-                  <option value={"user"}>User</option>
-                  <option value={"admin"}>Admin</option>
+                  {userRoles.map((role) => (
+                    <option value={role}>
+                      {role.charAt(0).toUpperCase() + role.slice(1)}
+                    </option>
+                  ))}
                 </Field>
                 <ErrorMessage
                   name="role"

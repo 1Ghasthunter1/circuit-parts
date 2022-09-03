@@ -7,62 +7,55 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useMutation, useQueryClient } from "react-query";
 
 import * as Yup from "yup";
-import { EditedPart, isPartStatus, Part } from "../../types/partsTypes";
 import {
+  assemblyStatuses,
   isPriority,
-  partStatuses,
   priorities,
 } from "../../types/universalTypes";
-import { editPart } from "../../services/partsServices";
 import Button from "../../elements/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
+import { Assembly, EditedAssembly, isAssemblyStatus } from "../../types/assemblyTypes";
+import { editAssemblyById } from "../../services/assemblyServices";
 
 interface CreateModalProps {
   modalVisibility: boolean;
   setModalVisibility: (inp: boolean) => void;
-  part: Part;
+  assembly: Assembly;
   queryKey: string;
 }
 
-const EditedPartSchema = Yup.object().shape({
+const EditedAssemblySchema = Yup.object().shape({
   name: Yup.string()
     .min(3, "Must be at least 3 characters long")
     .max(255, "Too Long!")
     .required("Required"),
   status: Yup.string()
-    .test("is_status", (status) => isPartStatus(status || ""))
+    .test("is_status", (status) => isAssemblyStatus(status || ""))
     .required("Required"),
   priority: Yup.string()
     .test("is_status", (priority) => isPriority(priority || ""))
     .required("Required"),
-  sourceMaterial: Yup.string()
-    .min(3, "Must be at least 3 characters long")
-    .max(500, "Too Long!"),
-  haveMaterial: Yup.boolean(),
-  quantityRequired: Yup.number().positive(
-    "You can't make negative things, come on now!"
-  ),
-  materialCutLength: Yup.string().max(500, "Too Long!"),
   notes: Yup.string().max(2000, "Too Long"),
 });
 
 Modal.setAppElement("#root");
 
-const EditDetails = ({
+const EditAssemblyModal = ({
   modalVisibility,
   setModalVisibility,
-  part,
+  assembly,
   queryKey,
 }: CreateModalProps) => {
   const queryClient = useQueryClient();
   const editPartMutation = useMutation(
-    async (values: EditedPart) => await editPart(part.id, values),
+    async (values: EditedAssembly) =>
+      await editAssemblyById(assembly.id, values),
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries([queryKey]);
         setModalVisibility(false);
-        toast.success(`Saved ${part.name}`)
+        toast.success(`Saved ${assembly.name}`);
       },
     }
   );
@@ -73,24 +66,20 @@ const EditDetails = ({
       setModalVisibility={setModalVisibility}
     >
       <GenericModalLayout
-        title={`Edit ${part.name}`}
-        subtitle={part.partNumber}
+        title={`Edit ${assembly.name}`}
+        subtitle={assembly.partNumber}
         closeModal={() => setModalVisibility(false)}
       >
         <Formik
           initialValues={
             {
-              name: part.name,
-              status: part.status,
-              priority: part.priority,
-              sourceMaterial: part.sourceMaterial,
-              haveMaterial: part.haveMaterial,
-              quantityRequired: part.quantityRequired,
-              materialCutLength: part.materialCutLength,
-              notes: part.notes,
-            } as EditedPart
+              name: assembly.name,
+              status: assembly.status,
+              priority: assembly.priority,
+              notes: assembly.notes,
+            } as EditedAssembly
           }
-          validationSchema={EditedPartSchema}
+          validationSchema={EditedAssemblySchema}
           onSubmit={(values) => {
             editPartMutation.mutate(values);
           }}
@@ -100,7 +89,7 @@ const EditDetails = ({
               <div className="space-y-4	">
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Part Name
+                    Assembly Name
                   </label>
                   <Field
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -124,7 +113,7 @@ const EditDetails = ({
                     type="select"
                     name="status"
                   >
-                    {partStatuses.map((status) => (
+                    {assemblyStatuses.map((status) => (
                       <option key={status} value={status}>
                         {status.charAt(0).toUpperCase() + status.slice(1)}
                       </option>
@@ -160,70 +149,6 @@ const EditDetails = ({
                   />
                 </div>
 
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Source Material
-                  </label>
-                  <Field
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    type="text"
-                    name="sourceMaterial"
-                  />
-                  <ErrorMessage
-                    name="sourceMaterial"
-                    component="div"
-                    className="text-xs text-red-400"
-                  />
-                </div>
-
-                <div className="flex">
-                  <label className="block mb-2 mr-4 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Have Material
-                  </label>
-                  <Field
-                    className="w-5 h-5 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    type="checkbox"
-                    name="haveMaterial"
-                  />
-                  <ErrorMessage
-                    name="haveMaterial"
-                    component="div"
-                    className="text-xs text-red-400"
-                  />
-                </div>
-
-                <div className="overflow-auto">
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Quantity Required
-                  </label>
-                  <Field
-                    className="float-left bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    type="number"
-                    name="quantityRequired"
-                  />
-                  <ErrorMessage
-                    name="quantityRequired"
-                    component="div"
-                    className="text-xs text-red-400"
-                  />
-                </div>
-
-                <div className="overflow-auto">
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Material Cut Length
-                  </label>
-                  <Field
-                    className="float-left bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    type="input"
-                    name="materialCutLength"
-                  />
-                  <ErrorMessage
-                    name="materialCutLength"
-                    component="div"
-                    className="text-xs text-red-400"
-                  />
-                </div>
-
                 <div className="overflow-auto">
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                     Notes
@@ -253,7 +178,7 @@ const EditDetails = ({
                           <FontAwesomeIcon icon="circle-notch" />
                         </span>
                       )}{" "}
-                      Save Part
+                      Save Assembly
                     </div>
                   </Button>
                 </div>
@@ -266,4 +191,4 @@ const EditDetails = ({
   );
 };
 
-export default EditDetails;
+export default EditAssemblyModal;

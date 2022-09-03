@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { deletePartById } from "../../services/partsServices";
 import { deleteAssemblyById } from "../../services/assemblyServices";
 import AssemblyStatusBox from "./AssemblyStatusBox";
+import EditAssemblyModal from "./EditAssemblyModal";
 
 interface intProps {
   rowItem: Part | Assembly;
@@ -66,7 +67,10 @@ const PartsTableItem = ({ rowItem, componentsQueryKey }: intProps) => {
             <PartStatusBox part={rowItem} queryKey={componentsQueryKey} />
           )}
           {rowItem.type === "assembly" && (
-            <AssemblyStatusBox assembly={rowItem} queryKey={componentsQueryKey} />
+            <AssemblyStatusBox
+              assembly={rowItem}
+              queryKey={componentsQueryKey}
+            />
           )}
         </td>
         <td className="mx-6">
@@ -113,6 +117,14 @@ const PartsTableItem = ({ rowItem, componentsQueryKey }: intProps) => {
           modalVisibility={editPartModalVis}
           setModalVisibility={setEditPartModalVis}
           part={rowItem}
+          queryKey={componentsQueryKey}
+        />
+      )}
+      {rowItem.type === "assembly" && (
+        <EditAssemblyModal
+          modalVisibility={editPartModalVis}
+          setModalVisibility={setEditPartModalVis}
+          assembly={rowItem}
           queryKey={componentsQueryKey}
         />
       )}

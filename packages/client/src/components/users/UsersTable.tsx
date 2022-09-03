@@ -9,7 +9,7 @@ import { User } from "../../types/userTypes";
 import UserActions from "./UserActions";
 import { userState } from "../../state/state";
 import { useSnapshot } from "valtio";
-import AttributeBox from "../../elements/AttributeBox";
+import RoleBox from "./RoleBox";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,11 +45,7 @@ const columns = [
   columnHelper.accessor("role", {
     cell: (info) => (
       <div>
-        {info.getValue() === "admin" ? (
-          <AttributeBox color="red">Admin</AttributeBox>
-        ) : (
-          <AttributeBox color="violet">User</AttributeBox>
-        )}
+        <RoleBox role={info.getValue()} />
       </div>
     ),
     footer: (info) => info.column.id,
@@ -102,7 +98,11 @@ const UsersTable = ({ data }: { data: TableUser[] }) => {
           {table.getRowModel().rows.map((row) => (
             <tr
               key={row.id}
-              className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
+              className={`hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700 ${
+                row.original.id === activeUser.id
+                  ? "odd:bg-blue-100 even:bg-blue-100 hover:bg-blue-200"
+                  : "odd:bg-white even:bg-gray-50"
+              }`}
             >
               {row.getVisibleCells().map((cell) => {
                 return (

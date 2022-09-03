@@ -1,5 +1,5 @@
 // Type constants =======================
-const userRoles = ["admin", "user"] as const;
+export const userRoles = ["admin", "user", "owner"] as const;
 
 export const childTypes = ["assembly", "part"] as const;
 

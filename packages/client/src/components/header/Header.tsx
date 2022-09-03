@@ -18,7 +18,7 @@ const Header = () => {
         <li className="mx-3">
           <HeaderItem url={"/orders"}>Orders</HeaderItem>
         </li>
-        {user?.role === "admin" && (
+        {(user?.role === "admin" || user?.role === "owner") && (
           <li className="mx-3">
             <HeaderItem url={"/users"}>Users</HeaderItem>
           </li>

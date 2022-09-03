@@ -9,6 +9,7 @@ import { UseMutationResult } from "react-query";
 import { AxiosResponse, AxiosError } from "axios";
 
 import * as Yup from "yup";
+import { userRoles } from "../../types/universalTypes";
 
 interface CreateModalProps {
   modalVisibility: boolean;
@@ -203,8 +204,11 @@ const EditUserModal = ({
                   name="role"
                   placeholder="New Project"
                 >
-                  <option value={"user"}>User</option>
-                  <option value={"admin"}>Admin</option>
+                  {userRoles.map((role) => (
+                    <option value={role} key={role}>
+                      {role.charAt(0).toUpperCase() + role.slice(1)}
+                    </option>
+                  ))}
                 </Field>
                 <ErrorMessage
                   name="role"
