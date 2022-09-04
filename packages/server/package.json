@@ -14,12 +14,10 @@
     "start": "node ./build/index.js",
     "build:local": "rm -rf build && npm run tsc && npm run build:ui",
     "deploy": "npm run build:local && git add . && git commit -m herokuBuild && cd ../.. && git push heroku `git subtree split --prefix packages/server master`:master --force"
-
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "tslog": "^3.3.3",
     "@types/jsonwebtoken": "^8.5.8",
     "ajv": "^8.11.0",
     "bcrypt": "^5.0.1",
@@ -29,7 +27,9 @@
     "express-async-errors": "^3.1.1",
     "express-validator": "^6.14.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.5.2"
+    "mongoose": "^6.5.2",
+    "tsc": "^2.0.4",
+    "tslog": "^3.3.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
