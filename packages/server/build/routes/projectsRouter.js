@@ -26,7 +26,7 @@ projectsRouter.get("/", ((_req, res) => __awaiter(void 0, void 0, void 0, functi
     const projects = yield project_1.default.find({});
     res.send(projects).end();
 })));
-projectsRouter.post("/", (0, express_validator_1.checkSchema)(projectValidation_1.newProjectSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+projectsRouter.post("/", middleware_1.adminRequired, (0, express_validator_1.checkSchema)(projectValidation_1.newProjectSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
