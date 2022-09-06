@@ -29,6 +29,7 @@ projectsRouter.get("/", (async (_req, res) => {
 
 projectsRouter.post(
   "/",
+  adminRequired,
   checkSchema(newProjectSchema),
   async (req: express.Request, res: express.Response) => {
     const errors = validationResult(req);

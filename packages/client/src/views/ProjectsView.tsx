@@ -10,30 +10,35 @@ import ProjectList from "../components/projects/ProjectsList";
 import CreateModal from "../components/modals/CreateModal";
 import CreateProjectForm from "../components/projects/createProject/CreateProjectForm";
 import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
-
+import { userState } from "~/state/state";
 const DashboardView = () => {
   const { data } = useQuery<Project[]>("projects", fetchProjects);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const userRole = userState.user?.role;
 
   const topRightStuff = (
     <>
-      <Button
-        iconName="folder-plus"
-        txtColor="text-white"
-        bgColor="bg-green-600"
-        hoverColor="hover:bg-green-700"
-        style="ml-2"
-        onClick={(_e) => setShowModal(true)}
-      >
-        New Project
-      </Button>
+      {(userRole === "admin" || userRole === "owner") && (
+        <>
+          <Button
+            iconName="folder-plus"
+            txtColor="text-white"
+            bgColor="bg-green-600"
+            hoverColor="hover:bg-green-700"
+            style="ml-2"
+            onClick={(_e) => setShowModal(true)}
+          >
+            New Project
+          </Button>
 
-      <CreateModal
-        title="New Project"
-        showModal={showModal}
-        setShowModal={setShowModal}
-        form={<CreateProjectForm closeModal={() => setShowModal(false)} />}
-      />
+          <CreateModal
+            title="New Project"
+            showModal={showModal}
+            setShowModal={setShowModal}
+            form={<CreateProjectForm closeModal={() => setShowModal(false)} />}
+          />
+        </>
+      )}
     </>
   );
 
