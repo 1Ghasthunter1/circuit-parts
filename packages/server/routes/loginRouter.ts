@@ -27,14 +27,12 @@ loginRouter.post(
     );
 
     const user = await User.findOne({ email });
-    const passwordCorrect =
-      user === null ? false : await bcrypt.compare(password, user.hash);
+    if (!user) return res.status(401).json({ error: "invalid credentials" });
 
-    if (!(user && passwordCorrect)) {
-      return res.status(401).json({
-        error: "invalid username or password",
-      });
-    }
+    const correctPassword = await bcrypt.compare(password, user.hash);
+
+    if (!correctPassword)
+      return res.status(401).json({ error: "incorrect password" });
 
     const userForToken = {
       username: user.username,

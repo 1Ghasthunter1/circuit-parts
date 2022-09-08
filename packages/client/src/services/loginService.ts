@@ -18,6 +18,13 @@ export const loginUser = async (email: string, password: string) => {
   }
 };
 
+export const newLoginUser = async (email: string, password: string) => {
+  return await axios.post<AuthUser>(`${apiBaseUrl}/login`, {
+    email,
+    password,
+  });
+};
+
 export const logoutUser = () => {
   window.localStorage.clear();
   userState.user = null;

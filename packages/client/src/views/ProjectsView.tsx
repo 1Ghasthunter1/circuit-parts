@@ -11,8 +11,9 @@ import CreateModal from "../components/modals/CreateModal";
 import CreateProjectForm from "../components/projects/createProject/CreateProjectForm";
 import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
 import { userState } from "~/state/state";
+import ProjectsSkeleton from "~/components/skeletons/ProjectsSkeleton";
 const DashboardView = () => {
-  const { data } = useQuery<Project[]>("projects", fetchProjects);
+  const { data, isLoading } = useQuery<Project[]>("projects", fetchProjects);
   const [showModal, setShowModal] = useState<boolean>(false);
   const userRole = userState.user?.role;
 
@@ -49,7 +50,7 @@ const DashboardView = () => {
       topLeftContent={topLeftStuff}
       topRightContent={topRightStuff}
     >
-      <ProjectList projects={data} />
+      {isLoading ? <ProjectsSkeleton rowCount={4} /> : <ProjectList projects={data} />}
     </TopLeftRightAndMiddle>
   );
 };

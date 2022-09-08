@@ -1,12 +1,15 @@
 import LoginLogo from "../media/loginlogo.png";
-import { Formik, Form, ErrorMessage, Field } from "formik";
-import { loginUser } from "../services/loginService";
-import { useState } from "react";
+import { Formik, Form, ErrorMessage, Field, useFormikContext } from "formik";
+import { loginUser, newLoginUser } from "../services/loginService";
+import { useEffect, useState } from "react";
 import { userState } from "../state/state";
 
 import { useSnapshot } from "valtio";
 import { Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useMutation } from "react-query";
+import { AxiosError, AxiosResponse } from "axios";
+import * as yup from "yup";
 
 const LoginView = () => {
   const [loginStatus, setLoginStatus] = useState<string>("");
@@ -14,22 +17,35 @@ const LoginView = () => {
   const userSnapshot = useSnapshot(userState);
   const user = userSnapshot.user;
 
-  const handleSubmit = async ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => {
-    const userObj = await loginUser(email, password);
-    if (!userObj) return null;
-    if ("error" in userObj) {
-      setLoginStatus(userObj.error);
-    } else {
-      localStorage.setItem("user", JSON.stringify(userObj));
-      userState.user = userObj;
+  let loginSchema = yup.object().shape({
+    email: yup
+      .string()
+      .required()
+      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i),
+    password: yup.string().min(6),
+  });
+
+  const loginMutation = useMutation(
+    async ({ email, password }: { email: string; password: string }) => {
+      const resp = await newLoginUser(email, password);
+      if (resp.data) userState.user = resp.data;
+    },
+    {
+      onError: (e: AxiosError<{ error: string }>) => {
+        switch (e.response?.data.error) {
+          case "invalid credentials":
+            console.log("bad creds");
+            setLoginStatus("Invalid email or password");
+            break;
+          case "incorrect password":
+            setLoginStatus("Invalid password");
+            break;
+          default:
+            console.log("something else");
+        }
+      },
     }
-  };
+  );
 
   interface ErrorsType {
     email?: string;
@@ -69,13 +85,11 @@ const LoginView = () => {
                       errors.password = "Password is required";
                     return errors;
                   }}
-                  onSubmit={async (values, { setSubmitting }) => {
-                    setSubmitting(true);
-                    await handleSubmit(values);
-                    setSubmitting(false);
+                  onSubmit={(values) => {
+                    loginMutation.mutate(values);
                   }}
                 >
-                  {({ isSubmitting, dirty, isValid }) => {
+                  {({ dirty, isValid }) => {
                     return (
                       <Form className="space-y-4 md:space-y-6">
                         <div>
@@ -121,10 +135,12 @@ const LoginView = () => {
                         </div>
                         <button
                           type="submit"
-                          disabled={isSubmitting || !dirty || !isValid}
+                          disabled={
+                            loginMutation.isLoading || !dirty || !isValid
+                          }
                           className="w-full text-white bg-fuchsia-500 hover:bg-fuchsia-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-gray-400"
                         >
-                          {isSubmitting && (
+                          {loginMutation.isLoading && (
                             <FontAwesomeIcon
                               icon="circle-notch"
                               color="#FFFFFF"
