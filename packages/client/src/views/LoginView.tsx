@@ -13,17 +13,24 @@ import * as yup from "yup";
 
 const LoginView = () => {
   const [loginStatus, setLoginStatus] = useState<string>("");
+  const [loginState, setLoginState] = useState<{
+    email: string;
+    password: string;
+    errors?: { email?: string; password?: string };
+  }>({ email: "", password: "" });
 
   const userSnapshot = useSnapshot(userState);
   const user = userSnapshot.user;
 
-  let loginSchema = yup.object().shape({
-    email: yup
-      .string()
-      .required()
-      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i),
-    password: yup.string().min(6),
-  });
+  let emailValidator = yup
+    .string()
+    .required("Required")
+    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, "Invalid Email");
+
+  let passwordValidator = yup
+    .string()
+    .required("Required")
+    .max(250, "Too Long!");
 
   const loginMutation = useMutation(
     async ({ email, password }: { email: string; password: string }) => {
@@ -52,6 +59,36 @@ const LoginView = () => {
     password?: string;
   }
 
+  const validateThing = async () => {
+    let emailErrors = null;
+    let passwordErrors = null;
+    try {
+      const emailValidation = await emailValidator.validateSync(
+        loginState.email
+      );
+      emailErrors = null;
+    } catch (e: any) {
+      console.log(e.errors);
+      emailErrors = e.errors[0];
+    }
+
+    try {
+      const passwordValidation = await passwordValidator.validateSync(
+        loginState.password
+      );
+      passwordErrors = null;
+    } catch (e: any) {
+      passwordErrors = e.errors[0];
+    }
+    setLoginState({
+      ...loginState,
+      errors: { email: emailErrors, password: passwordErrors },
+    });
+  };
+  useEffect(() => {
+    validateThing();
+    console.log(loginState.errors);
+  }, [loginState.email, loginState.password]);
   return (
     <>
       {!user ? (
@@ -154,6 +191,22 @@ const LoginView = () => {
                     );
                   }}
                 </Formik>
+                <input
+                  name="email"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="johndoe@team696.org"
+                  onChange={(e) =>
+                    setLoginState({ ...loginState, email: e.target.value })
+                  }
+                />
+                <input
+                  name="password"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="******"
+                  onChange={(e) =>
+                    setLoginState({ ...loginState, password: e.target.value })
+                  }
+                />
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Need an account?{" "}
                   <a
