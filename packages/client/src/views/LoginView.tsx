@@ -1,94 +1,49 @@
 import LoginLogo from "../media/loginlogo.png";
-import { Formik, Form, ErrorMessage, Field, useFormikContext } from "formik";
-import { loginUser, newLoginUser } from "../services/loginService";
-import { useEffect, useState } from "react";
+import { Formik, Form, ErrorMessage, Field } from "formik";
+import { loginUser } from "../services/loginService";
+import { useState } from "react";
 import { userState } from "../state/state";
 
 import { useSnapshot } from "valtio";
 import { Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useMutation } from "react-query";
-import { AxiosError, AxiosResponse } from "axios";
-import * as yup from "yup";
 
 const LoginView = () => {
   const [loginStatus, setLoginStatus] = useState<string>("");
-  const [loginState, setLoginState] = useState<{
-    email: string;
-    password: string;
-    errors?: { email?: string; password?: string };
-  }>({ email: "", password: "" });
 
   const userSnapshot = useSnapshot(userState);
   const user = userSnapshot.user;
 
-  let emailValidator = yup
-    .string()
-    .required("Required")
-    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, "Invalid Email");
-
-  let passwordValidator = yup
-    .string()
-    .required("Required")
-    .max(250, "Too Long!");
-
-  const loginMutation = useMutation(
-    async ({ email, password }: { email: string; password: string }) => {
-      const resp = await newLoginUser(email, password);
-      if (resp.data) userState.user = resp.data;
-    },
-    {
-      onError: (e: AxiosError<{ error: string }>) => {
-        switch (e.response?.data.error) {
-          case "invalid credentials":
-            console.log("bad creds");
-            setLoginStatus("Invalid email or password");
-            break;
-          case "incorrect password":
-            setLoginStatus("Invalid password");
-            break;
-          default:
-            console.log("something else");
-        }
-      },
+  const handleSubmit = async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => {
+    const userObj = await loginUser(email, password);
+    if (!userObj) return null;
+    if ("error" in userObj) {
+      console.log(userObj);
+      if (userObj.error === "invalid credentials")
+        setLoginStatus("Invalid username or password");
+      else if (userObj.error === "incorrect password")
+        setLoginStatus("Incorrect password");
+      else setLoginStatus("Unknown login error");
+    } else {
+      localStorage.setItem("user", JSON.stringify(userObj));
+      userState.user = userObj;
     }
-  );
+  };
+
+  const baseInputStyle =
+    "bg-gray-50 border-2 border-primary-600 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5";
 
   interface ErrorsType {
     email?: string;
     password?: string;
   }
 
-  const validateThing = async () => {
-    let emailErrors = null;
-    let passwordErrors = null;
-    try {
-      const emailValidation = await emailValidator.validateSync(
-        loginState.email
-      );
-      emailErrors = null;
-    } catch (e: any) {
-      console.log(e.errors);
-      emailErrors = e.errors[0];
-    }
-
-    try {
-      const passwordValidation = await passwordValidator.validateSync(
-        loginState.password
-      );
-      passwordErrors = null;
-    } catch (e: any) {
-      passwordErrors = e.errors[0];
-    }
-    setLoginState({
-      ...loginState,
-      errors: { email: emailErrors, password: passwordErrors },
-    });
-  };
-  useEffect(() => {
-    validateThing();
-    console.log(loginState.errors);
-  }, [loginState.email, loginState.password]);
   return (
     <>
       {!user ? (
@@ -122,23 +77,29 @@ const LoginView = () => {
                       errors.password = "Password is required";
                     return errors;
                   }}
-                  onSubmit={(values) => {
-                    loginMutation.mutate(values);
+                  onSubmit={async (values, { setSubmitting }) => {
+                    setSubmitting(true);
+                    await handleSubmit(values);
+                    setSubmitting(false);
                   }}
                 >
-                  {({ dirty, isValid }) => {
+                  {({ isSubmitting, dirty, isValid, errors, touched }) => {
                     return (
                       <Form className="space-y-4 md:space-y-6">
                         <div>
                           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Your Email
+                            Email
                           </label>
                           <Field
                             name="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className={`${baseInputStyle} ${
+                              errors.email &&
+                              touched.email &&
+                              "border-rose-500 text-rose-500 focus:ring-4 focus:outline-none focus:ring-rose-200 "
+                            }`}
                             placeholder="johndoe@team696.org"
                           />
-                          <div className="text-xs text-rose-400">
+                          <div className="text-rose-400">
                             <ErrorMessage name="email" component="div" />
                           </div>
                         </div>
@@ -153,9 +114,13 @@ const LoginView = () => {
                             type="password"
                             name="password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className={`${baseInputStyle} ${
+                              errors.password &&
+                              touched.password &&
+                              "border-rose-500 text-rose-500 focus:ring-4 focus:outline-none focus:ring-rose-200 "
+                            }`}
                           />
-                          <div className="text-xs text-rose-400">
+                          <div className="text-rose-400">
                             <ErrorMessage name="password" component="div" />
                           </div>
                         </div>
@@ -172,12 +137,10 @@ const LoginView = () => {
                         </div>
                         <button
                           type="submit"
-                          disabled={
-                            loginMutation.isLoading || !dirty || !isValid
-                          }
+                          disabled={isSubmitting || !dirty || !isValid}
                           className="w-full text-white bg-fuchsia-500 hover:bg-fuchsia-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-gray-400"
                         >
-                          {loginMutation.isLoading && (
+                          {isSubmitting && (
                             <FontAwesomeIcon
                               icon="circle-notch"
                               color="#FFFFFF"
@@ -191,22 +154,6 @@ const LoginView = () => {
                     );
                   }}
                 </Formik>
-                <input
-                  name="email"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="johndoe@team696.org"
-                  onChange={(e) =>
-                    setLoginState({ ...loginState, email: e.target.value })
-                  }
-                />
-                <input
-                  name="password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="******"
-                  onChange={(e) =>
-                    setLoginState({ ...loginState, password: e.target.value })
-                  }
-                />
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Need an account?{" "}
                   <a

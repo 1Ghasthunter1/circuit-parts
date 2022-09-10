@@ -53,7 +53,7 @@ app.use("/api/*", errorHandler);
 
 app.get("*", function (_req, res) {
   res.sendFile("index.html", {
-    root: __dirname,
+    root: path.join(__dirname, "./build"),
   });
 });
 
