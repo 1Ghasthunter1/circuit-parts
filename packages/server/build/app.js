@@ -43,7 +43,7 @@ app.use("/api/*", middleware_2.adminRequired);
 app.use("/api/*", middleware_1.errorHandler);
 app.get("*", function (_req, res) {
     res.sendFile("index.html", {
-        root: __dirname,
+        root: path_1.default.join(__dirname, "./build"),
     });
 });
 exports.default = app;

@@ -28,12 +28,11 @@ loginRouter.post("/", (0, express_validator_1.body)("email").isEmail(), (0, expr
         includeOptionals: true,
     }));
     const user = yield user_1.default.findOne({ email });
-    const passwordCorrect = user === null ? false : yield bcrypt_1.default.compare(password, user.hash);
-    if (!(user && passwordCorrect)) {
-        return res.status(401).json({
-            error: "invalid username or password",
-        });
-    }
+    if (!user)
+        return res.status(401).json({ error: "invalid credentials" });
+    const correctPassword = yield bcrypt_1.default.compare(password, user.hash);
+    if (!correctPassword)
+        return res.status(401).json({ error: "incorrect password" });
     const userForToken = {
         username: user.username,
         id: user._id,
