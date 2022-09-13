@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { userState } from "../../state/state";
 import { useSnapshot } from "valtio";
 import { useNavigate } from "react-router-dom";
+import UserIcon from "../users/UserIcon";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -23,17 +24,26 @@ export default function Example() {
   };
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button className="inline-flex">
-          <span className="p-4 select-none">
-            <FontAwesomeIcon className="pr-2" icon="user" size="sm" />
-            <span className="pr-1">
+      <Menu.Button className="inline-flex">
+        <div className="flex items-center">
+          <UserIcon
+            text={
+              user.firstName.charAt(0).toUpperCase() +
+              user.lastName.charAt(0).toUpperCase()
+            }
+            size="md"
+          />
+          <div className="ml-3">
+            <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
               {user.firstName} {user.lastName}
+            </p>
+            <span className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
+              <span className="mr-1">View profile</span>
+              <FontAwesomeIcon icon="caret-down" size="xs" />
             </span>
-            <FontAwesomeIcon icon="caret-down" size="xs" />
-          </span>
-        </Menu.Button>
-      </div>
+          </div>
+        </div>
+      </Menu.Button>
 
       <Transition
         as={Fragment}
@@ -44,7 +54,7 @@ export default function Example() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="z-40 shadow-lg origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="z-40 shadow-lg origin-top-right absolute right-0 mt-4 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (

@@ -96,7 +96,7 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
     "w-36 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5";
   return (
     <div
-      className="whitespace-nowrap w-min"
+      className="whitespace-nowrap w-min cursor-pointer"
       onClick={(e) => e.stopPropagation()}
     >
       <TopLeftNotif />
@@ -128,7 +128,7 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
         </div>
       ) : (
         <div
-          className={`px-2 py-1 text-white ${color} rounded-md`}
+          className={`px-2 py-1 text-white ${color} rounded-md  select-none`}
           onClick={() => setOnInput(true)}
         >
           {content}

@@ -14,6 +14,7 @@ import EditDetails from "../components/users/EditDetailsModal";
 import ChangePasswordModal from "../components/users/ChangePasswordModal";
 import { userState } from "../state/state";
 import { useNavigate } from "react-router-dom";
+import UserIcon from "~/components/users/UserIcon";
 
 const AccountView = () => {
   const [editModalVis, setEditModalVis] = useState<boolean>(false);
@@ -52,7 +53,7 @@ const AccountView = () => {
   if (!user) return null;
   return (
     <div className="m-8 flex">
-      <FontAwesomeIcon icon="circle-user" size="10x" color="#777777" />
+      <UserIcon text="HP" size="full" />
 
       <div className="w-full pr-12 pl-8">
         <div className="">

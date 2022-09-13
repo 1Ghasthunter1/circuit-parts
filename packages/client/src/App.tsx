@@ -14,6 +14,7 @@ import UsersView from "./views/UsersView";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import DashboardView from "./views/DashboardView";
 
 const App = () => {
   return (
@@ -25,7 +26,7 @@ const App = () => {
             <Route path="/login" element={<div>asd</div>}></Route>
           </Route>
           <Route element={<AppLayout header={<Header />} />}>
-            <Route path="/dashboard" element={<UnderConstruction />}></Route>
+            <Route path="/dashboard" element={<DashboardView />}></Route>
             <Route path="/projects" element={<ProjectsView />}></Route>
             <Route path="/projects/:id" element={<ProjectView />}></Route>
             <Route path="/parts/:id" element={<PartView />}></Route>

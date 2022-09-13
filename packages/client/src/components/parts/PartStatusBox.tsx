@@ -113,7 +113,7 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
     "w-36 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5";
   return (
     <div
-      className="whitespace-nowrap w-min"
+      className="whitespace-nowrap w-min cursor-pointer"
       onClick={(e) => e.stopPropagation()}
     >
       <TopLeftNotif />

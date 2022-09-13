@@ -20,7 +20,7 @@ const TypeBox = ({ type }: StatusProps) => {
   }
   return (
     <div
-      className={`whitespace-nowrap w-min px-2 py-1 rounded-md font-bold ${color}`}
+      className={`select-none whitespace-nowrap w-min px-2 py-1 rounded-md font-bold ${color}`}
     >
       {content}
     </div>

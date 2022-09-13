@@ -28,7 +28,7 @@ const NewComponentButtons = ({
   return (
     <div>
       <Button
-        iconName="puzzle-piece"
+        iconName="cube"
         txtColor="text-white"
         bgColor="bg-green-600"
         hoverColor="hover:bg-green-700"
@@ -52,7 +52,7 @@ const NewComponentButtons = ({
       />
 
       <Button
-        iconName="puzzle-piece"
+        iconName="cubes"
         txtColor="text-white"
         bgColor="bg-green-600"
         hoverColor="hover:bg-green-700"
