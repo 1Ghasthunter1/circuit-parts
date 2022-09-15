@@ -2,9 +2,10 @@ import { UserRole } from "~/types/universalTypes";
 
 interface StatusProps {
   role: UserRole;
+  size?: "sm" | "md" | "lg"
 }
 
-const RoleBox = ({ role }: StatusProps) => {
+const RoleBox = ({ role, size }: StatusProps) => {
   let content;
   let color;
   switch (role) {
@@ -24,9 +25,10 @@ const RoleBox = ({ role }: StatusProps) => {
       content = "Unknown";
       color = "bg-red-200";
   }
+
   return (
     <div
-      className={`whitespace-nowrap w-min px-2 py-1 rounded-md font-bold ${color}`}
+      className={`whitespace-nowrap w-min px-2 py-1 rounded-md font-bold select-none ${color}`}
     >
       {content}
     </div>

@@ -6,7 +6,7 @@ import { useSnapshot } from "valtio";
 const Header = () => {
   const user = useSnapshot(userState).user;
   return (
-    <div className="inline-flex items-center bg-gray-100 w-full">
+    <div className="inline-flex bg-white shadow items-center w-full">
       <a className="m-4 mr-12 text-xl font-bold">696 PMS</a>
       <ul className="flex">
         <li className="mx-3">

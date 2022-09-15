@@ -37,7 +37,7 @@ const LoginView = () => {
   };
 
   const baseInputStyle =
-    "bg-gray-50 border-2 border-primary-600 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5";
+    "bg-gray-50 border-2 border-black-600 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5";
 
   interface ErrorsType {
     email?: string;
@@ -130,7 +130,7 @@ const LoginView = () => {
                         <div className="flex items-center justify-between">
                           <a
                             href="mailto:hunterpruett2003@gmail.com?subject=Forgot%20PMS%20Password"
-                            className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                            className="text-sm font-medium text-black-600 hover:underline dark:text-black-500"
                           >
                             Forgot password?
                           </a>
@@ -138,7 +138,7 @@ const LoginView = () => {
                         <button
                           type="submit"
                           disabled={isSubmitting || !dirty || !isValid}
-                          className="w-full text-white bg-fuchsia-500 hover:bg-fuchsia-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-gray-400"
+                          className="w-full text-white bg-fuchsia-500 hover:bg-fuchsia-700 focus:ring-4 focus:outline-none focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-gray-400"
                         >
                           {isSubmitting && (
                             <FontAwesomeIcon
@@ -158,7 +158,7 @@ const LoginView = () => {
                   Need an account?{" "}
                   <a
                     href="mailto:hunterpruett2003@gmail.com?subject=PMS%Account%Creation"
-                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                    className="font-medium text-black-600 hover:underline dark:text-black-500"
                   >
                     Request Creation
                   </a>
