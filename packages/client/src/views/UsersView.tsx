@@ -21,8 +21,7 @@ const UsersView = () => {
           <div className="sm:flex-auto">
             <h1 className="text-xl font-semibold text-gray-900">Users</h1>
             <p className="mt-2 text-sm text-gray-700">
-              A list of all the users in your account including their name,
-              title, email and role.
+              A list of all the users in the 696 PMS workspace.
             </p>
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">

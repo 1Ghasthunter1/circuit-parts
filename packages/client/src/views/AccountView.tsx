@@ -52,7 +52,7 @@ const AccountView = () => {
 
   if (!user) return null;
   return (
-    <div className="m-8 flex">
+    <div className="m-8 flex p-4">
       <UserIcon text="HP" size="full" />
 
       <div className="w-full pr-12 pl-8">
