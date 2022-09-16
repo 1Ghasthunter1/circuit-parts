@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NewUser, User, EditedUser, NewUserPassword } from "../types/userTypes";
 import { apiBaseUrl } from "../constants";
+import { UserRole } from "~/types/universalTypes";
 
 export const fetchAllUsers = async () => {
   const { data } = await axios.get<Omit<User, "token">[]>(
@@ -35,4 +36,13 @@ export const updateUserById = async (user: EditedUser) => {
 
 export const deleteUserById = async (userId: string) => {
   return await axios.delete<NewUser>(`${apiBaseUrl}/users/${userId}`);
+};
+
+//Local user services
+export const validatePerms = (
+  requiredRoles: UserRole[],
+  targetRole?: UserRole
+) => {
+  if (!targetRole) return false;
+  return requiredRoles.includes(targetRole);
 };

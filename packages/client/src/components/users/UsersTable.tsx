@@ -29,8 +29,8 @@ const columns = [
     cell: (props) => {
       const user = props.row.original;
       return (
-        <div className="whitespace-nowrap py-2 pl-4 pr-3 text-sm sm:pl-6">
-          <div className="flex items-center">
+        <div className="whitespace-nowrap py-2  pr-3 text-sm">
+          <div className="flex items-left">
             <UserIcon
               text={
                 user.firstName.charAt(0).toUpperCase() +
