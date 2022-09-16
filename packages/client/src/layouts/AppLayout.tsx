@@ -25,7 +25,7 @@ const AppLayout = ({ header }: { header?: JSX.Element }) => {
   }
 
   const content = user ? (
-    <div className="bg-gray-50 h-screen">
+    <div className="bg-gray-100 h-screen">
       {header}
       <Outlet />
     </div>

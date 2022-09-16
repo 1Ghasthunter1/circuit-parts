@@ -51,7 +51,7 @@ const ProjectsView = () => {
       topLeftContent={topLeftStuff}
       topRightContent={topRightStuff}
     >
-      {isLoading ? (
+      {true ? (
         <ProjectsSkeleton rowCount={4} />
       ) : (
         <ProjectList projects={data} />

@@ -8,7 +8,6 @@ import {
 } from "../../types/universalTypes";
 import TopLeftNotif from "../notifications/TopLeftNotification";
 import { cssTransition, toast } from "react-toastify";
-import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { editAssemblyById } from "../../services/assemblyServices";
 import { Part } from "../../types/partsTypes";

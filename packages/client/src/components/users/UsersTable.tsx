@@ -115,11 +115,12 @@ const UsersTable = ({ data }: { data: TableUser[] }) => {
               <table className="min-w-full divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <tr>
+                    <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
                         <th
                           scope="col"
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                          key={header.id}
                         >
                           {header.isPlaceholder
                             ? null
@@ -134,7 +135,7 @@ const UsersTable = ({ data }: { data: TableUser[] }) => {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {table.getRowModel().rows.map((row) => (
-                    <tr key={row.id}>
+                    <tr key={row.id} className="hover:bg-gray-50">
                       {row.getVisibleCells().map((cell) => {
                         return (
                           <td

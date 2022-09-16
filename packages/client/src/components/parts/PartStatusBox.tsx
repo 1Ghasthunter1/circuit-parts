@@ -7,7 +7,6 @@ import { Part } from "../../types/partsTypes";
 import { PartStatus, partStatuses } from "../../types/universalTypes";
 import TopLeftNotif from "../notifications/TopLeftNotification";
 import { cssTransition, toast } from "react-toastify";
-import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 
 interface StatusProps {
