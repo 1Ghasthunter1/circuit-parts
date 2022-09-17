@@ -49,7 +49,7 @@ const EditedPartSchema = Yup.object().shape({
 
 Modal.setAppElement("#root");
 
-const EditDetails = ({
+const EditPartModal = ({
   modalVisibility,
   setModalVisibility,
   part,
@@ -62,7 +62,7 @@ const EditDetails = ({
       onSuccess: async () => {
         await queryClient.invalidateQueries([queryKey]);
         setModalVisibility(false);
-        toast.success(`Saved ${part.name}`)
+        toast.success(`Saved ${part.name}`);
       },
     }
   );
@@ -246,14 +246,14 @@ const EditDetails = ({
                     type="submit"
                     disabled={isSubmitting || !isValid}
                   >
-                    <div>
+                    <div className="flex items-center">
                       {!isSubmitting && <FontAwesomeIcon icon="check" />}
                       {isSubmitting && (
-                        <span className="animate-spin">
+                        <div className="animate-spin">
                           <FontAwesomeIcon icon="circle-notch" />
-                        </span>
-                      )}{" "}
-                      Save Part
+                        </div>
+                      )}
+                      <span className="ml-2">Save Part</span>
                     </div>
                   </Button>
                 </div>
@@ -266,4 +266,4 @@ const EditDetails = ({
   );
 };
 
-export default EditDetails;
+export default EditPartModal;

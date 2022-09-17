@@ -15,7 +15,11 @@ import {
 import Button from "../../elements/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
-import { Assembly, EditedAssembly, isAssemblyStatus } from "../../types/assemblyTypes";
+import {
+  Assembly,
+  EditedAssembly,
+  isAssemblyStatus,
+} from "../../types/assemblyTypes";
 import { editAssemblyById } from "../../services/assemblyServices";
 
 interface CreateModalProps {
@@ -171,14 +175,14 @@ const EditAssemblyModal = ({
                     type="submit"
                     disabled={isSubmitting || !isValid}
                   >
-                    <div>
+                    <div className="flex items-center">
                       {!isSubmitting && <FontAwesomeIcon icon="check" />}
                       {isSubmitting && (
-                        <span className="animate-spin">
+                        <div className="animate-spin">
                           <FontAwesomeIcon icon="circle-notch" />
-                        </span>
-                      )}{" "}
-                      Save Assembly
+                        </div>
+                      )}
+                      <span className="ml-2">Save Assembly</span>
                     </div>
                   </Button>
                 </div>

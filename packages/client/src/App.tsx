@@ -23,7 +23,7 @@ const App = () => {
         <Routes>
           <Route path="*" element={<Navigate to="/login" />} />
           <Route element={<LoginView />}>
-            <Route path="/login" element={<div>asd</div>}></Route>
+            <Route path="/login" element={<div></div>}></Route>
           </Route>
           <Route element={<AppLayout header={<Header />} />}>
             <Route path="/dashboard" element={<DashboardView />}></Route>

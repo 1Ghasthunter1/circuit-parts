@@ -23,11 +23,6 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
 
   const queryClient = useQueryClient();
 
-  const tranny = cssTransition({
-    enter: "animate__animated animate__bounceIn",
-    exit: "animate__animated animate__bounceOut",
-  });
-
   const editMutation = useMutation(
     async () => {
       await editAssemblyById(assembly.id, {
@@ -52,13 +47,11 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
       onError: () => {
         toast.error("Could not update status", {
           autoClose: 2500,
-          transition: tranny,
         });
       },
       onSuccess: () => {
         toast.success("Status changed successfully", {
           autoClose: 2500,
-          transition: tranny,
         });
       },
     }
