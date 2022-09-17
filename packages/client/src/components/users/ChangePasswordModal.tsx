@@ -64,12 +64,14 @@ const ChangePasswordModal = ({
           }}
           validationSchema={NewPwdSchema}
           onSubmit={(values) => {
-            const newPasswordFormValues: NewUserPassword = {
-              oldPassword: values.currentPassword,
-              newPassword: values.newPassword,
-            };
+            if (!editMutation.isLoading) {
+              const newPasswordFormValues: NewUserPassword = {
+                oldPassword: values.currentPassword,
+                newPassword: values.newPassword,
+              };
 
-            editMutation.mutate(newPasswordFormValues);
+              editMutation.mutate(newPasswordFormValues);
+            }
           }}
         >
           {({ dirty, isValid, values }) => (
@@ -154,11 +156,9 @@ const ChangePasswordModal = ({
                 <Button
                   // className="bg-emerald-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
-                  bgColor="bg-green-600"
-                  hoverColor="hover:bg-green-700"
-                  txtColor="text-white"
                   iconName="check"
-                  disabled={editMutation.isLoading || !dirty || !isValid}
+                  color="green"
+                  isLoading={editMutation.isLoading}
                 >
                   Change Password
                 </Button>

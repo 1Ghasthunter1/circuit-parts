@@ -26,37 +26,19 @@ const NewComponentButtons = ({
   const [partModalVis, setPartModalVis] = useState<boolean>(false);
   const [assyModalVis, setAssyModalVis] = useState<boolean>(false);
   return (
-    <div>
+    <div className="space-x-2">
       <Button
         iconName="cube"
-        txtColor="text-white"
-        bgColor="bg-green-600"
-        hoverColor="hover:bg-green-700"
-        style="ml-2"
+        color="green"
+        style="primary"
         onClick={() => setPartModalVis(true)}
       >
         New Part
       </Button>
-      <CreateModal
-        title="New Part"
-        showModal={partModalVis}
-        setShowModal={setPartModalVis}
-        form={
-          <CreatePartForm
-            queriesToInvalidate={queriesToInvalidate}
-            project={project}
-            defaultParentId={parent?.type === "assembly" ? parent.id : ""}
-            closeModal={() => setPartModalVis(false)}
-          />
-        }
-      />
-
       <Button
         iconName="cubes"
-        txtColor="text-white"
-        bgColor="bg-green-600"
-        hoverColor="hover:bg-green-700"
-        style="ml-2"
+        style="primary"
+        color="green"
         onClick={() => setAssyModalVis(true)}
       >
         New Assembly
@@ -77,6 +59,19 @@ const NewComponentButtons = ({
                 : ""
             }
             closeModal={() => setAssyModalVis(false)}
+          />
+        }
+      />
+      <CreateModal
+        title="New Part"
+        showModal={partModalVis}
+        setShowModal={setPartModalVis}
+        form={
+          <CreatePartForm
+            queriesToInvalidate={queriesToInvalidate}
+            project={project}
+            defaultParentId={parent?.type === "assembly" ? parent.id : ""}
+            closeModal={() => setPartModalVis(false)}
           />
         }
       />

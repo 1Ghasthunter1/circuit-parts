@@ -10,7 +10,7 @@ import {
 import TypeBox from "./TypeBox";
 import { Link, useNavigate } from "react-router-dom";
 import PartStatusBox from "../parts/PartStatusBox";
-import AssemblyStatusBox from "../parts/AssemblyStatusBox";
+import AssemblyStatusBox from "../assemblies/AssemblyStatusBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PartActions from "../parts/PartActions";
 import AssemblyActions from "../assemblies/AssemblyActions";

@@ -77,23 +77,22 @@ const DeleteModal = ({
           )}
 
           {(!serious || confirmDel === upperName) && (
-            <div className="flex items-center">
+            <div className="flex justify-between">
               <div className="mt-2 text-rose-400 text-sm">
                 <FontAwesomeIcon className="pr-2" icon="warning" />
                 <span>This action is irreversible!</span>
               </div>
               <Button
-                bgColor="bg-rose-500"
-                txtColor="text-white"
-                style="ml-auto mt-4 disabled"
-                hoverColor="hover:bg-rose-400"
-                disabled={deleteMutation.isLoading}
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                style="primary"
+                color="red"
+                size="md"
+                iconName="trash"
+                isLoading={deleteMutation.isLoading}
                 onClick={() => {
-                  deleteMutation.mutate();
+                  if (!deleteMutation.isLoading) deleteMutation.mutate();
                 }}
               >
-                {`Delete ${component.name}`}
+                <>Delete {component.name}</>
               </Button>
             </div>
           )}

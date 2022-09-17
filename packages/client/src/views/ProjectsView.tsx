@@ -23,12 +23,10 @@ const ProjectsView = () => {
       {(userRole === "admin" || userRole === "owner") && (
         <>
           <Button
+            style="primary"
             iconName="folder-plus"
-            txtColor="text-white"
-            bgColor="bg-green-600"
-            hoverColor="hover:bg-green-700"
-            style="ml-2"
-            onClick={(_e) => setShowModal(true)}
+            color="green"
+            onClick={() => setShowModal(true)}
           >
             New Project
           </Button>

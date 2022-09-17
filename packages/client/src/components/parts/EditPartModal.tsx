@@ -15,7 +15,6 @@ import {
 } from "../../types/universalTypes";
 import { editPart } from "../../services/partsServices";
 import Button from "../../elements/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 
 interface CreateModalProps {
@@ -92,10 +91,12 @@ const EditPartModal = ({
           }
           validationSchema={EditedPartSchema}
           onSubmit={(values) => {
-            editPartMutation.mutate(values);
+            if (!editPartMutation.isLoading) {
+              editPartMutation.mutate(values);
+            }
           }}
         >
-          {({ isSubmitting, isValid }) => (
+          {() => (
             <Form>
               <div className="space-y-4	">
                 <div>
@@ -242,19 +243,12 @@ const EditPartModal = ({
 
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                   <Button
-                    className="bg-emerald-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="submit"
-                    disabled={isSubmitting || !isValid}
+                    color="green"
+                    iconName="check"
+                    isLoading={editPartMutation.isLoading}
                   >
-                    <div className="flex items-center">
-                      {!isSubmitting && <FontAwesomeIcon icon="check" />}
-                      {isSubmitting && (
-                        <div className="animate-spin">
-                          <FontAwesomeIcon icon="circle-notch" />
-                        </div>
-                      )}
-                      <span className="ml-2">Save Part</span>
-                    </div>
+                    Save Part
                   </Button>
                 </div>
               </div>

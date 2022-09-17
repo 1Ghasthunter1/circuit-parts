@@ -5,6 +5,7 @@ import EditUserModal from "./EditUserModal";
 import { User, EditedUser } from "../../types/userTypes";
 import { useQueryClient, useMutation } from "react-query";
 import { deleteUserById, updateUserById } from "../../services/usersService";
+import { toast } from "react-toastify";
 
 const UserActions = ({
   user,
@@ -18,26 +19,39 @@ const UserActions = ({
   const [editModalVis, setEditModalVis] = useState<boolean>(false);
 
   const deleteMutation = useMutation(() => deleteUserById(user.id), {
-    onSuccess: () => queryClient.invalidateQueries("allUsers"),
+    onSuccess: () => {
+      queryClient.invalidateQueries("allUsers");
+      setDeleteModalVis(false);
+      toast.success("Deleted user");
+    },
+    onError: () => {
+      toast.error("Error deleting user");
+    },
   });
   const editMutation = useMutation((user: EditedUser) => updateUserById(user), {
     onSuccess: async () => {
       await queryClient.invalidateQueries("allUsers");
       setEditModalVis(false);
+      toast.success("Saved user");
+    },
+    onError: () => {
+      toast.error("Error deleting user");
     },
   });
 
   return (
-    <div>
+    <div className="space-x-2">
       <Button
         iconName="trash"
-        className="bg-red-500 hover:bg-red-600 text-white m-1 disabled:bg-gray-400"
+        color="red"
+        style="secondary"
         disabled={user.id === activeUser?.id || user.role === "owner"}
         onClick={() => setDeleteModalVis(true)}
       ></Button>
       <Button
         iconName="pencil"
-        className="bg-blue-500 hover:bg-blue-600 text-white m-1 disabled:bg-gray-400"
+        color="blue"
+        style="secondary"
         disabled={user.role === "owner" && activeUser?.role !== "owner"}
         onClick={() => setEditModalVis(true)}
       ></Button>

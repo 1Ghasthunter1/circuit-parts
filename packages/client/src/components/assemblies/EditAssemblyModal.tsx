@@ -85,7 +85,7 @@ const EditAssemblyModal = ({
           }
           validationSchema={EditedAssemblySchema}
           onSubmit={(values) => {
-            editPartMutation.mutate(values);
+            if (!editPartMutation.isLoading) editPartMutation.mutate(values);
           }}
         >
           {({ isSubmitting, isValid }) => (
@@ -171,19 +171,15 @@ const EditAssemblyModal = ({
 
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                   <Button
-                    className="bg-emerald-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    style="primary"
+                    color="green"
                     type="submit"
-                    disabled={isSubmitting || !isValid}
+                    size="md"
+                    disabled={!isValid}
+                    isLoading={isSubmitting}
+                    iconName="check"
                   >
-                    <div className="flex items-center">
-                      {!isSubmitting && <FontAwesomeIcon icon="check" />}
-                      {isSubmitting && (
-                        <div className="animate-spin">
-                          <FontAwesomeIcon icon="circle-notch" />
-                        </div>
-                      )}
-                      <span className="ml-2">Save Assembly</span>
-                    </div>
+                    Save Assembly
                   </Button>
                 </div>
               </div>

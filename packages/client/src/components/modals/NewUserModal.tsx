@@ -10,6 +10,7 @@ import { createNewUser } from "../../services/usersService";
 import { useQueryClient } from "react-query";
 
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 
 interface CreateModalProps {
   modalVisibility: boolean;
@@ -49,7 +50,11 @@ const NewUserModal = ({
   const queryClient = useQueryClient();
 
   const mutation = useMutation((newUser: NewUser) => createNewUser(newUser), {
-    onSuccess: async () => queryClient.invalidateQueries("allUsers"),
+    onSuccess: async () => {
+      queryClient.invalidateQueries("allUsers");
+      setModalVisibility(false);
+      toast.success("Created new user!");
+    },
   });
   return (
     <BaseModal
@@ -72,24 +77,24 @@ const NewUserModal = ({
           }}
           validationSchema={NewUserSchema}
           onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
-            const newUser: NewUser = {
-              firstName: values.firstName,
-              lastName: values.lastName,
-              username: values.username,
-              email: values.email,
-              password: values.password,
-              role: values.role,
-            };
+            if (!mutation.isLoading) {
+              setSubmitting(true);
+              const newUser: NewUser = {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                username: values.username,
+                email: values.email,
+                password: values.password,
+                role: values.role,
+              };
 
-            mutation.mutate(newUser);
-            setModalVisibility(false);
-            setSubmitting(false);
+              mutation.mutate(newUser);
+              setSubmitting(false);
+            }
           }}
         >
-          {({ isSubmitting, dirty }) => (
+          {({ isSubmitting }) => (
             <Form>
-              {/* FIRST NAME */}
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                   First Name*
@@ -107,7 +112,6 @@ const NewUserModal = ({
                 />
               </div>
 
-              {/* LAST NAME */}
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                   Last Name*
@@ -205,7 +209,7 @@ const NewUserModal = ({
                   placeholder="New Project"
                 >
                   {userRoles.map((role) => (
-                    <option value={role}>
+                    <option value={role} key={role}>
                       {role.charAt(0).toUpperCase() + role.slice(1)}
                     </option>
                   ))}
@@ -219,13 +223,10 @@ const NewUserModal = ({
 
               <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                 <Button
-                  // className="bg-emerald-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
-                  bgColor="bg-green-500"
-                  hoverColor="hover:bg-green-600"
-                  txtColor="text-white"
+                  color="green"
                   iconName="user-plus"
-                  disabled={isSubmitting || !dirty}
+                  isLoading={mutation.isLoading}
                 >
                   Create User
                 </Button>

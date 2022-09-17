@@ -27,8 +27,8 @@ const UsersView = () => {
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <Button
               iconName="user-plus"
+              color="green"
               onClick={() => setShowModal(true)}
-              style="bg-green-500 hover:bg-green-600 focus:ring-2 focus:ring-green-500 text-white"
             >
               New User
             </Button>

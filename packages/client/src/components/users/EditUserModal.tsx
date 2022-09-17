@@ -73,18 +73,20 @@ const EditUserModal = ({
           }}
           validationSchema={NewUserSchema}
           onSubmit={(values) => {
-            const updatedUserFormValues: EditedUser = {
-              firstName: values.firstName,
-              lastName: values.lastName,
-              username: values.username,
-              email: values.email,
-              role: values.role,
-              id: user.id,
-            };
-            if (values.password)
-              updatedUserFormValues.password = values.password;
+            if (!editMutation.isLoading) {
+              const updatedUserFormValues: EditedUser = {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                username: values.username,
+                email: values.email,
+                role: values.role,
+                id: user.id,
+              };
+              if (values.password)
+                updatedUserFormValues.password = values.password;
 
-            editMutation.mutate(updatedUserFormValues);
+              editMutation.mutate(updatedUserFormValues);
+            }
           }}
         >
           {({ dirty, isValid }) => (
@@ -234,13 +236,10 @@ const EditUserModal = ({
 
               <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                 <Button
-                  // className="bg-emerald-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
-                  bgColor="bg-green-600"
-                  hoverColor="hover:bg-green-700"
-                  txtColor="text-white"
-                  iconName="pencil"
-                  disabled={editMutation.isLoading || !dirty || !isValid}
+                  color="green"
+                  iconName="check"
+                  isLoading={editMutation.isLoading}
                 >
                   Save User
                 </Button>

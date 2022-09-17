@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { deleteAssemblyById } from "~/services/assemblyServices";
 import { Assembly } from "~/types/assemblyTypes";
 import DeleteModal from "../modals/DeleteModal";
-import EditAssemblyModal from "../parts/EditAssemblyModal";
+import EditAssemblyModal from "./EditAssemblyModal";
 
 const AssemblyActions = ({
   assembly,

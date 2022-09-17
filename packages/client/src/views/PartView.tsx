@@ -55,14 +55,14 @@ const PartView = () => {
     <div className="mr-4 space-x-4">
       <Button
         iconName="pencil"
-        className="bg-blue-500 hover:bg-blue-600 text-white"
+        color="blue"
         onClick={() => setEditPartModalVis(true)}
       >
         Edit
       </Button>
       <Button
         iconName="trash"
-        className="bg-red-500 hover:bg-red-600 text-white"
+        color="red"
         onClick={() => setDeleteModalVis(true)}
       >
         Delete

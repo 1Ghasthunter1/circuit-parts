@@ -15,6 +15,7 @@ import ChangePasswordModal from "../components/users/ChangePasswordModal";
 import { userState } from "../state/state";
 import { useNavigate } from "react-router-dom";
 import UserIcon from "~/components/users/UserIcon";
+import { toast } from "react-toastify";
 
 const AccountView = () => {
   const [editModalVis, setEditModalVis] = useState<boolean>(false);
@@ -32,7 +33,9 @@ const AccountView = () => {
     onSuccess: async () => {
       await userQuery.refetch();
       setEditModalVis(false);
+      toast.success("Saved details!");
     },
+    onError: async () => toast.error("Could not save details."),
   });
 
   const changePasswordMutation = useMutation(
@@ -68,13 +71,6 @@ const AccountView = () => {
           <div className="text-2xl text-gray-500 float-top mt-8 ">
             Username: {user.username}
           </div>
-          <Button
-            iconName="pencil"
-            style="bg-blue-500 hover:bg-blue-600 text-white my-2"
-            onClick={() => setEditModalVis(true)}
-          >
-            Edit Details
-          </Button>
         </div>
         <EditDetails
           modalVisibility={editModalVis}
@@ -83,9 +79,21 @@ const AccountView = () => {
           editMutation={editMutation}
         />
         <div className="mt-4 relative flex items-centerflex-grow border-t border-gray-400" />
-        <span className="text-gray-400 font-bold text-lg">
-          Basic Information
-        </span>
+        <div className="flex justify-between">
+          <span className="text-gray-400 font-bold text-lg">
+            Basic Information
+          </span>
+          <div className="mt-2">
+            <Button
+              iconName="pencil"
+              color="blue"
+              style="secondary"
+              onClick={() => setEditModalVis(true)}
+            >
+              Edit Details
+            </Button>
+          </div>
+        </div>
         <div className="text-xl">
           <div>
             <span className="text-gray-500">Username:</span>{" "}
@@ -109,8 +117,9 @@ const AccountView = () => {
         <div>
           <div className="text-gray-400 font-bold text-lg">Password</div>
           <Button
-            iconName="lock"
-            style="bg-blue-500 hover:bg-blue-600 text-white my-4"
+            iconName="key"
+            style="secondary"
+            color="blue"
             onClick={() => setPasswordModalVis(true)}
           >
             Reset Password

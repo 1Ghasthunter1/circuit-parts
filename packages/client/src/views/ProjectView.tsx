@@ -6,7 +6,6 @@ import {
   fetchProjectComponents,
 } from "../services/projectsServices";
 
-import PartsTable from "../components/parts/PartsTable";
 import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
 import NewComponentButtons from "../components/components/NewComponentButtons";
 import ComponentsTable from "~/components/components/ComponentsTable";

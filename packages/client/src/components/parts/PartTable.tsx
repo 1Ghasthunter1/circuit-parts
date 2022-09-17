@@ -12,9 +12,25 @@ interface PropType {
 
 const PartTable = ({ part }: PropType) => {
   return (
-    <div className="overflow-x-auto relative sm:rounded-md my-4">
-      <table className="w-1/2 text-sm dark:text-gray-400">
-        <tbody>
+    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg w-1/2">
+      <table className="divide-y divide-gray-300 w-full">
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+            >
+              Property
+            </th>
+            <th
+              scope="col"
+              className="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+            >
+              Value
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 bg-white">
           <PartTableEntry title="Name" content={part.name} />
           <PartTableEntry title="Part Number" content={part?.partNumber} />
           <PartTableEntry title="Type" content={<TypeBox type="part" />} />
@@ -57,10 +73,7 @@ const PartTable = ({ part }: PropType) => {
             title="Source Material"
             content={part.sourceMaterial}
           />
-          <PartTableEntry
-            title="Notes"
-            content={part.notes}
-          />
+          <PartTableEntry title="Notes" content={part.notes} />
         </tbody>
       </table>
     </div>

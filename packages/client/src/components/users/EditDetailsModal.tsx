@@ -63,23 +63,24 @@ const EditDetails = ({
           }}
           validationSchema={NewUserSchema}
           onSubmit={(values) => {
-            const updatedUserFormValues: EditedUser = {
-              firstName: values.firstName,
-              lastName: values.lastName,
-              username: values.username,
-              email: values.email,
-              role: user.role,
-              id: user.id,
-            };
-            if (values.password)
-              updatedUserFormValues.password = values.password;
+            if (!editMutation.isLoading) {
+              const updatedUserFormValues: EditedUser = {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                username: values.username,
+                email: values.email,
+                role: user.role,
+                id: user.id,
+              };
+              if (values.password)
+                updatedUserFormValues.password = values.password;
 
-            editMutation.mutate(updatedUserFormValues);
+              editMutation.mutate(updatedUserFormValues);
+            }
           }}
         >
-          {({ dirty, isValid }) => (
+          {() => (
             <Form>
-              {/* FIRST NAME */}
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                   First Name*
@@ -166,13 +167,10 @@ const EditDetails = ({
 
               <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                 <Button
-                  // className="bg-emerald-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
-                  bgColor="bg-green-600"
-                  hoverColor="hover:bg-green-700"
-                  txtColor="text-white"
+                  color="green"
                   iconName="pencil"
-                  disabled={editMutation.isLoading || !dirty || !isValid}
+                  isLoading={editMutation.isLoading}
                 >
                   Save User
                 </Button>

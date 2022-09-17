@@ -62,25 +62,23 @@ const DeleteUserModal = ({
           </div>
 
           {(!serious || confirmDel === upperName) && (
-            <div className="flex items-center">
+            <div className="flex justify-between">
               <div className="mt-2 text-rose-400 text-sm">
                 <FontAwesomeIcon className="pr-2" icon="warning" />
                 <span>This action is irreversible!</span>
               </div>
               <Button
-                bgColor="bg-rose-500"
-                txtColor="text-white"
-                style="ml-auto mt-4 disabled"
-                hoverColor="hover:bg-rose-400"
-                disabled={deleteMutation.isLoading}
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                isLoading={deleteMutation.isLoading}
+                color="red"
+                iconName="trash"
                 onClick={() => {
-                  deleteMutation.mutate();
-                  setModalVisibility(false);
-                  setConfirmDel("");
+                  if (!deleteMutation.isLoading) {
+                    deleteMutation.mutate();
+                    setConfirmDel("");
+                  }
                 }}
               >
-                {`Delete User`}
+                Delete User
               </Button>
             </div>
           )}
