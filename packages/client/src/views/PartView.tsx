@@ -71,7 +71,7 @@ const PartView = () => {
   );
 
   return (
-    <div className="m-8">
+    <div>
       <TopLeftRightAndMiddle
         topLeftContent={pageTitle}
         topRightContent={topRightStuff}

@@ -23,7 +23,7 @@ const ProjectView = () => {
   );
   const project = projectQuery.data;
 
-  if (project) {
+  if (projectComponentsQuery.data && project) {
     const topLeftStuff = (
       <>
         <div className="text-4xl font-bold pb-2">Project: {project.name}</div>

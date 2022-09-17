@@ -30,7 +30,7 @@ const AssemblyView = () => {
     refreshPage().catch(console.error);
   }, [id]);
 
-  if (assemblyQuery.data) {
+  if (assemblyComponentsQuery.data && assemblyQuery.data) {
     const assembly = assemblyQuery.data;
     const project = assembly.project;
 

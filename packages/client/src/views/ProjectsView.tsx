@@ -44,7 +44,11 @@ const ProjectsView = () => {
     </>
   );
 
-  const topLeftStuff = <div className="text-4xl font-bold ">All Projects</div>;
+  const topLeftStuff = (
+    <div className="flex-auto">
+      <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
+    </div>
+  );
 
   return (
     <TopLeftRightAndMiddle
