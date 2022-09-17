@@ -20,11 +20,6 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
 
   const queryClient = useQueryClient();
 
-  const tranny = cssTransition({
-    enter: "animate__animated animate__bounceIn",
-    exit: "animate__animated animate__bounceOut",
-  });
-
   const editMutation = useMutation(
     async () => {
       await editPart(part.id, {
@@ -43,23 +38,22 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
           [queryKey],
           (previous) => {
             if (previous)
-            return previous.map((rowItem) => {
-              if (rowItem.id === part.id) return { ...part, status: newStatus };
-              return rowItem;
-            });
+              return previous.map((rowItem) => {
+                if (rowItem.id === part.id)
+                  return { ...part, status: newStatus };
+                return rowItem;
+              });
             return [];
           }
         ),
       onError: () => {
         toast.error("Could not update status", {
           autoClose: 2500,
-          transition: tranny,
         });
       },
       onSuccess: () => {
         toast.success("Status changed successfully", {
           autoClose: 2500,
-          transition: tranny,
         });
       },
     }

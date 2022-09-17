@@ -16,10 +16,10 @@ const UsersView = () => {
 
   return (
     <>
-      <div className="px-4 sm:px-6 lg:px-8 m-8">
-        <div className="sm:flex sm:items-center">
-          <div className="sm:flex-auto">
-            <h1 className="text-xl font-semibold text-gray-900">Users</h1>
+      <div className="px-4 m-8">
+        <div className="flex items-center">
+          <div className="flex-auto">
+            <h1 className="text-2xl font-semibold text-gray-900">Users</h1>
             <p className="mt-2 text-sm text-gray-700">
               A list of all the users in the 696 PMS workspace.
             </p>
