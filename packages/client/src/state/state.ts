@@ -1,8 +1,17 @@
 import { proxy } from "valtio";
 import { AuthUser } from "../types/userTypes";
+import { FooterState } from "~/types/universalTypes";
 import { devtools } from "valtio/utils";
-import { NotificationState } from "../types/frontendTypes";
+import { logout } from "~/utils/logout";
 export const userState = proxy<{ user: AuthUser | null }>();
+export const footerState = proxy<FooterState>({
+  links: [
+    { text: "Projects", url: "/projects" },
+    { text: "Dashboard", url: "/dashboard" },
+    { text: "Account", url: "/account" },
+    { text: "Sign Out", url: "/projects", onClick: () => logout() },
+  ],
+});
 
 const storage: string | null = localStorage.getItem("user");
 try {
@@ -12,7 +21,3 @@ try {
   // eslint-disable-next-line no-empty
 } catch {}
 devtools(userState, "userState");
-
-export const notificationState = proxy<{
-  notification: NotificationState | null;
-}>();

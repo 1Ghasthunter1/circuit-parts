@@ -2,12 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Assembly } from "../../types/assemblyTypes";
-import {
-  AssemblyStatus,
-  assemblyStatuses,
-} from "../../types/universalTypes";
-import TopLeftNotif from "../notifications/TopLeftNotification";
-import { cssTransition, toast } from "react-toastify";
+import { AssemblyStatus, assemblyStatuses } from "../../types/universalTypes";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { editAssemblyById } from "../../services/assemblyServices";
 import { Part } from "../../types/partsTypes";
@@ -91,7 +87,6 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
       className="whitespace-nowrap w-min cursor-pointer"
       onClick={(e) => e.stopPropagation()}
     >
-      <TopLeftNotif />
       {onInput ? (
         <div className="flex items-center">
           <select

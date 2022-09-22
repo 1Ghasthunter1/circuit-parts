@@ -21,7 +21,8 @@ const AccountView = () => {
   const [editModalVis, setEditModalVis] = useState<boolean>(false);
   const [passwordModalVis, setPasswordModalVis] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { id } = useParams();
+  const id = userState.user?.id;
+  if (!id) return null;
 
   const userQuery = useQuery<User>(
     `/users/${id || ""}`,

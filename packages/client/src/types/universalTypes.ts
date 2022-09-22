@@ -64,3 +64,7 @@ export interface Parent {
   parentType: ParentType;
   parent: string;
 }
+
+export interface FooterState {
+  links: { text: string; url: string; onClick?: () => void }[];
+}
