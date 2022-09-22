@@ -1,11 +1,58 @@
 import { Part } from "../../types/partsTypes";
 import { Assembly } from "../../types/assemblyTypes";
 import PartsTableItem from "./PartsTableItem";
+import {
+  useReactTable,
+  createColumnHelper,
+  getCoreRowModel,
+  flexRender,
+  RowData,
+} from "@tanstack/react-table";
 
 interface PartsTableProps {
   data: (Part | Assembly)[];
   queryKeyToRefresh: string;
 }
+
+const columnHelper = createColumnHelper<Part | Assembly>();
+
+const columns = [
+  columnHelper.accessor("partNumber", {
+    header: "Part Number",
+    cell: (info) => {
+      return <div>{info.getValue()}</div>;
+    },
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("type", {
+    header: "Part Number",
+    cell: (info) => {
+      return <div>{info.getValue()}</div>;
+    },
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("name", {
+    header: "Part Number",
+    cell: (info) => {
+      return <div>{info.getValue()}</div>;
+    },
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("parent", {
+    header: "Part Number",
+    cell: (info) => {
+      return <div>{info.getValue().name}</div>;
+    },
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("status", {
+    header: "Status",
+    cell: (info) => {
+      return <div>{info.getValue()}</div>;
+    },
+    footer: (info) => info.column.id,
+  }),
+];
 
 const PartsTable = ({ data, queryKeyToRefresh }: PartsTableProps) => {
   return (

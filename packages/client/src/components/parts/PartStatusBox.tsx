@@ -7,7 +7,6 @@ import { Part } from "../../types/partsTypes";
 import { PartStatus, partStatuses } from "../../types/universalTypes";
 import TopLeftNotif from "../notifications/TopLeftNotification";
 import { cssTransition, toast } from "react-toastify";
-import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 
 interface StatusProps {
@@ -20,11 +19,6 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
   const [newStatus, setNewStatus] = useState<PartStatus>(part.status);
 
   const queryClient = useQueryClient();
-
-  const tranny = cssTransition({
-    enter: "animate__animated animate__bounceIn",
-    exit: "animate__animated animate__bounceOut",
-  });
 
   const editMutation = useMutation(
     async () => {
@@ -44,23 +38,22 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
           [queryKey],
           (previous) => {
             if (previous)
-            return previous.map((rowItem) => {
-              if (rowItem.id === part.id) return { ...part, status: newStatus };
-              return rowItem;
-            });
+              return previous.map((rowItem) => {
+                if (rowItem.id === part.id)
+                  return { ...part, status: newStatus };
+                return rowItem;
+              });
             return [];
           }
         ),
       onError: () => {
         toast.error("Could not update status", {
           autoClose: 2500,
-          transition: tranny,
         });
       },
       onSuccess: () => {
         toast.success("Status changed successfully", {
           autoClose: 2500,
-          transition: tranny,
         });
       },
     }

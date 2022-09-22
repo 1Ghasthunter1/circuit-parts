@@ -33,11 +33,11 @@ export default function Example() {
             }
             size="md"
           />
-          <div className="ml-3">
-            <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+          <div className="ml-3 group">
+            <p className="text-sm font-medium text-gray-700">
               {user.firstName} {user.lastName}
             </p>
-            <span className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
+            <span className="text-xs font-medium text-gray-500 group-hover:text-gray-800">
               <span className="mr-1">View profile</span>
               <FontAwesomeIcon icon="caret-down" size="xs" />
             </span>

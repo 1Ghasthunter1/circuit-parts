@@ -9,6 +9,7 @@ import DeleteModal from "../modals/DeleteModal";
 
 import { userState } from "../../state/state";
 import { useSnapshot } from "valtio";
+import { validatePerms } from "~/services/usersService";
 
 Modal.setAppElement("#root");
 
@@ -29,18 +30,18 @@ const ProjectCard = ({ project }: ProjectTypes) => {
   return (
     <>
       <Link to={`/projects/${project.id}`}>
-        <div className="group flex flex-row items-center transition bg-gray-200 my-2 p-4 rounded-md hover:bg-gray-300 hover:scale-102">
-          <div className="h-full items-center float-left p-1 mx-4">
+        <div className="h-24 group flex flex-row items-center shadow transition bg-white my-2 p-4 rounded-md hover:bg-gray-50 hover:scale-102">
+          <div className="inline-block align-middle float-left p-1 mx-4">
             <FontAwesomeIcon icon="folder-open" size="2x" color="#EE3D96" />
           </div>
           <div className="inline-block float-left">
             <p className="text-xl font-bold">{project.name}</p>
-            <p className="text-xs text-gray-400 ">
+            <p className="text-sm text-gray-400">
               <b>{project.prefix}</b>
             </p>
-            <p className="text-sm">{project.description}</p>
+            <p className="text-sm text-gray-400">{project.description}</p>
           </div>
-          {user?.role === "admin" && (
+          {validatePerms(["admin", "owner"], user?.role) && (
             <div
               onClick={(e) => {
                 e.preventDefault();

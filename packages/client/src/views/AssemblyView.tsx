@@ -7,9 +7,10 @@ import {
   fetchAssemblyComponents,
 } from "../services/assemblyServices";
 
-import PartsTable from "../components/parts/PartsTable";
 import NewComponentButtons from "../components/components/NewComponentButtons";
 import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
+import ComponentsTable from "~/components/components/ComponentsTable";
+import TopLeftCenterSkeleton from "~/components/skeletons/TopLeftCenterSkeleton";
 
 const AssemblyView = () => {
   const { id } = useParams();
@@ -29,42 +30,44 @@ const AssemblyView = () => {
     refreshPage().catch(console.error);
   }, [id]);
 
-  if (!assemblyQuery.data || !assemblyComponentsQuery.data) {
-    return null;
-  }
+  if (assemblyComponentsQuery.data && assemblyQuery.data) {
+    const assembly = assemblyQuery.data;
+    const project = assembly.project;
 
-  const assembly = assemblyQuery.data;
-  const project = assembly.project;
-
-  const topLeftStuff = (
-    <>
-      <div className="text-4xl font-bold pb-2">Assembly: {assembly.name}</div>
-      <div className="text-gray-400">
-        Part Number: <b>{assembly.partNumber}</b>
-      </div>
-      <div className="text-gray-400">
-        Creation Date:{" "}
-        <b>{new Date(project.creationDate).toLocaleDateString("en-US")}</b>
-      </div>
-    </>
-  );
-
-  return (
-    <TopLeftRightAndMiddle
-      topLeftContent={topLeftStuff}
-      topRightContent={
-        <NewComponentButtons
-          project={project}
-          parent={assembly}
-          queriesToInvalidate={[assemblyQuery, assemblyComponentsQuery]}
+    const topLeftStuff = (
+      <>
+        <div className="text-4xl font-bold pb-2">Assembly: {assembly.name}</div>
+        <div className="text-gray-400">
+          Part Number: <b>{assembly.partNumber}</b>
+        </div>
+        <div className="text-gray-400">
+          Creation Date:{" "}
+          <b>{new Date(project.creationDate).toLocaleDateString("en-US")}</b>
+        </div>
+      </>
+    );
+    return (
+      <TopLeftRightAndMiddle
+        topLeftContent={topLeftStuff}
+        topRightContent={
+          <NewComponentButtons
+            project={project}
+            parent={assembly}
+            queriesToInvalidate={[assemblyQuery, assemblyComponentsQuery]}
+          />
+        }
+      >
+        <ComponentsTable
+          data={assemblyComponentsQuery.data || []}
+          queryKeyToRefresh={`assemblies/${id}/components`}
         />
-      }
-    >
-      <PartsTable
-        data={assemblyComponentsQuery.data || []}
-        queryKeyToRefresh={`assemblies/${id}/components`}
-      />
-    </TopLeftRightAndMiddle>
+      </TopLeftRightAndMiddle>
+    );
+  }
+  return (
+    <div className="m-12">
+      <TopLeftCenterSkeleton />
+    </div>
   );
 };
 

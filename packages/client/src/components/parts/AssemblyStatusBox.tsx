@@ -8,7 +8,6 @@ import {
 } from "../../types/universalTypes";
 import TopLeftNotif from "../notifications/TopLeftNotification";
 import { cssTransition, toast } from "react-toastify";
-import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { editAssemblyById } from "../../services/assemblyServices";
 import { Part } from "../../types/partsTypes";
@@ -23,11 +22,6 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
   const [newStatus, setNewStatus] = useState<AssemblyStatus>(assembly.status);
 
   const queryClient = useQueryClient();
-
-  const tranny = cssTransition({
-    enter: "animate__animated animate__bounceIn",
-    exit: "animate__animated animate__bounceOut",
-  });
 
   const editMutation = useMutation(
     async () => {
@@ -53,13 +47,11 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
       onError: () => {
         toast.error("Could not update status", {
           autoClose: 2500,
-          transition: tranny,
         });
       },
       onSuccess: () => {
         toast.success("Status changed successfully", {
           autoClose: 2500,
-          transition: tranny,
         });
       },
     }
