@@ -57,7 +57,13 @@ const AccountView = () => {
   if (!user) return null;
   return (
     <div className="m-8 flex p-4">
-      <UserIcon text="HP" size="full" />
+      <div className="flex shrink-0">
+        <img
+          className="h-24 w-24 rounded-full ring-white ring-4 sm:h-32 sm:w-32"
+          src="/userIcon.jpg"
+          alt=""
+        />
+      </div>
 
       <div className="w-full pr-12 pl-8">
         <div className="">
@@ -130,7 +136,6 @@ const AccountView = () => {
             setModalVisibility={setPasswordModalVis}
             editMutation={changePasswordMutation}
           />
-          
         </div>
       </div>
     </div>
