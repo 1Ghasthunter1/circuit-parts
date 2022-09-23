@@ -2,7 +2,13 @@
 import { Types } from "mongoose";
 import { DatabaseAssembly } from "./assemblyTypes";
 import { DatabaseProject } from "./projectTypes";
-import { Parent, partStatuses, PartStatus, Priority } from "./universalTypes";
+import {
+  Parent,
+  partStatuses,
+  PartStatus,
+  Priority,
+  PopulatedPathItem,
+} from "./universalTypes";
 
 export const isPartStatus = (value: string): value is PartStatus => {
   return partStatuses.includes(value as PartStatus);
@@ -26,8 +32,9 @@ export interface DatabasePart {
 }
 
 export interface ToDatabasePart extends Omit<DatabasePart, "id"> {}
-export interface Part extends Omit<DatabasePart, "parent"> {
+export interface Part extends Omit<DatabasePart, "parent" | "path"> {
   parent: DatabaseAssembly | DatabaseProject;
+  path: PopulatedPathItem[];
 }
 
 export type EditedPart = Omit<

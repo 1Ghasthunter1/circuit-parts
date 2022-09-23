@@ -6,6 +6,7 @@ import {
   AssemblyStatus,
   Priority,
   Child,
+  PopulatedPathItem,
 } from "./universalTypes";
 import { DatabasePart } from "./partsTypes";
 
@@ -41,10 +42,11 @@ export type EditedAssembly = Omit<
   | "creationDate"
 >;
 export interface Assembly
-  extends Omit<DatabaseAssembly, "parent" | "children" | "project"> {
+  extends Omit<DatabaseAssembly, "parent" | "children" | "project" | "path"> {
   parent: DatabaseAssembly | DatabaseProject;
-  children: Array<DatabasePart | DatabaseAssembly>;
+  children: (DatabasePart | DatabaseAssembly)[];
   project: DatabaseProject;
+  path: PopulatedPathItem[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

@@ -66,3 +66,9 @@ export interface Parent {
   parentType: ParentType;
   parent: Types.ObjectId;
 }
+
+export interface PopulatedPathItem {
+  id: Types.ObjectId;
+  name: string;
+  type: ParentType;
+}

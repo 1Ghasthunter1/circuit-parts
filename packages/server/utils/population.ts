@@ -4,7 +4,10 @@ import PartModel from "../models/part";
 import { DatabaseAssembly, Assembly } from "../types/assemblyTypes";
 import { DatabaseProject } from "../types/projectTypes";
 import { DatabasePart, Part } from "../types/partsTypes";
-import { ParentType } from "../types/universalTypes";
+import { Parent, ParentType } from "../types/universalTypes";
+
+import { Types } from "mongoose";
+import ProjectModel from "../models/project";
 
 //FOR ASSEMBLIES ======================================
 export const getPopulatedAssy = async (assyId: string) => {
@@ -36,10 +39,13 @@ export const getAssyForUser = async (
 
   if (!foundAssembly) return null;
 
+  const populatedPath = await populatePath(foundAssembly.path);
+
   const modifiedAssembly: Assembly = {
     ...foundAssembly.toJSON(),
     children: foundAssembly.children.map((childObj) => childObj.child),
     parent: foundAssembly.parent.parent,
+    path: populatedPath,
   };
   return modifiedAssembly;
 };
@@ -114,9 +120,12 @@ export const getPartForUser = async (partId: string): Promise<Part | null> => {
 
   if (!foundPart) return null;
 
+  const populatedPath = await populatePath(foundPart.path);
+
   const modifiedPart: Part = {
     ...foundPart.toJSON(),
     parent: foundPart.parent.parent,
+    path: populatedPath,
   };
   return modifiedPart;
 };
@@ -134,4 +143,61 @@ export const getMultiplePartsForUser = async (
   }));
 
   return modifiedParts;
+};
+
+export const populatePath = async (path: Parent[]) => {
+  //Firstly, separate path objects by type
+  const projectIds = path.reduce<Types.ObjectId[]>((projIds, pathItem) => {
+    if (pathItem.parentType === "project")
+      return projIds.concat(pathItem.parent);
+    return projIds;
+  }, []);
+
+  const assemblyIds = path.reduce<Types.ObjectId[]>((assyIds, pathItem) => {
+    if (pathItem.parentType === "assembly")
+      return assyIds.concat(pathItem.parent);
+    return assyIds;
+  }, []);
+
+  //query each individually
+  const updatedProjects = await ProjectModel.find({
+    _id: { $in: projectIds },
+  }).select({ name: 1, _id: 1, type: 1 });
+
+  const updatedAssemblies = await AssemblyModel.find({
+    _id: { $in: assemblyIds },
+  }).select({ name: 1, _id: 1, type: 1 });
+
+  //re-match with original order from path. THis is sort of redundant but its safe
+  const populatedPath = path.reduce<
+    { id: Types.ObjectId; name: string; type: ParentType }[]
+  >((popPath, pathItem) => {
+    switch (pathItem.parentType) {
+      case "assembly":
+        const foundAssembly = updatedAssemblies.find(
+          (updatedAssy) =>
+            updatedAssy._id.toString() === pathItem.parent.toString()
+        );
+        if (!foundAssembly)
+          throw new Error("fatal error in populatePath in utils");
+        return popPath.concat({
+          id: foundAssembly._id,
+          name: foundAssembly.name,
+          type: foundAssembly.type,
+        });
+      case "project":
+        const foundProject = updatedProjects.find((updatedProj) => {
+          return updatedProj._id.toString() === pathItem.parent.toString();
+        });
+        if (!foundProject)
+          throw new Error("fatal error in populatePath in utils");
+        return popPath.concat({
+          id: foundProject._id,
+          name: foundProject.name,
+          type: foundProject.type,
+        });
+    }
+  }, []);
+
+  return populatedPath;
 };
