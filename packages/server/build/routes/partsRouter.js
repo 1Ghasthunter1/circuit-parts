@@ -27,6 +27,12 @@ partsRouter.get("/", ((_req, res) => __awaiter(void 0, void 0, void 0, function*
     const parts = yield part_1.default.find({});
     res.status(200).send(parts).end();
 })));
+partsRouter.get("/asdf", ((_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const parts = yield part_1.default.find({});
+    if (parts.length > 0)
+        yield (0, population_1.populatePath)(parts[0].path);
+    res.status(200).end();
+})));
 partsRouter.get("/:id", ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const partId = req.params.id;
     const foundPart = yield (0, population_1.getPartForUser)(partId);
@@ -64,7 +70,10 @@ partsRouter.post("/", (0, express_validator_1.checkSchema)(partsValidation_1.new
             .end();
         return;
     }
-    const partToDb = Object.assign(Object.assign({}, newPart), { status: "design in progress", partNumber: yield (0, generatePartNumber_1.generateNewPartNumber)(foundProject, foundParent, "part"), type: "part", priority: "low", creationDate: new Date() });
+    const newPath = foundParent.type === "assembly"
+        ? foundParent.path.concat(newPart.parent)
+        : [newPart.parent];
+    const partToDb = Object.assign(Object.assign({}, newPart), { status: "design in progress", partNumber: yield (0, generatePartNumber_1.generateNewPartNumber)(foundProject, foundParent, "part"), path: newPath, type: "part", priority: "low", creationDate: new Date() });
     const savedPart = yield new part_1.default(partToDb).save();
     foundParent.children = foundParent.children.concat({
         childType: "part",

@@ -4,29 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const universalTypes_1 = require("../types/universalTypes");
 const childrenSchema_1 = __importDefault(require("./schemas/childrenSchema"));
+const parentSchema_1 = __importDefault(require("./schemas/parentSchema"));
 const assemblySchema = new mongoose_1.default.Schema({
     name: {
         type: String,
         required: true,
     },
-    parent: {
-        parentType: {
-            type: String,
-            required: true,
-            validate: {
-                validator: (value) => (0, universalTypes_1.isParentType)(value),
-                message: "`parent.parentType` is not a parent type",
-            },
-        },
-        parent: {
-            type: mongoose_1.default.Types.ObjectId,
-            refPath: "parent.parentType",
-            required: true,
-        },
-    },
+    parent: parentSchema_1.default,
     children: [childrenSchema_1.default],
+    path: [parentSchema_1.default],
     project: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "project",
@@ -39,7 +26,7 @@ const assemblySchema = new mongoose_1.default.Schema({
     type: {
         required: true,
         type: String,
-        enum: ['assembly']
+        enum: ["assembly"],
     },
     status: {
         type: String,

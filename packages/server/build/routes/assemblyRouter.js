@@ -82,7 +82,10 @@ assemblyRouter.post("/", (0, express_validator_1.checkSchema)(assemblyValidation
             .end();
         return;
     }
-    const newAssemblyObj = Object.assign(Object.assign({}, newAssembly), { status: "design in progress", partNumber: yield (0, generatePartNumber_1.generateNewPartNumber)(foundProject, foundParent, "assembly"), type: "assembly", priority: "normal", creationDate: new Date() });
+    const newPath = foundParent.type === "assembly"
+        ? foundParent.path.concat(newAssembly.parent)
+        : [newAssembly.parent];
+    const newAssemblyObj = Object.assign(Object.assign({}, newAssembly), { status: "design in progress", partNumber: yield (0, generatePartNumber_1.generateNewPartNumber)(foundProject, foundParent, "assembly"), path: newPath, type: "assembly", priority: "normal", creationDate: new Date() });
     const savedAssembly = yield new assembly_1.default(newAssemblyObj).save();
     foundParent.children = foundParent.children.concat({
         childType: "assembly",
