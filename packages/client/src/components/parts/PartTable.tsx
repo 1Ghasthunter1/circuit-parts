@@ -56,7 +56,7 @@ const PartTable = ({ part }: PropType) => {
                 className={
                   part.haveMaterial
                     ? "bg-green-100 text-green-500"
-                    : "bg-red-300 text-red-500"
+                    : "bg-red-100 text-red-500"
                 }
               />
             }

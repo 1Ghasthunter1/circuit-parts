@@ -12,7 +12,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+export const LoginDropdown = () => {
   const navigate = useNavigate();
   const user = useSnapshot(userState).user;
   if (!user) return null;
@@ -28,14 +28,16 @@ export default function Example() {
             }
             size="md"
           />
-          <div className="ml-3 group">
+          <div className="ml-3 group flex flex-col justify-left">
             <p className="text-sm font-medium text-gray-700">
               {user.firstName} {user.lastName}
             </p>
-            <span className="text-xs font-medium text-gray-500 group-hover:text-gray-800">
-              <span className="mr-1">View profile</span>
-              <FontAwesomeIcon icon="caret-down" size="xs" />
-            </span>
+            <div className="flex content-center text-xs font-medium text-gray-500 group-hover:text-gray-800">
+              <div className="mr-1">View profile</div>
+              <div>
+                <FontAwesomeIcon icon="caret-down" size="xs" />
+              </div>
+            </div>
           </div>
         </div>
       </Menu.Button>
@@ -85,4 +87,6 @@ export default function Example() {
       </Transition>
     </Menu>
   );
-}
+};
+
+export default LoginDropdown;

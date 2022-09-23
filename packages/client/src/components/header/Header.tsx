@@ -1,5 +1,5 @@
 import HeaderItem from "./HeaderItem";
-import LoginLogout from "./LoginLogout";
+import LoginDropdown from "./LoginDropdown";
 
 import { userState } from "../../state/state";
 import { useSnapshot } from "valtio";
@@ -25,7 +25,7 @@ const Header = () => {
         )}
       </ul>
       <div className="flex ml-auto float-right mr-4">
-        <LoginLogout />
+        <LoginDropdown />
       </div>
     </div>
   );

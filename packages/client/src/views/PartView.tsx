@@ -29,7 +29,7 @@ const PartView = () => {
     },
     {
       onSuccess: async () => {
-        navigate(`/projects/${part?.project.id}`);
+        navigate(`/assemblies/${part?.parent.id}`);
         toast.success("Deleted Part");
       },
       onError: async () => toast.error("Error deleting part"),
@@ -45,15 +45,15 @@ const PartView = () => {
 
   const pageTitle = (
     <>
-      <div className="text-4xl font-bold ">Part: {part.name}</div>
-      <div className="text-gray-500 mb-2">
+      <div className="text-4xl font-bold mb-2">Part: {part.name}</div>
+      <div className=" text-gray-400">
         Part Number: <b>{part.partNumber}</b>
       </div>
       <div className="text-gray-400 mb-2">
         Creation Date:{" "}
         <b>{new Date(part.creationDate).toLocaleDateString("en-US")}</b>
       </div>
-      <Breadcrumbs pages={part.path.concat()} current={part.name}/>
+      <Breadcrumbs pages={part.path.concat()} current={part.name} />
     </>
   );
 
