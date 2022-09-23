@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { DatabasePart, isPartStatus } from "../types/partsTypes";
-import { isParentType, isPriority } from "../types/universalTypes";
+import { isPriority } from "../types/universalTypes";
+import parentSchema from "./schemas/parentSchema";
 const partSchema = new mongoose.Schema<DatabasePart>({
   name: {
     type: String,
@@ -15,21 +16,8 @@ const partSchema = new mongoose.Schema<DatabasePart>({
     type: String,
     enum: ["part"],
   },
-  parent: {
-    parentType: {
-      type: String,
-      required: true,
-      validate: {
-        validator: (value: string) => isParentType(value),
-        message: "`parent.parentType` is not a parent type",
-      },
-    },
-    parent: {
-      type: mongoose.Types.ObjectId,
-      refPath: "parent.parentType",
-      required: true,
-    },
-  },
+  parent: parentSchema,
+  path: [parentSchema],
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "project",

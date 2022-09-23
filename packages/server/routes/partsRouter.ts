@@ -67,6 +67,11 @@ partsRouter.post(
       return;
     }
 
+    const newPath =
+      foundParent.type === "assembly"
+        ? foundParent.path.concat(newPart.parent)
+        : [newPart.parent];
+
     const partToDb: ToDatabasePart = {
       ...newPart,
       status: "design in progress",
@@ -75,6 +80,7 @@ partsRouter.post(
         foundParent,
         "part"
       ),
+      path: newPath,
       type: "part",
       priority: "low",
       creationDate: new Date(),

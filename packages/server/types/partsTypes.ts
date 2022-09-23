@@ -14,6 +14,7 @@ export interface DatabasePart {
   type: "part";
   parent: Parent;
   project: Types.ObjectId;
+  path: Parent[];
   status: PartStatus;
   priority: Priority;
   creationDate: Date;
@@ -29,9 +30,12 @@ export interface Part extends Omit<DatabasePart, "parent"> {
   parent: DatabaseAssembly | DatabaseProject;
 }
 
-export type EditedPart = Omit<DatabasePart, "id" | "partNumber" | "type" | "parent" | "project" | "creationDate">;
+export type EditedPart = Omit<
+  DatabasePart,
+  "id" | "partNumber" | "type" | "parent" | "project" | "creationDate"
+>;
 export interface NewPart
   extends Omit<
     DatabasePart,
-    "id" | "partNumber" | "status" | "priority" | "type"
+    "id" | "partNumber" | "status" | "priority" | "type" | "path"
   > {}

@@ -20,6 +20,7 @@ export interface DatabaseAssembly {
   type: "assembly";
   parent: Parent;
   children: Child[];
+  path: Parent[];
   project: Types.ObjectId;
   status: AssemblyStatus;
   priority: Priority;
@@ -27,8 +28,7 @@ export interface DatabaseAssembly {
   notes?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ToDatabaseAssembly extends Omit<DatabaseAssembly, "id"> {}
+export type ToDatabaseAssembly = Omit<DatabaseAssembly, "id">;
 
 export type EditedAssembly = Omit<
   DatabaseAssembly,
@@ -51,5 +51,5 @@ export interface Assembly
 export interface NewAssembly
   extends Omit<
     DatabaseAssembly,
-    "id" | "partNumber" | "status" | "priority" | "type"
+    "id" | "partNumber" | "status" | "priority" | "type" | "path"
   > {}

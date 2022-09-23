@@ -102,6 +102,11 @@ assemblyRouter.post(
       return;
     }
 
+    const newPath =
+      foundParent.type === "assembly"
+        ? foundParent.path.concat(newAssembly.parent)
+        : [newAssembly.parent];
+
     const newAssemblyObj: ToDatabaseAssembly = {
       ...newAssembly,
       status: "design in progress",
@@ -110,6 +115,7 @@ assemblyRouter.post(
         foundParent,
         "assembly"
       ),
+      path: newPath,
       type: "assembly",
       priority: "normal",
       creationDate: new Date(),

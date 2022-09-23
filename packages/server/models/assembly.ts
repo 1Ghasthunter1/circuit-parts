@@ -1,28 +1,15 @@
 import mongoose from "mongoose";
 import { DatabaseAssembly } from "../types/assemblyTypes";
-import { isParentType } from "../types/universalTypes";
 import childSchema from "./schemas/childrenSchema";
+import parentSchema from "./schemas/parentSchema";
 const assemblySchema = new mongoose.Schema<DatabaseAssembly>({
   name: {
     type: String,
     required: true,
   },
-  parent: {
-    parentType: {
-      type: String,
-      required: true,
-      validate: {
-        validator: (value: string) => isParentType(value),
-        message: "`parent.parentType` is not a parent type",
-      },
-    },
-    parent: {
-      type: mongoose.Types.ObjectId,
-      refPath: "parent.parentType",
-      required: true,
-    },
-  },
+  parent: parentSchema,
   children: [childSchema],
+  path: [parentSchema],
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "project",
@@ -35,7 +22,7 @@ const assemblySchema = new mongoose.Schema<DatabaseAssembly>({
   type: {
     required: true,
     type: String,
-    enum: ['assembly']
+    enum: ["assembly"],
   },
   status: {
     type: String,
