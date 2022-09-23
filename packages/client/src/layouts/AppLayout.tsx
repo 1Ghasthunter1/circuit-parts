@@ -7,7 +7,13 @@ import axios from "axios";
 import services from "../services/services";
 import { logoutUser } from "../services/loginService";
 
-const AppLayout = ({ header }: { header?: JSX.Element }) => {
+const AppLayout = ({
+  header,
+  footer,
+}: {
+  header?: JSX.Element;
+  footer?: JSX.Element;
+}) => {
   const userSnapshot = useSnapshot(userState);
   const user = userSnapshot.user;
   if (user) {
@@ -25,9 +31,11 @@ const AppLayout = ({ header }: { header?: JSX.Element }) => {
   }
 
   const content = user ? (
-    <div className="bg-gray-100 h-screen">
+    <div className="bg-gray-100 min-h-screen relative">
       {header}
       <Outlet />
+      <div className="h-24"></div>
+      <div className="absolute bottom-0 w-screen">{footer}</div>
     </div>
   ) : (
     <Navigate to="/login" />

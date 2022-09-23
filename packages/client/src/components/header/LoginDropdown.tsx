@@ -7,7 +7,7 @@ import { userState } from "../../state/state";
 import { useSnapshot } from "valtio";
 import { useNavigate } from "react-router-dom";
 import UserIcon from "../users/UserIcon";
-
+import { logout } from "~/utils/logout";
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -17,11 +17,6 @@ export default function Example() {
   const user = useSnapshot(userState).user;
   if (!user) return null;
 
-  const onLogout = () => {
-    window.localStorage.clear();
-    userState.user = null;
-    navigate("/login");
-  };
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="inline-flex">
@@ -59,7 +54,7 @@ export default function Example() {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  onClick={() => navigate(`/users/${user.id}`)}
+                  onClick={() => navigate(`/account`)}
                   className={classNames(
                     active
                       ? "bg-gray-100 text-gray-900 cursor-pointer"
@@ -79,7 +74,7 @@ export default function Example() {
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block w-full text-left px-4 py-2 text-sm"
                   )}
-                  onClick={onLogout}
+                  onClick={() => logout()}
                 >
                   Sign out
                 </button>

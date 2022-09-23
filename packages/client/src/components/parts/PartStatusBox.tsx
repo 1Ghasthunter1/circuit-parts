@@ -5,8 +5,7 @@ import { editPart } from "../../services/partsServices";
 import { Assembly } from "../../types/assemblyTypes";
 import { Part } from "../../types/partsTypes";
 import { PartStatus, partStatuses } from "../../types/universalTypes";
-import TopLeftNotif from "../notifications/TopLeftNotification";
-import { cssTransition, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 interface StatusProps {
@@ -109,7 +108,6 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
       className="whitespace-nowrap w-min cursor-pointer"
       onClick={(e) => e.stopPropagation()}
     >
-      <TopLeftNotif />
       {onInput && queryKey ? (
         <div className="flex items-center">
           <select
