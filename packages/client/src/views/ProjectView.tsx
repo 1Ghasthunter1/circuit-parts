@@ -10,6 +10,7 @@ import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
 import NewComponentButtons from "../components/components/NewComponentButtons";
 import ComponentsTable from "~/components/components/ComponentsTable";
 import TopLeftCenterSkeleton from "~/components/skeletons/TopLeftCenterSkeleton";
+import Breadcrumbs from "~/components/navigation/Breadcrumbs";
 
 const ProjectView = () => {
   const { id } = useParams();

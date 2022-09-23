@@ -1,7 +1,13 @@
 // eslint-disable-file @typescript-eslint/no-empty-interface
 import { UnpopulatedAssembly } from "./assemblyTypes";
 import { UnpopulatedProject } from "./projectTypes";
-import { Parent, partStatuses, PartStatus, Priority } from "./universalTypes";
+import {
+  Parent,
+  partStatuses,
+  PartStatus,
+  Priority,
+  PopulatedPathItem,
+} from "./universalTypes";
 
 export const isPartStatus = (value: string): value is PartStatus => {
   return partStatuses.includes(value as PartStatus);
@@ -13,6 +19,7 @@ export interface UnpopulatedPart {
   type: "part";
   parent: Parent;
   project: string;
+  path: Parent[];
   status: PartStatus;
   priority: Priority;
   creationDate: Date;
@@ -23,9 +30,11 @@ export interface UnpopulatedPart {
   quantityRequired?: number;
 }
 
-export interface Part extends Omit<UnpopulatedPart, "parent" | "project"> {
+export interface Part
+  extends Omit<UnpopulatedPart, "parent" | "project" | "path"> {
   parent: UnpopulatedAssembly | UnpopulatedProject;
   project: UnpopulatedProject;
+  path: PopulatedPathItem[];
 }
 
 export interface EditedPart
@@ -42,6 +51,7 @@ export interface EditedPart
     | "haveMaterial"
     | "materialCutLength"
     | "quantityRequired"
+    | "path"
   > {
   notes: string;
   sourceMaterial: string;
@@ -54,5 +64,11 @@ export interface EditedPart
 export interface NewPart
   extends Omit<
     UnpopulatedPart,
-    "id" | "partNumber" | "status" | "priority" | "type" | "creationDate"
+    | "id"
+    | "partNumber"
+    | "status"
+    | "priority"
+    | "type"
+    | "creationDate"
+    | "path"
   > {}

@@ -7,6 +7,7 @@ import {
   AssemblyStatus,
   Priority,
   Child,
+  PopulatedPathItem,
 } from "./universalTypes";
 
 export const isAssemblyStatus = (value: string): value is AssemblyStatus => {
@@ -20,6 +21,7 @@ export interface UnpopulatedAssembly {
   type: "assembly";
   parent: Parent;
   children: Child[];
+  path: Parent[];
   project: string;
   status: AssemblyStatus;
   priority: Priority;
@@ -30,10 +32,14 @@ export interface UnpopulatedAssembly {
 // eslint-disable-file @typescript-eslint/no-empty-interface
 
 export interface Assembly
-  extends Omit<UnpopulatedAssembly, "parent" | "children" | "project"> {
+  extends Omit<
+    UnpopulatedAssembly,
+    "parent" | "children" | "project" | "path"
+  > {
   parent: UnpopulatedProject | UnpopulatedAssembly;
   children: Array<UnpopulatedPart | UnpopulatedAssembly>;
   project: UnpopulatedProject;
+  path: PopulatedPathItem[];
 }
 
 export type EditedAssembly = Omit<
@@ -45,6 +51,7 @@ export type EditedAssembly = Omit<
   | "children"
   | "project"
   | "creationDate"
+  | "path"
 >;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -58,4 +65,5 @@ export interface NewAssembly
     | "type"
     | "children"
     | "creationDate"
+    | "path"
   > {}

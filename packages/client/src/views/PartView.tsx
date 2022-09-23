@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import EditPartModal from "../components/parts/EditPartModal";
+import Breadcrumbs from "~/components/navigation/Breadcrumbs";
 
 const PartView = () => {
   const queryClient = useQueryClient();
@@ -45,9 +46,14 @@ const PartView = () => {
   const pageTitle = (
     <>
       <div className="text-4xl font-bold ">Part: {part.name}</div>
-      <div className="text-gray-500">
+      <div className="text-gray-500 mb-2">
         Part Number: <b>{part.partNumber}</b>
       </div>
+      <div className="text-gray-400 mb-2">
+        Creation Date:{" "}
+        <b>{new Date(part.creationDate).toLocaleDateString("en-US")}</b>
+      </div>
+      <Breadcrumbs pages={part.path.concat()} current={part.name}/>
     </>
   );
 

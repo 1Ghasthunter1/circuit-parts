@@ -11,6 +11,7 @@ import NewComponentButtons from "../components/components/NewComponentButtons";
 import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
 import ComponentsTable from "~/components/components/ComponentsTable";
 import TopLeftCenterSkeleton from "~/components/skeletons/TopLeftCenterSkeleton";
+import Breadcrumbs from "~/components/navigation/Breadcrumbs";
 
 const AssemblyView = () => {
   const { id } = useParams();
@@ -40,10 +41,11 @@ const AssemblyView = () => {
         <div className="text-gray-400">
           Part Number: <b>{assembly.partNumber}</b>
         </div>
-        <div className="text-gray-400">
+        <div className="text-gray-400 mb-2">
           Creation Date:{" "}
-          <b>{new Date(project.creationDate).toLocaleDateString("en-US")}</b>
+          <b>{new Date(assembly.creationDate).toLocaleDateString("en-US")}</b>
         </div>
+        <Breadcrumbs pages={assembly.path} current={assembly.name}/>
       </>
     );
     return (

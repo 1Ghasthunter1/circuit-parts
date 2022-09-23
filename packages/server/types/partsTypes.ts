@@ -39,7 +39,7 @@ export interface Part extends Omit<DatabasePart, "parent" | "path"> {
 
 export type EditedPart = Omit<
   DatabasePart,
-  "id" | "partNumber" | "type" | "parent" | "project" | "creationDate"
+  "id" | "partNumber" | "type" | "parent" | "project" | "creationDate" | "path"
 >;
 export interface NewPart
   extends Omit<
