@@ -34,7 +34,7 @@ const AssemblyView = () => {
   if (assemblyComponentsQuery.data && assemblyQuery.data) {
     const assembly = assemblyQuery.data;
     const project = assembly.project;
-
+ 
     const topLeftStuff = (
       <>
         <div className="text-4xl font-bold pb-2">Assembly: {assembly.name}</div>

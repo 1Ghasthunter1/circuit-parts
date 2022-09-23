@@ -130,6 +130,7 @@ const AccountView = () => {
             setModalVisibility={setPasswordModalVis}
             editMutation={changePasswordMutation}
           />
+          
         </div>
       </div>
     </div>

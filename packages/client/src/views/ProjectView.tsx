@@ -30,10 +30,11 @@ const ProjectView = () => {
         <div className="text-gray-400">
           Prefix: <b>{project.prefix}</b>
         </div>
-        <div className="text-gray-400">
+        <div className="text-gray-400 mb-2">
           Creation Date:{" "}
           <b>{new Date(project.creationDate).toLocaleDateString("en-US")}</b>
         </div>
+        <Breadcrumbs pages={[]} current={project.name} />
       </>
     );
 
