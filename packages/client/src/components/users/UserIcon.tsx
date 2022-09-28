@@ -25,7 +25,7 @@ const UserIcon = ({ text, size }: { text?: string; size?: Sizes }) => {
   return (
     <div className="flex shrink-0 h-10 w-10">
       <img
-        className="rounded-full ring-white ring-4"
+        className="rounded-full ring-gray-700 ring-2"
         src="/upClose.jpg"
         alt=""
       />
