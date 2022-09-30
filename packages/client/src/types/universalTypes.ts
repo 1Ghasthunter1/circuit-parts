@@ -68,6 +68,10 @@ export interface Parent {
 export interface FooterState {
   links: { text: string; url: string; onClick?: () => void }[];
 }
+
+export interface DashboardState {
+  selectedProjectId: string; 
+}
 export interface PopulatedPathItem {
   id: string;
   name: string;
