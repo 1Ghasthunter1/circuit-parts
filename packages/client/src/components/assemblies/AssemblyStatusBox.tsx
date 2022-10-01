@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { editAssemblyById } from "../../services/assemblyServices";
 import { Part } from "../../types/partsTypes";
+import StatusBox from "../components/StatusBox";
 
 interface StatusProps {
   assembly: Assembly;
@@ -81,7 +82,7 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
       color = "bg-red-500";
   }
   const inputStyle =
-    "w-36 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5";
+    "w-36 bg-gray-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2";
   return (
     <div
       className="whitespace-nowrap w-min cursor-pointer"
@@ -115,10 +116,9 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
         </div>
       ) : (
         <div
-          className={`px-2 py-1 text-white ${color} rounded-md  select-none`}
           onClick={() => setOnInput(true)}
         >
-          {content}
+          <StatusBox status={assembly.status} />
         </div>
       )}
     </div>

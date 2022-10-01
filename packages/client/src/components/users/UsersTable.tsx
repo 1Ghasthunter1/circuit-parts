@@ -126,7 +126,7 @@ const UsersTable = ({ data }: { data: TableUser[] }) => {
                         return (
                           <td
                             key={cell.id}
-                            className="h-8 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                            className="h-8 px-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                           >
                             {flexRender(
                               cell.column.columnDef.cell,

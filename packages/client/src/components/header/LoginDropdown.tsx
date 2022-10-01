@@ -29,10 +29,10 @@ export const LoginDropdown = () => {
             size="md"
           />
           <div className="ml-3 group flex flex-col justify-left">
-            <p className="text-sm font-medium text-gray-700">
+            <p className="text-sm font-medium text-gray-300">
               {user.firstName} {user.lastName}
             </p>
-            <div className="flex content-center text-xs font-medium text-gray-500 group-hover:text-gray-800">
+            <div className="flex content-center text-xs font-medium text-gray-100 group-hover:text-gray-300">
               <div className="mr-1">View profile</div>
               <div>
                 <FontAwesomeIcon icon="caret-down" size="xs" />
@@ -61,7 +61,7 @@ export const LoginDropdown = () => {
                     active
                       ? "bg-gray-100 text-gray-900 cursor-pointer"
                       : "text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    "block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 w-full flex"
                   )}
                 >
                   Account settings
@@ -74,7 +74,7 @@ export const LoginDropdown = () => {
                   type="submit"
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block w-full text-left px-4 py-2 text-sm"
+                    "block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 w-full flex"
                   )}
                   onClick={() => logout()}
                 >
