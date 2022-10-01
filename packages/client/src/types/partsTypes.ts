@@ -60,15 +60,7 @@ export interface EditedPart
   quantityRequired: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface NewPart
-  extends Omit<
-    UnpopulatedPart,
-    | "id"
-    | "partNumber"
-    | "status"
-    | "priority"
-    | "type"
-    | "creationDate"
-    | "path"
-  > {}
+export type NewPart = Omit<
+  UnpopulatedPart,
+  "id" | "partNumber" | "status" | "priority" | "type" | "creationDate" | "path"
+>;

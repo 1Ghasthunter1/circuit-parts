@@ -3,18 +3,16 @@ import { useState } from "react";
 // import Modal from "react-modal";
 
 import Button from "../../elements/Button";
-import CreateModal from "../../components/modals/CreateModal";
-import CreatePartForm from "../parts/CreatePartForm";
-import CreateAssemblyForm from "../assemblies/CreateAssemblyForm";
 import { UnpopulatedProject, Project } from "../../types/projectTypes";
 import { UseQueryResult } from "react-query";
-import { UnpopulatedAssembly, Assembly } from "../../types/assemblyTypes";
+import CreatePartModal from "../parts/CreatePartModal";
+import { Parent } from "~/types/universalTypes";
 
 // Modal.setAppElement("#root");
 
 interface props {
   project: UnpopulatedProject | Project;
-  parent?: UnpopulatedProject | Project | UnpopulatedAssembly | Assembly;
+  parent?: Parent;
   queriesToInvalidate: UseQueryResult[];
 }
 
@@ -43,37 +41,12 @@ const NewComponentButtons = ({
       >
         New Assembly
       </Button>
-      <CreateModal
-        title="New Assembly"
-        showModal={assyModalVis}
-        setShowModal={setAssyModalVis}
-        form={
-          <CreateAssemblyForm
-            queriesToInvalidate={queriesToInvalidate}
-            project={project}
-            defaultParentId={
-              parent?.type
-                ? parent.type === "project"
-                  ? `PROJECT:${parent.id}`
-                  : parent.id
-                : ""
-            }
-            closeModal={() => setAssyModalVis(false)}
-          />
-        }
-      />
-      <CreateModal
-        title="New Part"
-        showModal={partModalVis}
-        setShowModal={setPartModalVis}
-        form={
-          <CreatePartForm
-            queriesToInvalidate={queriesToInvalidate}
-            project={project}
-            defaultParentId={parent?.type === "assembly" ? parent.id : ""}
-            closeModal={() => setPartModalVis(false)}
-          />
-        }
+      <CreatePartModal
+        modalVisibility={partModalVis}
+        setModalVisibility={setPartModalVis}
+        project={project}
+        queriesToInvalidate={queriesToInvalidate}
+        parent={parent}
       />
     </div>
   );

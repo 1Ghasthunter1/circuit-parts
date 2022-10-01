@@ -1,6 +1,5 @@
 import GenericModalLayout from "../modals/layouts/GenericModalLayout";
 import BaseModal from "../modals/base/BaseModal";
-// import Button from "../../elements/Button";
 import Modal from "react-modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 

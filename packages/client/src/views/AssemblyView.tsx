@@ -34,7 +34,7 @@ const AssemblyView = () => {
   if (assemblyComponentsQuery.data && assemblyQuery.data) {
     const assembly = assemblyQuery.data;
     const project = assembly.project;
- 
+
     const topLeftStuff = (
       <>
         <div className="text-4xl font-bold pb-2">Assembly: {assembly.name}</div>
@@ -45,7 +45,7 @@ const AssemblyView = () => {
           Creation Date:{" "}
           <b>{new Date(assembly.creationDate).toLocaleDateString("en-US")}</b>
         </div>
-        <Breadcrumbs pages={assembly.path} current={assembly.name}/>
+        <Breadcrumbs pages={assembly.path} current={assembly.name} />
       </>
     );
     return (
@@ -54,7 +54,7 @@ const AssemblyView = () => {
         topRightContent={
           <NewComponentButtons
             project={project}
-            parent={assembly}
+            parent={{ parent: assembly.id, parentType: assembly.type }}
             queriesToInvalidate={[assemblyQuery, assemblyComponentsQuery]}
           />
         }
