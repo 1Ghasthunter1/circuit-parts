@@ -63,6 +63,7 @@ const Header = () => {
                       return (
                         <div
                           onClick={() => navigate(item.href)}
+                          key={item.name}
                           className={`px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${
                             comparePathway(item.href)
                               ? "bg-gray-900 text-white"

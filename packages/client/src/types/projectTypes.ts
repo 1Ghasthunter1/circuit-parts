@@ -15,8 +15,7 @@ export interface UnpopulatedProject {
 export interface Project extends Omit<UnpopulatedProject, "children"> {
   children: Array<Part | Assembly>;
 }
-export interface NewProject
-  extends Omit<
-    UnpopulatedProject,
-    "id" | "date" | "children" | "type" | "creationDate"
-  > {}
+export type NewProject = Omit<
+  UnpopulatedProject,
+  "id" | "date" | "children" | "type" | "creationDate"
+>;

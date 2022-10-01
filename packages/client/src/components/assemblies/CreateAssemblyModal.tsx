@@ -41,12 +41,12 @@ const CreateAssemblyModal = ({
   parent,
 }: CreateModalProps) => {
   const createAssemblyMutation = useMutation(
-    async (newPart: NewAssembly) => await createAssembly(newPart),
+    async (newAssembly: NewAssembly) => await createAssembly(newAssembly),
     {
-      onSuccess: async (newPart) => {
+      onSuccess: async (newAssembly) => {
         queriesToInvalidate.map((query) => query.refetch());
         setModalVisibility(false);
-        toast.success(`Created ${newPart.name}`);
+        toast.success(`Created ${newAssembly.name}`);
       },
     }
   );

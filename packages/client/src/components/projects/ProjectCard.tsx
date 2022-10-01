@@ -10,6 +10,7 @@ import DeleteModal from "../modals/DeleteModal";
 import { userState } from "../../state/state";
 import { useSnapshot } from "valtio";
 import { validatePerms } from "~/services/usersService";
+import { toast } from "react-toastify";
 
 Modal.setAppElement("#root");
 
@@ -24,7 +25,12 @@ const ProjectCard = ({ project }: ProjectTypes) => {
 
   const mutation = useMutation(
     async () => await deleteProjectById(project.id),
-    { onSuccess: async () => await queryClient.invalidateQueries("projects") }
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("projects");
+        toast.success(`Deleted project ${project.name}`);
+      },
+    }
   );
 
   return (

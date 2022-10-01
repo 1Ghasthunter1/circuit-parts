@@ -45,7 +45,7 @@ const DeleteModal = ({
         <div>
           <div className="mb-4">
             {serious ? (
-              <div>
+              <div className="select-none">
                 You{"'"}re about to delete {component.type} {component.name}.
                 Type {'"'}
                 <b>{upperName}</b>

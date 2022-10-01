@@ -27,7 +27,7 @@ const GenericModal = ({
             closeModal();
           }}
         >
-          <FontAwesomeIcon icon="square-xmark" color="#F4405E" size="2x" />
+          <FontAwesomeIcon icon="square-xmark" className="text-red-500 hover:text-red-600" size="2x" />
         </button>
       </div>
       <div className="relative p-6 flex-auto bg-transparent">{children}</div>

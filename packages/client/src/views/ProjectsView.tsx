@@ -12,9 +12,10 @@ import CreateProjectForm from "../components/projects/createProject/CreateProjec
 import TopLeftRightAndMiddle from "../layouts/TopLeftRightAndMiddle";
 import { userState } from "~/state/state";
 import ProjectsSkeleton from "~/components/skeletons/ProjectsSkeleton";
+import CreateProjectModal from "~/components/projects/CreateProjectModal";
 
 const ProjectsView = () => {
-  const { data, isLoading } = useQuery<Project[]>("projects", fetchProjects);
+  const projectsQuery = useQuery<Project[]>("projects", fetchProjects);
   const [showModal, setShowModal] = useState<boolean>(false);
   const userRole = userState.user?.role;
 
@@ -31,11 +32,10 @@ const ProjectsView = () => {
             New Project
           </Button>
 
-          <CreateModal
-            title="New Project"
-            showModal={showModal}
-            setShowModal={setShowModal}
-            form={<CreateProjectForm closeModal={() => setShowModal(false)} />}
+          <CreateProjectModal
+            modalVisibility={showModal}
+            setModalVisibility={setShowModal}
+            queriesToInvalidate={[projectsQuery]}
           />
         </>
       )}
@@ -47,6 +47,8 @@ const ProjectsView = () => {
       <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
     </div>
   );
+
+  const { data, isLoading } = projectsQuery;
 
   return (
     <TopLeftRightAndMiddle
