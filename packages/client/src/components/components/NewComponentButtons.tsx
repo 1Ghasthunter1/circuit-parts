@@ -7,6 +7,7 @@ import { UnpopulatedProject, Project } from "../../types/projectTypes";
 import { UseQueryResult } from "react-query";
 import CreatePartModal from "../parts/CreatePartModal";
 import { Parent } from "~/types/universalTypes";
+import CreateAssemblyModal from "../assemblies/CreateAssemblyModal";
 
 // Modal.setAppElement("#root");
 
@@ -44,6 +45,13 @@ const NewComponentButtons = ({
       <CreatePartModal
         modalVisibility={partModalVis}
         setModalVisibility={setPartModalVis}
+        project={project}
+        queriesToInvalidate={queriesToInvalidate}
+        parent={parent}
+      />
+      <CreateAssemblyModal
+        modalVisibility={assyModalVis}
+        setModalVisibility={setAssyModalVis}
         project={project}
         queriesToInvalidate={queriesToInvalidate}
         parent={parent}

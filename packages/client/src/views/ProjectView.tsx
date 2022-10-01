@@ -41,7 +41,7 @@ const ProjectView = () => {
     const topRightStuff = (
       <NewComponentButtons
         project={project}
-        parent={project}
+        parent={{parent: project.id, parentType: project.type}}
         queriesToInvalidate={[projectQuery, projectComponentsQuery]}
       />
     );

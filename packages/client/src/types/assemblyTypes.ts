@@ -54,16 +54,14 @@ export type EditedAssembly = Omit<
   | "path"
 >;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface NewAssembly
-  extends Omit<
-    UnpopulatedAssembly,
-    | "id"
-    | "partNumber"
-    | "status"
-    | "priority"
-    | "type"
-    | "children"
-    | "creationDate"
-    | "path"
-  > {}
+export type NewAssembly = Omit<
+  UnpopulatedAssembly,
+  | "id"
+  | "partNumber"
+  | "status"
+  | "priority"
+  | "type"
+  | "children"
+  | "creationDate"
+  | "path"
+>;
