@@ -30,6 +30,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      visibility: ["group-hover"],
       backgroundColor: ['even'],
       display: ["group-hover"],
     }

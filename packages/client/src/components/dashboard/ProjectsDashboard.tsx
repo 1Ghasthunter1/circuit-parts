@@ -34,14 +34,11 @@ const ProjectsDashboard = ({
               <div className="bg-gray-50 shadow w-full mb-4 rounded-lg mt-1 p-2">
                 <div className="flex flex-wrap relative gap-2 ">
                   {components.map((c) => (
-                    <div
-                      key={c.id}
-                      className="group relative"
-                    >
+                    <div key={c.id} className="group relative">
                       <TitleCard component={c} />
-                      <span className="ease-in-out duration-200 absolute hidden group-hover:flex -top-2 left-1/2 transform -translate-x-1/2 -translate-y-full px-4 py-2 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:left-1/2 after:top-[100%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-gray-700">
+                      <div className="absolute opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 transition duration-100 -top-2 left-1/2 transform -translate-x-1/2 -translate-y-full px-4 py-2 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:left-1/2 after:top-[100%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-gray-700">
                         {c.name}
-                      </span>
+                      </div>
                     </div>
                   ))}
                 </div>
