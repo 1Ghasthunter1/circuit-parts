@@ -33,6 +33,5 @@ module.exports = {
       backgroundColor: ['even'],
       display: ["group-hover"],
     }
-  },
-  plugins: []
+  }
 }

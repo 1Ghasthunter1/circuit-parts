@@ -8,13 +8,13 @@ const TitleCard = ({ component }: { component: Part | Assembly }) => {
   const getColor = () => {
     switch (component.priority) {
       case "low":
-        return "bg-blue-100 text-blue-600";
+        return "bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-700 transition duration-100";
       case "normal":
-        return "bg-green-100 text-green-500";
+        return "bg-green-100 text-green-500  hover:bg-green-200 hover:text-green-700 transition duration-100";
       case "high":
-        return "bg-orange-100 text-orange-600";
+        return "bg-orange-100 text-orange-600  hover:bg-orange-200 hover:text-orange-700 transition duration-100";
       case "urgent":
-        return "bg-red-100 text-red-500";
+        return "bg-red-100 text-red-500  hover:bg-red-200 hover:text-red-700 transition duration-100";
     }
     exhaustiveCheck(component.priority);
   };
