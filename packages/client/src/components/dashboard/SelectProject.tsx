@@ -8,7 +8,7 @@ const SelectProject = ({
   setProjectId,
 }: {
   projectId: string;
-  setProjectId: Dispatch<SetStateAction<string>>;
+  setProjectId: (val: string) => void;
 }) => {
   const { data, isLoading } = useQuery<Project[]>("projects", fetchProjects);
 
@@ -23,6 +23,7 @@ const SelectProject = ({
         placeholder="Oompa Loompa Project"
         defaultValue=""
         onChange={(e) => setProjectId(e.target.value)}
+        value={projectId}
       >
         <option disabled value="">
           (Select a project)

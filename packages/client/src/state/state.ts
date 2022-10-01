@@ -12,20 +12,14 @@ export const footerState = proxy<FooterState>({
     { text: "Sign Out", url: "/projects", onClick: () => logout() },
   ],
 });
-export const dashboardState = proxy<FooterState>({
-  links: [
-    { text: "Projects", url: "/projects" },
-    { text: "Dashboard", url: "/dashboard" },
-    { text: "Account", url: "/account" },
-    { text: "Sign Out", url: "/projects", onClick: () => logout() },
-  ],
+export const dashboardState = proxy<{ project: string; filter: string }>({
+  project: "",
+  filter: "",
 });
 
 const storage: string | null = localStorage.getItem("user");
 try {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const userObj: AuthUser = JSON.parse(storage || "");
   userState.user = userObj;
-  // eslint-disable-next-line no-empty
 } catch {}
 devtools(userState, "userState");

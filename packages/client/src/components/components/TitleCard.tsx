@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { Assembly } from "~/types/assemblyTypes";
 import { Part } from "~/types/partsTypes";
 
 const TitleCard = ({ component }: { component: Part | Assembly }) => {
+  const navigate = useNavigate();
   function exhaustiveCheck(param: never) {}
   const getColor = () => {
     switch (component.priority) {
@@ -17,8 +19,15 @@ const TitleCard = ({ component }: { component: Part | Assembly }) => {
     exhaustiveCheck(component.priority);
   };
 
+  const navigateUrl = `/${component.type === "part" ? "parts" : "assemblies"}/${
+    component.id
+  }`;
+
   return (
-    <div className="whitespace-nowrap w-min cursor-pointer">
+    <div
+      onClick={() => navigate(navigateUrl)}
+      className="whitespace-nowrap w-min cursor-pointer"
+    >
       <div
         className={`px-2 py-1 font-bold  ${getColor()} rounded-md  select-none`}
       >
