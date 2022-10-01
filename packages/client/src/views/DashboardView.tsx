@@ -10,7 +10,8 @@ const DashboardView = () => {
   const [projectId, setProjectId] = useState<string>("");
   const projectComponentsQuery = useQuery(
     `/projects/${projectId}/components`,
-    () => fetchProjectComponents(projectId)
+    () => fetchProjectComponents(projectId),
+    { enabled: projectId !== "" }
   );
 
   const data = projectComponentsQuery.data;
@@ -27,10 +28,14 @@ const DashboardView = () => {
         topLeftContent={TopLeftContent}
         topRightContent={TopRightContent}
       >
-        {!data ? (
-          <DashboardSkeleton rowCount={4} />
+        {projectId !== "" ? (
+          !data ? (
+            <DashboardSkeleton rowCount={4} />
+          ) : (
+            <ProjectsDashboard components={data} filter="nasd" />
+          )
         ) : (
-          <ProjectsDashboard components={data} filter="nasd" />
+          <div>Please select a project above...</div>
         )}
       </TopLeftRightAndMiddle>
     </>

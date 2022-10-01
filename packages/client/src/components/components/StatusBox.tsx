@@ -4,8 +4,10 @@ import { Assembly } from "../../types/assemblyTypes";
 
 const StatusBox = ({
   status,
+  disabled,
 }: {
   status: Assembly["status"] | Part["status"];
+  disabled?: boolean;
 }) => {
   function exhaustiveCheck(param: never) {}
   const getStuff = () => {
@@ -39,10 +41,11 @@ const StatusBox = ({
     }
     exhaustiveCheck(status);
   };
+
   const { text, color } = getStuff();
   return (
     <div className="whitespace-nowrap w-min cursor-pointer">
-      <div className={`px-2 py-1 text-white ${color} rounded-md  select-none`}>
+      <div className={`px-2 py-1 text-white ${disabled ? "bg-gray-300" : color} rounded-md  select-none`}>
         {text}
       </div>
     </div>
