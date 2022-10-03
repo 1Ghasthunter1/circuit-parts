@@ -15,25 +15,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = __importDefault(require("../models/user"));
 const uuid_1 = require("uuid");
-const loginRouter = express_1.default.Router();
-loginRouter.post("/", (0, express_validator_1.body)("email").isEmail(), (0, express_validator_1.body)("password").isLength({ min: 6 }), ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const refreshRouter = express_1.default.Router();
+refreshRouter.post("/", (0, express_validator_1.body)("refreshToken").isString().isLength({ max: 255 }), ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    const { email, password } = ((0, express_validator_1.matchedData)(req, {
+    const { refreshToken } = (0, express_validator_1.matchedData)(req, {
         locations: ["body"],
         includeOptionals: true,
-    }));
-    const user = yield user_1.default.findOne({ email });
+    });
+    const user = yield user_1.default.findOne({
+        "refreshToken.token": refreshToken,
+    });
     if (!user)
-        return res.status(401).json({ error: "invalid credentials" });
-    const correctPassword = yield bcrypt_1.default.compare(password, user.hash);
-    if (!correctPassword)
-        return res.status(401).json({ error: "incorrect password" });
+        return res.status(401).json({ error: "invalid refresh token" });
+    const existingToken = user.refreshToken;
+    const expireTime = process.env["REFRESH_TOKEN_EXPIRY_HOURS"] *
+        60 *
+        60 *
+        1000 || 12 * 60 * 60 * 1000;
+    if (new Date().getTime() - existingToken.creationDate.getTime() >
+        expireTime)
+        return res.status(401).json({ error: "refresh token expired" });
     const newRefreshToken = (0, uuid_1.v4)();
     user.refreshToken = { token: newRefreshToken, creationDate: new Date() };
     yield user.save();
@@ -45,16 +51,11 @@ loginRouter.post("/", (0, express_validator_1.body)("email").isEmail(), (0, expr
         expiresIn: process.env["ACCESS_TOKEN_EXPIRY_MINUTES"] *
             60,
     });
-    const userToSend = {
+    const tokenDataToSend = {
         token,
         refreshToken: newRefreshToken,
-        role: user.role,
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        id: user._id,
     };
-    return res.status(200).send(userToSend);
+    return res.status(200).send(tokenDataToSend);
 })));
-exports.default = loginRouter;
-//# sourceMappingURL=loginRouter.js.map
+exports.default = refreshRouter;
+//# sourceMappingURL=refreshRouter.js.map

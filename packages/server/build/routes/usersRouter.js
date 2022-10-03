@@ -86,6 +86,7 @@ usersRouter.post("/", (0, express_validator_1.checkSchema)(userValidation_1.newU
         lastName: newUser.lastName,
         email: newUser.email,
         role: newUser.role,
+        refreshToken: { token: "", creationDate: new Date() },
         hash: passwordHash,
     };
     const user = yield new user_1.default(newUserObject).save();

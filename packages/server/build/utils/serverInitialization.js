@@ -27,6 +27,7 @@ const initializeUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         lastName: "Admin",
         email: "circuitadmin@team696.org",
         role: "admin",
+        refreshToken: { token: "", creationDate: new Date() },
         hash: passwordHash,
     };
     yield new user_1.default(newUserObject).save();

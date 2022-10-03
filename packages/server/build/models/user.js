@@ -41,6 +41,10 @@ const userSchema = new mongoose_1.default.Schema({
         required: true,
         errorMessage: "role must be either admin or user",
     },
+    refreshToken: {
+        token: String,
+        creationDate: Date
+    },
     hash: { type: String, required: true },
 });
 userSchema.set("toJSON", {
