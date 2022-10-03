@@ -1,9 +1,9 @@
 import { proxy } from "valtio";
-import { AuthUser } from "../types/userTypes";
+import { AuthUser, UserFromAPI } from "../types/userTypes";
 import { FooterState } from "~/types/universalTypes";
 import { devtools } from "valtio/utils";
 import { logout } from "~/utils/logout";
-export const userState = proxy<{ user: AuthUser | null }>();
+export const userState = proxy<{ user: UserFromAPI | null }>();
 export const footerState = proxy<FooterState>({
   links: [
     { text: "Projects", url: "/projects" },
@@ -19,7 +19,7 @@ export const dashboardState = proxy<{ project: string; filter: string }>({
 
 const storage: string | null = localStorage.getItem("user");
 try {
-  const userObj: AuthUser = JSON.parse(storage || "");
+  const userObj: UserFromAPI = JSON.parse(storage || "");
   userState.user = userObj;
 } catch {}
 devtools(userState, "userState");

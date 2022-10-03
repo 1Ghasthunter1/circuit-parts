@@ -42,7 +42,6 @@ const CreateProjectModal = ({
       onSuccess: async (newProject) => {
         queriesToInvalidate.map((query) => query.refetch());
         setModalVisibility(false);
-        console.log(newProject)
         toast.success(`Created ${newProject?.name}`);
       },
     }
@@ -65,7 +64,6 @@ const CreateProjectModal = ({
           }}
           validationSchema={NewProjectFormSchema}
           onSubmit={(values) => {
-            console.log(values);
             createProjectMutation.mutate(values);
           }}
         >

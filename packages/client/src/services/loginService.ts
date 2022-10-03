@@ -1,11 +1,16 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { apiBaseUrl } from "../constants";
-import { AuthUser } from "../types/userTypes";
+import {
+  AuthUser,
+  RefreshTokenResponse,
+  UserFromAPI,
+} from "../types/userTypes";
 import { userState } from "../state/state";
-
+import type {} from "vite";
+import { toast } from "react-toastify";
 export const loginUser = async (email: string, password: string) => {
   try {
-    const resp = await axios.post<AuthUser>(`${apiBaseUrl}/login`, {
+    const resp = await axios.post<UserFromAPI>(`${apiBaseUrl}/login`, {
       email,
       password,
     });
@@ -24,7 +29,42 @@ export const newLoginUser = async (email: string, password: string) => {
   });
 };
 
+export const refreshTokenService = async () => {
+  try {
+    const response = await axios.post<RefreshTokenResponse>(
+      `${apiBaseUrl}/refresh`,
+      {
+        refreshToken: userState.user?.refreshToken,
+      }
+    );
+    if (!userState.user) return null;
+    const data = response.data;
+    userState.user.token = data.token;
+    userState.user.refreshToken = data.refreshToken;
+  } catch (err) {}
+};
+
 export const logoutUser = () => {
   window.localStorage.clear();
   userState.user = null;
 };
+
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    if (userState.user) {
+      if (error.response?.data?.error === "jwt expired") {
+        await refreshTokenService();
+      } else if (
+        error.response?.data?.error === "refresh token expired" ||
+        error.response?.data?.error === "invalid refresh token"
+      ) {
+        logoutUser();
+        toast.info("Token expired, please sign in again.");
+      }
+      return Promise.reject(error);
+    }
+  }
+);

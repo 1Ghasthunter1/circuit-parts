@@ -9,6 +9,19 @@ export interface User {
   role: UserRole;
 }
 
+export interface UserFromAPI {
+  token: string;
+  refreshToken: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  id: string;
+  role: UserRole;
+}
+export interface RefreshTokenResponse {
+  token: string;
+  refreshToken: string;
+}
 export interface AuthUser extends User {
   token: string;
 }

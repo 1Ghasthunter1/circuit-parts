@@ -48,7 +48,9 @@ loginRouter.post(
       userForToken,
       process.env["SECRET"] || "RandomSecret!@@@Z===AS()_%)(!*",
       {
-        expiresIn: 60 * 60,
+        expiresIn:
+          (process.env["ACCESS_TOKEN_EXPIRY_MINUTES"] as unknown as number) *
+          60,
       }
     );
 

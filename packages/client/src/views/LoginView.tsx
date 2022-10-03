@@ -25,7 +25,6 @@ const LoginView = () => {
     const userObj = await loginUser(email, password);
     if (!userObj) return null;
     if ("error" in userObj) {
-      console.log(userObj);
       if (userObj.error === "invalid credentials")
         setLoginStatus("Invalid username or password");
       else if (userObj.error === "incorrect password")
@@ -34,6 +33,11 @@ const LoginView = () => {
     } else {
       localStorage.setItem("user", JSON.stringify(userObj));
       userState.user = userObj;
+      toast.success(
+        <div>
+          Welcome, <b>{userObj.firstName}</b>!
+        </div>
+      );
     }
   };
 

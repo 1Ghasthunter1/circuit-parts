@@ -30,7 +30,10 @@ refreshRouter.post(
     if (!user) return res.status(401).json({ error: "invalid refresh token" });
     const existingToken = user.refreshToken;
     const expireTime =
-      (process.env["REFRESH_TOKEN_EXPIRY"] as unknown as number) * 3600000 || 86400000;
+      (process.env["REFRESH_TOKEN_EXPIRY_HOURS"] as unknown as number) *
+        60 *
+        60 *
+        1000 || 12 * 60 * 60 * 1000;
 
     if (
       new Date().getTime() - existingToken.creationDate.getTime() >
@@ -52,7 +55,9 @@ refreshRouter.post(
       userForToken,
       process.env["SECRET"] || "RandomSecret!@@@Z===AS()_%)(!*",
       {
-        expiresIn: 60 * 10,
+        expiresIn:
+          (process.env["ACCESS_TOKEN_EXPIRY_MINUTES"] as unknown as number) *
+          60,
       }
     );
 

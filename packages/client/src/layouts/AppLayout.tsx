@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import services from "../services/services";
-import { logoutUser } from "../services/loginService";
+import { logoutUser, refreshTokenService } from "../services/loginService";
 
 const AppLayout = ({
   header,
@@ -14,21 +14,8 @@ const AppLayout = ({
   header?: JSX.Element;
   footer?: JSX.Element;
 }) => {
-  const userSnapshot = useSnapshot(userState);
-  const user = userSnapshot.user;
-  if (user) {
-    axios.interceptors.response.use(
-      (response) => {
-        return response;
-      },
-      (error) => {
-        if (error.response?.data?.error === "jwt expired") logoutUser();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
-        return Promise.reject(error);
-      }
-    );
-    axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
-  }
+  const user = useSnapshot(userState).user;
+  axios.defaults.headers.common["Authorization"] = `Bearer ${user?.token}`;
 
   const content = user ? (
     <div className="bg-gray-100 min-h-screen relative">
