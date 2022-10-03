@@ -7,6 +7,10 @@ export interface DatabaseUser {
   username: string;
   email: string;
   role: UserRole;
+  refreshToken: {
+    token: string;
+    creationDate: Date;
+  };
   hash: string;
 }
 
@@ -16,9 +20,15 @@ export interface NewUser extends Omit<DatabaseUser, "id"> {
 
 export interface LoginToUser {
   token: string;
+  refreshToken: string;
   username: string;
   firstName: string;
   lastName: string;
   id: Types.ObjectId;
   role: UserRole;
+}
+
+export interface RefreshTokenResponse {
+  token: string;
+  refreshToken: string;
 }

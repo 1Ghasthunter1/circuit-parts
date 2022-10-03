@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema<DatabaseUser>({
     required: true,
     errorMessage: "role must be either admin or user",
   },
+  refreshToken: {
+    token: String,
+    creationDate: Date
+  },
   hash: { type: String, required: true },
 });
 

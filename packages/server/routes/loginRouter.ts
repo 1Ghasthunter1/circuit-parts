@@ -3,6 +3,7 @@ import { body, validationResult, matchedData } from "express-validator";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/user";
+import { v4 as uuidv4 } from "uuid";
 
 import { LoginToUser } from "../types/userTypes";
 
@@ -34,6 +35,10 @@ loginRouter.post(
     if (!correctPassword)
       return res.status(401).json({ error: "incorrect password" });
 
+    const newRefreshToken = uuidv4();
+    user.refreshToken = { token: newRefreshToken, creationDate: new Date() };
+    await user.save();
+
     const userForToken = {
       username: user.username,
       id: user._id,
@@ -49,6 +54,7 @@ loginRouter.post(
 
     const userToSend: LoginToUser = {
       token,
+      refreshToken: newRefreshToken,
       role: user.role,
       username: user.username,
       firstName: user.firstName,

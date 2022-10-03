@@ -18,6 +18,7 @@ import {
 
 import { Logger } from "tslog";
 import path from "path";
+import refreshRouter from "./routes/refreshRouter";
 const log: Logger = new Logger({ name: "myLogger" });
 
 log.info(`MONGO_URI: ${config.MONGODB_URI}`);
@@ -37,6 +38,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "./build")));
 
+app.use("/api/refresh", refreshRouter);
 app.use("/api/login", loginRouter);
 
 app.use("/api/*", tokenExtractor);
