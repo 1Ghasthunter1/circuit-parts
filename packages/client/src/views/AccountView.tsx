@@ -15,7 +15,7 @@ import ChangePasswordModal from "../components/users/ChangePasswordModal";
 import { userState } from "../state/state";
 import { useNavigate } from "react-router-dom";
 import UserIcon from "~/components/users/UserIcon";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 const AccountView = () => {
   const [editModalVis, setEditModalVis] = useState<boolean>(false);

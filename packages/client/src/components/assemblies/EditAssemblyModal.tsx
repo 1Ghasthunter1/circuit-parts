@@ -14,7 +14,7 @@ import {
 } from "../../types/universalTypes";
 import Button from "../../elements/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import {
   Assembly,
   EditedAssembly,

@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Assembly } from "../../types/assemblyTypes";
 import { AssemblyStatus, assemblyStatuses } from "../../types/universalTypes";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 import { editAssemblyById } from "../../services/assemblyServices";
 import { Part } from "../../types/partsTypes";
 import StatusBox from "../components/StatusBox";
@@ -115,9 +114,7 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
           />
         </div>
       ) : (
-        <div
-          onClick={() => setOnInput(true)}
-        >
+        <div onClick={() => setOnInput(true)}>
           <StatusBox status={assembly.status} />
         </div>
       )}

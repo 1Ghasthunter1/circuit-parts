@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { deleteAssemblyById } from "~/services/assemblyServices";
 import { Assembly } from "~/types/assemblyTypes";
 import DeleteModal from "../modals/DeleteModal";

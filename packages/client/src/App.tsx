@@ -11,9 +11,7 @@ import UnderConstruction from "./components/components/UnderConstruction";
 import AppLayout from "./layouts/AppLayout";
 import AccountView from "./views/AccountView";
 import UsersView from "./views/UsersView";
-
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import TailwindToaster from "./utils/toast/TailwindToast";
 import DashboardView from "./views/DashboardView";
 import Footer from "./components/footer/Footer";
 
@@ -40,7 +38,7 @@ const App = () => {
           </Route>
         </Routes>
       </Router>
-      <ToastContainer hideProgressBar={true} pauseOnFocusLoss={false} />
+      <TailwindToaster />
     </>
   );
 };

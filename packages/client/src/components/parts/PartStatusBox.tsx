@@ -5,8 +5,7 @@ import { editPart } from "../../services/partsServices";
 import { Assembly } from "../../types/assemblyTypes";
 import { Part } from "../../types/partsTypes";
 import { PartStatus, partStatuses } from "../../types/universalTypes";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 import StatusBox from "../components/StatusBox";
 
 interface StatusProps {
@@ -47,14 +46,10 @@ const PartStatusBox = ({ part, queryKey }: StatusProps) => {
           }
         ),
       onError: () => {
-        toast.error("Could not update status", {
-          autoClose: 2500,
-        });
+        toast.error("Could not update status");
       },
       onSuccess: () => {
-        toast.success("Status changed successfully", {
-          autoClose: 2500,
-        });
+        toast.success("Status changed successfully");
       },
     }
   );

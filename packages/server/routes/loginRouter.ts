@@ -6,6 +6,7 @@ import User from "../models/user";
 import { v4 as uuidv4 } from "uuid";
 
 import { LoginToUser } from "../types/userTypes";
+import config from "../utils/config";
 
 const loginRouter = express.Router();
 
@@ -48,9 +49,7 @@ loginRouter.post(
       userForToken,
       process.env["SECRET"] || "RandomSecret!@@@Z===AS()_%)(!*",
       {
-        expiresIn:
-          (process.env["ACCESS_TOKEN_EXPIRY_MINUTES"] as unknown as number) *
-          60,
+        expiresIn: config.ACCESS_TOKEN_EXPIRY_MINUTES * 60,
       }
     );
 

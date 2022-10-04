@@ -10,7 +10,7 @@ import DeleteModal from "../modals/DeleteModal";
 import { userState } from "../../state/state";
 import { useSnapshot } from "valtio";
 import { validatePerms } from "~/services/usersService";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 Modal.setAppElement("#root");
 

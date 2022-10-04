@@ -10,7 +10,7 @@ import { createNewUser } from "../../services/usersService";
 import { useQueryClient } from "react-query";
 
 import * as Yup from "yup";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 interface CreateModalProps {
   modalVisibility: boolean;

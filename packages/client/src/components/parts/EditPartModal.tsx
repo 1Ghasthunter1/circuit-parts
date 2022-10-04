@@ -14,7 +14,7 @@ import {
 } from "../../types/universalTypes";
 import { editPart } from "../../services/partsServices";
 import Button from "../../elements/Button";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 interface CreateModalProps {
   modalVisibility: boolean;

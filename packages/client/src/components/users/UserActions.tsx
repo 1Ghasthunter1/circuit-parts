@@ -5,7 +5,7 @@ import EditUserModal from "./EditUserModal";
 import { User, EditedUser } from "../../types/userTypes";
 import { useQueryClient, useMutation } from "react-query";
 import { deleteUserById, updateUserById } from "../../services/usersService";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 const UserActions = ({
   user,
