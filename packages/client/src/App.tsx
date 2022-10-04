@@ -11,9 +11,7 @@ import UnderConstruction from "./components/components/UnderConstruction";
 import AppLayout from "./layouts/AppLayout";
 import AccountView from "./views/AccountView";
 import UsersView from "./views/UsersView";
-
-import { Toaster } from "react-hot-toast";
-
+import TailwindToaster from "./utils/toast/TailwindToast";
 import DashboardView from "./views/DashboardView";
 import Footer from "./components/footer/Footer";
 
@@ -40,14 +38,7 @@ const App = () => {
           </Route>
         </Routes>
       </Router>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          // Define default options
-          className: "",
-          duration: 3000,
-        }}
-      />
+      <TailwindToaster />
     </>
   );
 };

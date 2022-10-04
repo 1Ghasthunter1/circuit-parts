@@ -8,7 +8,6 @@ import { useSnapshot } from "valtio";
 import { Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import toast from "react-hot-toast";
-
 const LoginView = () => {
   const [loginStatus, setLoginStatus] = useState<string>("");
 
