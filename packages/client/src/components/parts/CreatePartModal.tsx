@@ -15,7 +15,7 @@ import { NewPart } from "../../types/partsTypes";
 import { Parent } from "../../types/universalTypes";
 import { createPart } from "../../services/partsServices";
 import Button from "../../elements/Button";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { Project, UnpopulatedProject } from "~/types/projectTypes";
 import { fetchProjectAssemblies } from "~/services/projectsServices";
 

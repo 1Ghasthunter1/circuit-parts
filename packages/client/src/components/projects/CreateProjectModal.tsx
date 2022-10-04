@@ -8,11 +8,9 @@ import { useMutation, UseQueryResult } from "react-query";
 import * as Yup from "yup";
 import { Parent } from "../../types/universalTypes";
 import Button from "../../elements/Button";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { NewProject, Project, UnpopulatedProject } from "~/types/projectTypes";
-import {
-  createProject,
-} from "~/services/projectsServices";
+import { createProject } from "~/services/projectsServices";
 
 interface CreateModalProps {
   modalVisibility: boolean;

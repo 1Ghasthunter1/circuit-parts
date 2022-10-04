@@ -8,7 +8,7 @@ import Button from "../elements/Button";
 import CasualDeleteModal from "../components/modals/DeleteModal";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import EditPartModal from "../components/parts/EditPartModal";
 import Breadcrumbs from "~/components/navigation/Breadcrumbs";
 

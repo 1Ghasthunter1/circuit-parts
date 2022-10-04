@@ -7,7 +7,7 @@ import {
 } from "../types/userTypes";
 import { userState } from "../state/state";
 import type {} from "vite";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 export const loginUser = async (email: string, password: string) => {
   try {
     const resp = await axios.post<UserFromAPI>(`${apiBaseUrl}/login`, {
