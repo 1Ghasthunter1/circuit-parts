@@ -18,6 +18,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = __importDefault(require("../models/user"));
 const uuid_1 = require("uuid");
+const config_1 = __importDefault(require("../utils/config"));
 const loginRouter = express_1.default.Router();
 loginRouter.post("/", (0, express_validator_1.body)("email").isEmail(), (0, express_validator_1.body)("password").isLength({ min: 6 }), ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
@@ -42,8 +43,7 @@ loginRouter.post("/", (0, express_validator_1.body)("email").isEmail(), (0, expr
         id: user._id,
     };
     const token = jsonwebtoken_1.default.sign(userForToken, process.env["SECRET"] || "RandomSecret!@@@Z===AS()_%)(!*", {
-        expiresIn: process.env["ACCESS_TOKEN_EXPIRY_MINUTES"] *
-            60,
+        expiresIn: config_1.default.ACCESS_TOKEN_EXPIRY_MINUTES * 60,
     });
     const userToSend = {
         token,

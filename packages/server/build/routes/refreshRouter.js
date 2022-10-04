@@ -17,6 +17,7 @@ const express_validator_1 = require("express-validator");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = __importDefault(require("../models/user"));
 const uuid_1 = require("uuid");
+const config_1 = __importDefault(require("../utils/config"));
 const refreshRouter = express_1.default.Router();
 refreshRouter.post("/", (0, express_validator_1.body)("refreshToken").isString().isLength({ max: 255 }), ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
@@ -33,10 +34,7 @@ refreshRouter.post("/", (0, express_validator_1.body)("refreshToken").isString()
     if (!user)
         return res.status(401).json({ error: "invalid refresh token" });
     const existingToken = user.refreshToken;
-    const expireTime = process.env["REFRESH_TOKEN_EXPIRY_HOURS"] *
-        60 *
-        60 *
-        1000 || 12 * 60 * 60 * 1000;
+    const expireTime = config_1.default.REFRESH_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000;
     if (new Date().getTime() - existingToken.creationDate.getTime() >
         expireTime)
         return res.status(401).json({ error: "refresh token expired" });
@@ -48,8 +46,7 @@ refreshRouter.post("/", (0, express_validator_1.body)("refreshToken").isString()
         id: user._id,
     };
     const token = jsonwebtoken_1.default.sign(userForToken, process.env["SECRET"] || "RandomSecret!@@@Z===AS()_%)(!*", {
-        expiresIn: process.env["ACCESS_TOKEN_EXPIRY_MINUTES"] *
-            60,
+        expiresIn: config_1.default.ACCESS_TOKEN_EXPIRY_MINUTES * 60,
     });
     const tokenDataToSend = {
         token,

@@ -18,7 +18,7 @@ const middleware_2 = require("./utils/middleware/middleware");
 const tslog_1 = require("tslog");
 const path_1 = __importDefault(require("path"));
 const refreshRouter_1 = __importDefault(require("./routes/refreshRouter"));
-const log = new tslog_1.Logger({ name: "myLogger" });
+const log = new tslog_1.Logger({ name: "appLogger" });
 log.info(`MONGO_URI: ${config_1.default.MONGODB_URI}`);
 log.info(`NODE_ENV: ${process.env.NODE_ENV}`);
 mongoose_1.default
