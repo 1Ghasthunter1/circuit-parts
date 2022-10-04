@@ -7,11 +7,11 @@ const TailwindToaster = () => {
     <Toaster
       position="top-right"
       toastOptions={{
-        duration: 3000,
+        duration: 30000,
       }}
     >
       {(t) => (
-        <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
+        <div className="flex flex-col items-center space-y-4 sm:items-end">
           <Transition
             appear
             show={t.visible}
