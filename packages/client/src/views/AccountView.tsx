@@ -48,6 +48,7 @@ const AccountView = () => {
         window.localStorage.clear();
         userState.user = null;
         navigate("/login");
+        toast.success("Password changed! Please sign in again.");
       },
     }
   );

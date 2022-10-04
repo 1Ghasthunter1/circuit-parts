@@ -4,8 +4,6 @@ import { useSnapshot } from "valtio";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import services from "../services/services";
-import { logoutUser, refreshTokenService } from "../services/loginService";
 
 const AppLayout = ({
   header,

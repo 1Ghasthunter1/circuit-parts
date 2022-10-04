@@ -15,6 +15,7 @@ export const loginUser = async (email: string, password: string) => {
       email,
       password,
     });
+    console.log(resp);
     return resp.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
@@ -67,5 +68,6 @@ axios.interceptors.response.use(
       }
       return Promise.reject(error);
     }
+    return Promise.reject(error);
   }
 );

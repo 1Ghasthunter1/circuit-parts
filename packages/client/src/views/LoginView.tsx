@@ -29,6 +29,8 @@ const LoginView = () => {
       else if (userObj.error === "incorrect password")
         setLoginStatus("Incorrect password");
       else setLoginStatus("Unknown login error");
+    } else if ("errors" in userObj) {
+      setLoginStatus("Unknown login error");
     } else {
       localStorage.setItem("user", JSON.stringify(userObj));
       userState.user = userObj;
