@@ -7,7 +7,7 @@ const TailwindToaster = () => {
     <Toaster
       position="top-right"
       toastOptions={{
-        duration: 30000,
+        duration: 3000,
       }}
     >
       {(t) => (
