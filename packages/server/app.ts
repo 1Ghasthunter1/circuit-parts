@@ -19,7 +19,7 @@ import {
 import { Logger } from "tslog";
 import path from "path";
 import refreshRouter from "./routes/refreshRouter";
-const log: Logger = new Logger({ name: "myLogger" });
+const log: Logger = new Logger({ name: "appLogger" });
 
 log.info(`MONGO_URI: ${config.MONGODB_URI}`);
 log.info(`NODE_ENV: ${process.env.NODE_ENV}`);

@@ -5,6 +5,7 @@ import User from "../models/user";
 import { v4 as uuidv4 } from "uuid";
 
 import { RefreshTokenResponse } from "../types/userTypes";
+import config from "../utils/config";
 
 const refreshRouter = express.Router();
 
@@ -29,11 +30,7 @@ refreshRouter.post(
 
     if (!user) return res.status(401).json({ error: "invalid refresh token" });
     const existingToken = user.refreshToken;
-    const expireTime =
-      (process.env["REFRESH_TOKEN_EXPIRY_HOURS"] as unknown as number) *
-        60 *
-        60 *
-        1000 || 12 * 60 * 60 * 1000;
+    const expireTime = config.REFRESH_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000;
 
     if (
       new Date().getTime() - existingToken.creationDate.getTime() >
@@ -55,9 +52,7 @@ refreshRouter.post(
       userForToken,
       process.env["SECRET"] || "RandomSecret!@@@Z===AS()_%)(!*",
       {
-        expiresIn:
-          (process.env["ACCESS_TOKEN_EXPIRY_MINUTES"] as unknown as number) *
-          60,
+        expiresIn: config.ACCESS_TOKEN_EXPIRY_MINUTES * 60,
       }
     );
 
