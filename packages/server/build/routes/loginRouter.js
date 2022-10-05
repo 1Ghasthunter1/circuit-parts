@@ -72,7 +72,7 @@ loginRouter.post("/signout", (0, express_validator_1.body)("refreshToken").isLen
     const user = yield user_1.default.findOne({ _id: userId });
     if (!user)
         return res.status(404).json({ error: "user not found" });
-    user.refreshTokens = user.refreshTokens.filter((refreshTokenObj) => refreshTokenObj.token !== refreshToken);
+    user.refreshTokens = (0, userService_1.clearOldTokens)(user.refreshTokens).filter((refreshTokenObj) => refreshTokenObj.token !== refreshToken);
     yield user.save();
     return res.status(204).end();
 })));
