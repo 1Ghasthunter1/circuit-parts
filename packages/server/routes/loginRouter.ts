@@ -94,7 +94,7 @@ loginRouter.post(
     const user = await User.findOne({ _id: userId });
     if (!user) return res.status(404).json({ error: "user not found" });
 
-    user.refreshTokens = user.refreshTokens.filter(
+    user.refreshTokens = clearOldTokens(user.refreshTokens).filter(
       (refreshTokenObj) => refreshTokenObj.token !== refreshToken
     );
     await user.save();
