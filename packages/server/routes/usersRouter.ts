@@ -100,7 +100,7 @@ usersRouter.post("/", checkSchema(newUserSchema), (async (req, res) => {
     lastName: newUser.lastName,
     email: newUser.email,
     role: newUser.role,
-    refreshToken: {token: "", creationDate: new Date()},
+    refreshTokens: [],
     hash: passwordHash,
   };
 

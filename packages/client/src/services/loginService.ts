@@ -7,15 +7,14 @@ import {
 } from "../types/userTypes";
 import { userState } from "../state/state";
 import type {} from "vite";
-import toast from "react-hot-toast";
 import { infoToast } from "~/utils/toast/Toasts";
+
 export const loginUser = async (email: string, password: string) => {
   try {
     const resp = await axios.post<UserFromAPI>(`${apiBaseUrl}/login`, {
       email,
       password,
     });
-    console.log(resp);
     return resp.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
@@ -46,7 +45,15 @@ export const refreshTokenService = async () => {
   } catch (err) {}
 };
 
-export const logoutUser = () => {
+export const logoutUser = async () => {
+  try {
+    await axios.post(`${apiBaseUrl}/login/signout`, {
+      userId: userState.user?.id,
+      refreshToken: userState.user?.refreshToken,
+    });
+  } catch {
+    console.log("error with signing user out");
+  }
   window.localStorage.clear();
   userState.user = null;
 };

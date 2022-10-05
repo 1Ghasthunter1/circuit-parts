@@ -16,7 +16,7 @@ export const initializeUsers = async () => {
     lastName: "Admin",
     email: "circuitadmin@team696.org",
     role: "admin",
-    refreshToken: { token: "", creationDate: new Date() },
+    refreshTokens: [],
     hash: passwordHash,
   };
 

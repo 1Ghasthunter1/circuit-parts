@@ -2,7 +2,7 @@ import { proxy } from "valtio";
 import { AuthUser, UserFromAPI } from "../types/userTypes";
 import { FooterState } from "~/types/universalTypes";
 import { devtools } from "valtio/utils";
-import { logout } from "~/utils/logout";
+import { logout } from "~/utils/authorization";
 export const userState = proxy<{ user: UserFromAPI | null }>();
 export const footerState = proxy<FooterState>({
   links: [

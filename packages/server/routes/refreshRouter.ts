@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 import { RefreshTokenResponse } from "../types/userTypes";
 import config from "../utils/config";
 
+import { clearOldTokens } from "../services/userService";
+
 const refreshRouter = express.Router();
 
 refreshRouter.post(
@@ -25,25 +27,38 @@ refreshRouter.post(
     });
 
     const user = await User.findOne({
-      "refreshToken.token": refreshToken,
+      refreshTokens: { $elemMatch: { token: refreshToken } },
     });
 
     if (!user) {
       return res.status(401).json({ error: "invalid refresh token" });
     }
-    const existingToken = user.refreshToken;
-    const expireTime = config.REFRESH_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000;
+    const existingTokenObject = user.refreshTokens.find(
+      (tokenObj) => tokenObj.token === refreshToken
+    );
+
+    if (!existingTokenObject) {
+      return res.status(401).json({ error: "invalid refresh token" });
+    }
+    const expireTime = config.REFRESH_TOKEN_EXPIRY;
 
     if (
-      new Date().getTime() - existingToken.creationDate.getTime() >
+      new Date().getTime() - existingTokenObject.creationDate.getTime() >
       expireTime
     ) {
+      user.refreshTokens = clearOldTokens(user.refreshTokens);
+      await user.save();
       return res.status(401).json({ error: "refresh token expired" });
     }
 
     const newRefreshToken = uuidv4();
 
-    user.refreshToken = { token: newRefreshToken, creationDate: new Date() };
+    user.refreshTokens = clearOldTokens(user.refreshTokens).map((tokenObj) => {
+      if (tokenObj.token === refreshToken) {
+        return { token: newRefreshToken, creationDate: new Date() };
+      }
+      return tokenObj;
+    });
     await user.save();
 
     const userForToken = {
@@ -55,7 +70,7 @@ refreshRouter.post(
       userForToken,
       process.env["SECRET"] || "RandomSecret!@@@Z===AS()_%)(!*",
       {
-        expiresIn: config.ACCESS_TOKEN_EXPIRY_MINUTES * 60,
+        expiresIn: config.ACCESS_TOKEN_EXPIRY,
       }
     );
 

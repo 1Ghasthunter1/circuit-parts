@@ -7,10 +7,10 @@ export interface DatabaseUser {
   username: string;
   email: string;
   role: UserRole;
-  refreshToken: {
+  refreshTokens: {
     token: string;
     creationDate: Date;
-  };
+  }[];
   hash: string;
 }
 
@@ -31,4 +31,9 @@ export interface LoginToUser {
 export interface RefreshTokenResponse {
   token: string;
   refreshToken: string;
+}
+
+export interface RefreshTokenObj {
+  token: string;
+  creationDate: Date;
 }

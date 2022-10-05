@@ -3,11 +3,11 @@ import { Menu, Transition } from "@headlessui/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { userState } from "../../state/state";
+import { userState } from "~/state/state";
 import { useSnapshot } from "valtio";
 import { useNavigate } from "react-router-dom";
 import UserIcon from "../users/UserIcon";
-import { logout } from "~/utils/logout";
+import { logout } from "~/utils/authorization";
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
