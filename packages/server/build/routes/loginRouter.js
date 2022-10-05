@@ -54,6 +54,8 @@ loginRouter.post("/", (0, express_validator_1.body)("email").isEmail(), (0, expr
         lastName: user.lastName,
         id: user._id,
     };
+    user.refreshToken = { token: newRefreshToken, creationDate: new Date() };
+    yield user.save();
     return res.status(200).send(userToSend);
 })));
 exports.default = loginRouter;

@@ -31,13 +31,20 @@ refreshRouter.post("/", (0, express_validator_1.body)("refreshToken").isString()
     const user = yield user_1.default.findOne({
         "refreshToken.token": refreshToken,
     });
-    if (!user)
+    if (!user) {
+        console.log("no user found");
         return res.status(401).json({ error: "invalid refresh token" });
+    }
     const existingToken = user.refreshToken;
     const expireTime = config_1.default.REFRESH_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000;
     if (new Date().getTime() - existingToken.creationDate.getTime() >
-        expireTime)
+        expireTime) {
+        console.log("token expired");
+        console.log(existingToken.creationDate.getTime());
+        console.log(expireTime);
         return res.status(401).json({ error: "refresh token expired" });
+    }
+    console.log("sending new refresh token");
     const newRefreshToken = (0, uuid_1.v4)();
     user.refreshToken = { token: newRefreshToken, creationDate: new Date() };
     yield user.save();
