@@ -18,29 +18,29 @@ const getMongoURI = () => {
             throw new Error(`NODE_ENV: '${ENVIRONMENT}' is not configured correctly `);
     }
 };
-const getAccessTokenExpiryMinutes = () => {
+const getAccessTokenExpiry = () => {
     const envAccessTokenExpiryMinutes = process.env.ACCESS_TOKEN_EXPIRY_MINUTES;
     if (!(0, validations_1.isNumber)(envAccessTokenExpiryMinutes))
         throw new Error(`process.env.ACCESS_TOKEN_EXPIRY_MINUTES: '${envAccessTokenExpiryMinutes}' is not a number.`);
-    return envAccessTokenExpiryMinutes;
+    return Math.round(envAccessTokenExpiryMinutes * 60);
 };
-const getRefreshTokenExpiryHours = () => {
+const getRefreshTokenExpiry = () => {
     const envRefreshTokenExpiryHours = process.env.REFRESH_TOKEN_EXPIRY_HOURS;
     if (!(0, validations_1.isNumber)(envRefreshTokenExpiryHours))
         throw new Error(`process.env.REFRESH_TOKEN_EXPIRY_HOURS: '${envRefreshTokenExpiryHours}' is not a number.`);
-    return envRefreshTokenExpiryHours;
+    return Math.round(envRefreshTokenExpiryHours * 60 * 60 * 1000);
 };
 const MONGODB_URI = getMongoURI();
-const ACCESS_TOKEN_EXPIRY_MINUTES = getAccessTokenExpiryMinutes();
-const REFRESH_TOKEN_EXPIRY_HOURS = getRefreshTokenExpiryHours();
-log.info(`ACCESS_TOKEN_EXPIRY_MINUTES: ${ACCESS_TOKEN_EXPIRY_MINUTES}`);
-log.info(`REFRESH_TOKEN_EXPIRY_HOURS: ${REFRESH_TOKEN_EXPIRY_HOURS}`);
+const ACCESS_TOKEN_EXPIRY = getAccessTokenExpiry();
+const REFRESH_TOKEN_EXPIRY = getRefreshTokenExpiry();
+log.info(`ACCESS_TOKEN_EXPIRY: ${ACCESS_TOKEN_EXPIRY} s (${ACCESS_TOKEN_EXPIRY / 60} min)`);
+log.info(`REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY} ms (${REFRESH_TOKEN_EXPIRY / 60 / 60 / 1000} hr)`);
 const ENVIRONMENT = process.env.NODE_ENV;
 exports.default = {
     PORT,
     ENVIRONMENT,
     MONGODB_URI,
-    ACCESS_TOKEN_EXPIRY_MINUTES,
-    REFRESH_TOKEN_EXPIRY_HOURS,
+    ACCESS_TOKEN_EXPIRY,
+    REFRESH_TOKEN_EXPIRY,
 };
 //# sourceMappingURL=config.js.map

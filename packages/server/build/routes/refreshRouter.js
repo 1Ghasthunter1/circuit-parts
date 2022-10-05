@@ -18,6 +18,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = __importDefault(require("../models/user"));
 const uuid_1 = require("uuid");
 const config_1 = __importDefault(require("../utils/config"));
+const userService_1 = require("../services/userService");
 const refreshRouter = express_1.default.Router();
 refreshRouter.post("/", (0, express_validator_1.body)("refreshToken").isString().isLength({ max: 255 }), ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
@@ -29,26 +30,36 @@ refreshRouter.post("/", (0, express_validator_1.body)("refreshToken").isString()
         includeOptionals: true,
     });
     const user = yield user_1.default.findOne({
-        "refreshToken.token": refreshToken,
+        refreshTokens: { $elemMatch: { token: refreshToken } },
     });
     if (!user) {
         return res.status(401).json({ error: "invalid refresh token" });
     }
-    const existingToken = user.refreshToken;
-    const expireTime = config_1.default.REFRESH_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000;
-    if (new Date().getTime() - existingToken.creationDate.getTime() >
+    const existingTokenObject = user.refreshTokens.find((tokenObj) => tokenObj.token === refreshToken);
+    if (!existingTokenObject) {
+        return res.status(401).json({ error: "invalid refresh token" });
+    }
+    const expireTime = config_1.default.REFRESH_TOKEN_EXPIRY;
+    if (new Date().getTime() - existingTokenObject.creationDate.getTime() >
         expireTime) {
+        user.refreshTokens = (0, userService_1.clearOldTokens)(user.refreshTokens);
+        yield user.save();
         return res.status(401).json({ error: "refresh token expired" });
     }
     const newRefreshToken = (0, uuid_1.v4)();
-    user.refreshToken = { token: newRefreshToken, creationDate: new Date() };
+    user.refreshTokens = (0, userService_1.clearOldTokens)(user.refreshTokens).map((tokenObj) => {
+        if (tokenObj.token === refreshToken) {
+            return { token: newRefreshToken, creationDate: new Date() };
+        }
+        return tokenObj;
+    });
     yield user.save();
     const userForToken = {
         username: user.username,
         id: user._id,
     };
     const token = jsonwebtoken_1.default.sign(userForToken, process.env["SECRET"] || "RandomSecret!@@@Z===AS()_%)(!*", {
-        expiresIn: config_1.default.ACCESS_TOKEN_EXPIRY_MINUTES * 60,
+        expiresIn: config_1.default.ACCESS_TOKEN_EXPIRY,
     });
     const tokenDataToSend = {
         token,
