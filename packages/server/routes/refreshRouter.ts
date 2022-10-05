@@ -28,15 +28,23 @@ refreshRouter.post(
       "refreshToken.token": refreshToken,
     });
 
-    if (!user) return res.status(401).json({ error: "invalid refresh token" });
+    if (!user) {
+      console.log("no user found");
+      return res.status(401).json({ error: "invalid refresh token" });
+    }
     const existingToken = user.refreshToken;
     const expireTime = config.REFRESH_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000;
 
     if (
       new Date().getTime() - existingToken.creationDate.getTime() >
       expireTime
-    )
+    ) {
+      console.log("token expired");
+      console.log(existingToken.creationDate.getTime());
+      console.log(expireTime);
       return res.status(401).json({ error: "refresh token expired" });
+    }
+    console.log("sending new refresh token");
 
     const newRefreshToken = uuidv4();
 

@@ -63,6 +63,9 @@ loginRouter.post(
       id: user._id,
     };
 
+    user.refreshToken = { token: newRefreshToken, creationDate: new Date() };
+    await user.save();
+
     return res.status(200).send(userToSend);
   }) as RequestHandler
 );
