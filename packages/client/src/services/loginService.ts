@@ -42,7 +42,13 @@ export const refreshTokenService = async () => {
     const data = response.data;
     userState.user.token = data.token;
     userState.user.refreshToken = data.refreshToken;
-  } catch (err) {}
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error.response?.data as { error: string };
+      const errMsg = err.error;
+      console.log(errMsg);
+    }
+  }
 };
 
 export const logoutUser = async () => {
@@ -58,22 +64,32 @@ export const logoutUser = async () => {
   userState.user = null;
 };
 
+let refreshingToken = false;
 axios.interceptors.response.use(
   (response) => {
     return response;
   },
   async (error) => {
-    if (userState.user) {
-      if (error.response?.data?.error === "jwt expired") {
-        await refreshTokenService();
-      } else if (
-        error.response?.data?.error === "refresh token expired" ||
-        error.response?.data?.error === "invalid refresh token"
-      ) {
-        logoutUser();
-        infoToast("Token expired, please sign in again.");
-      }
-      return Promise.reject(error);
+    if (!refreshingToken && error.response?.data?.error === "jwt expired") {
+      refreshingToken = true;
+      await refreshTokenService();
+      refreshingToken = false;
+    }
+    return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    if (
+      error.response?.data?.error === "refresh token expired" ||
+      error.response?.data?.error === "invalid refresh token"
+    ) {
+      logoutUser();
+      infoToast("Token expired, please sign in again.");
     }
     return Promise.reject(error);
   }

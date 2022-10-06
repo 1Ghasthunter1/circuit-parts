@@ -42,6 +42,7 @@ refreshRouter.post(
     }
     const expireTime = config.REFRESH_TOKEN_EXPIRY;
 
+    
     if (
       new Date().getTime() - existingTokenObject.creationDate.getTime() >
       expireTime
