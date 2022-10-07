@@ -18,6 +18,7 @@ import { ChildType } from "../types/universalTypes";
 import { DatabaseAssembly } from "../types/assemblyTypes";
 import { DatabasePart } from "../types/partsTypes";
 import { adminRequired } from "../utils/middleware/middleware";
+import Order from "../models/order/order";
 require("express-async-errors");
 
 const projectsRouter = express.Router();
@@ -111,6 +112,12 @@ projectsRouter.delete("/:id", adminRequired, (async (req, res) => {
   await foundProject.delete();
 
   return res.status(204).end();
+}) as RequestHandler);
+
+projectsRouter.get("/:id/orders", (async (req, res) => {
+  const projectId = req.params.id;
+  const orders = await Order.find({ project: projectId });
+  return res.status(200).json(orders);
 }) as RequestHandler);
 
 export default projectsRouter;
