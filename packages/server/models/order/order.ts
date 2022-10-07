@@ -1,0 +1,50 @@
+import mongoose from "mongoose";
+import { DatabaseOrder } from "../../types/orderTypes";
+import { orderStatuses } from "../../types/universalTypes";
+const orderSchema = new mongoose.Schema<DatabaseOrder>({
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "project",
+    required: true,
+  },
+  status: {
+    enum: orderStatuses,
+  },
+  vendor: {
+    type: String,
+    required: true,
+  },
+  items: [{ type: mongoose.Schema.Types.ObjectId, ref: "orderItem" }],
+  tax: {
+    type: Number,
+  },
+  shipping: {
+    type: Number,
+  },
+  purchaser: {
+    type: String,
+  },
+  reimbursed: {
+    type: Boolean,
+  },
+  orderDate: {
+    type: Date,
+  },
+  notes: {
+    type: String,
+  },
+});
+
+orderSchema.set("toJSON", {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transform: (_document: any, returnedObject: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    returnedObject.id = returnedObject._id?.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+const Order = mongoose.model("order", orderSchema);
+
+export default Order;

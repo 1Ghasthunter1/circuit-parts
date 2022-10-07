@@ -41,14 +41,10 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
           }
         ),
       onError: () => {
-        toast.error("Could not update status", {
-          autoClose: 2500,
-        });
+        toast.error("Could not update status");
       },
       onSuccess: () => {
-        toast.success("Status changed successfully", {
-          autoClose: 2500,
-        });
+        toast.success("Status changed successfully");
       },
     }
   );
