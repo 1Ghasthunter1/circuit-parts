@@ -9,6 +9,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "sourceMap": true,
+    "sourceMap": true
   }
 }

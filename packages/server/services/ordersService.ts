@@ -5,9 +5,7 @@ export const getPopulatedOrder = async (orderId: string) => {
 };
 
 export const orderExists = async (orderId: string) => {
-  console.log(orderId);
   const res = await Order.findById(orderId);
-  console.log(res);
   if (!res) return false;
   return true;
 };
