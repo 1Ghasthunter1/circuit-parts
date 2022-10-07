@@ -8,31 +8,20 @@ const orderSchema = new mongoose.Schema<DatabaseOrder>({
     required: true,
   },
   status: {
-    enum: orderStatuses,
+    type: String,
+    enum: [...orderStatuses],
   },
   vendor: {
     type: String,
     required: true,
   },
   items: [{ type: mongoose.Schema.Types.ObjectId, ref: "orderItem" }],
-  tax: {
-    type: Number,
-  },
-  shipping: {
-    type: Number,
-  },
-  purchaser: {
-    type: String,
-  },
-  reimbursed: {
-    type: Boolean,
-  },
-  orderDate: {
-    type: Date,
-  },
-  notes: {
-    type: String,
-  },
+  tax: Number,
+  shipping: Number,
+  purchaser: String,
+  reimbursed: Boolean,
+  orderDate: Date,
+  notes: String,
 });
 
 orderSchema.set("toJSON", {

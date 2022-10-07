@@ -3,18 +3,11 @@ import { isValidObjectId } from "mongoose";
 import ProjectModel from "../models/project";
 import { isOrderStatus } from "../types/universalTypes";
 
-export const orderItemSchema: Schema = {
-  parentOrder: {
-    custom: {
-      options: (value: string) => isValidObjectId(value),
-      errorMessage: "field `parentOrder` must be an object id",
-    },
-  },
-  vendor: {
-    isString: true,
+export const newOrderItemSchema: Schema = {
+  partNumber: {
     isLength: {
       options: { max: 250 },
-      errorMessage: "`vendor` cannot exceed 250 chars",
+      errorMessage: "`partNumber` cannot exceed 250 chars",
     },
     notEmpty: true,
   },
@@ -22,29 +15,27 @@ export const orderItemSchema: Schema = {
     isInt: true,
     toInt: true,
     errorMessage: "`quantity` is not int or undefined",
-  },
-  partNumber: {
-    isLength: {
-      options: { max: 250 },
-      errorMessage: "`partNumber` cannot exceed 250 chars",
-    },
+    optional: true,
   },
   description: {
     isLength: {
       options: { max: 500 },
       errorMessage: "`description` cannot exceed 500 chars",
     },
+    optional: true,
   },
   unitCost: {
-    isInt: true,
-    toInt: true,
-    errorMessage: "`unitCost` is not int or undefined",
+    isFloat: true,
+    toFloat: true,
+    errorMessage: "`unitCost` is not float",
+    optional: true,
   },
   notes: {
     isLength: {
       options: { max: 500 },
       errorMessage: "`notes` cannot exceed 500 chars",
     },
+    optional: true,
   },
 };
 
@@ -82,13 +73,13 @@ export const newOrderSchema: Schema = {
   tax: {
     isFloat: true,
     toFloat: true,
-    errorMessage: "`tax` must be integer",
+    errorMessage: "`tax` must be float",
     optional: true,
   },
   shipping: {
     isFloat: true,
     toFloat: true,
-    errorMessage: "`shipping` must be integer",
+    errorMessage: "`shipping` must be float",
     optional: true,
   },
   purchaser: {

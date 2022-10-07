@@ -1,34 +1,19 @@
 import mongoose from "mongoose";
 import { DatabaseOrderItem } from "../../types/orderTypes";
 const orderItemSchema = new mongoose.Schema<DatabaseOrderItem>({
-  parentOrder: {
+  order: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "order",
-    required: true,
-  },
-  vendor: {
-    type: String,
-    required: true,
-  },
-  quantity: {
-    type: Number,
     required: true,
   },
   partNumber: {
     type: String,
     required: true,
   },
-  description: {
-    required: true,
-    type: String,
-    enum: ["project"],
-  },
-  unitCost: { type: Number, default: 0 },
-  notes: {
-    required: true,
-    type: String,
-    enum: ["project"],
-  },
+  quantity: Number,
+  description: String,
+  unitCost: Number,
+  notes: String,
 });
 
 orderItemSchema.set("toJSON", {

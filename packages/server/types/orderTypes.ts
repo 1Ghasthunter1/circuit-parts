@@ -3,12 +3,12 @@ import { OrderStatus } from "./universalTypes";
 
 export interface DatabaseOrderItem {
   id: Types.ObjectId;
-  parentOrder: Types.ObjectId;
-  quantity: number;
+  order: Types.ObjectId;
   partNumber: string;
-  description: string;
-  unitCost: number;
-  notes: string;
+  quantity?: number;
+  description?: string;
+  unitCost?: number;
+  notes?: string;
 }
 
 export interface DatabaseOrder {
@@ -30,3 +30,7 @@ export interface DatabaseOrder {
 }
 
 export type OrderToDB = Omit<DatabaseOrder, "id">;
+
+export type OrderItemToDB = Omit<DatabaseOrderItem, "id">;
+
+export type OrderItemValidated = Omit<OrderItemToDB, "order">;
