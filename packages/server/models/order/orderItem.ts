@@ -26,6 +26,6 @@ orderItemSchema.set("toJSON", {
   },
 });
 
-const OrderItemSchema = mongoose.model("orderItem", orderItemSchema);
+const OrderItemModel = mongoose.model("orderItem", orderItemSchema);
 
-export default OrderItemSchema;
+export default OrderItemModel;

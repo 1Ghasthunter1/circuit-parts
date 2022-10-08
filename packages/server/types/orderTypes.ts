@@ -10,11 +10,9 @@ export interface DatabaseOrderItem {
   unitCost?: number;
   notes?: string;
 }
-
 export interface DatabaseOrder {
   id: Types.ObjectId;
   project: Types.ObjectId;
-  items?: Types.ObjectId[];
   status: OrderStatus;
   vendor: string;
   tracking?: {
@@ -27,6 +25,10 @@ export interface DatabaseOrder {
   reimbursed?: boolean;
   orderDate?: Date;
   notes?: string;
+}
+
+export interface PopulatedOrder extends DatabaseOrder {
+  items: DatabaseOrderItem[];
 }
 
 export type OrderToDB = Omit<DatabaseOrder, "id">;

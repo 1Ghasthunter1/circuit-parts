@@ -15,7 +15,7 @@ import {
   newOrderItemSchema,
 } from "../validation/orderValidation";
 import OrderItem from "../models/order/orderItem";
-import { orderExists } from "../services/ordersService";
+import { getPopulatedOrder, orderExists } from "../services/ordersService";
 import mongoose from "mongoose";
 
 const orderRouter = express.Router();
@@ -23,6 +23,17 @@ const orderRouter = express.Router();
 orderRouter.get("/", (async (_req, res) => {
   const orders = await Order.find({});
   return res.status(200).json(orders);
+}) as RequestHandler);
+
+orderRouter.get("/:id", (async (req, res) => {
+  const populatedOrder = await getPopulatedOrder(req.params.id);
+
+  if (!populatedOrder)
+    return res
+      .status(404)
+      .json({ errors: [{ message: "`order` does not exist" }] });
+
+  return res.status(200).json(populatedOrder);
 }) as RequestHandler);
 
 orderRouter.post("/", checkSchema(newOrderSchema), handleSchemaErrors, (async (
@@ -36,15 +47,18 @@ orderRouter.post("/", checkSchema(newOrderSchema), handleSchemaErrors, (async (
 
 orderRouter.post(
   "/:id/items",
-  param("id")
-    .custom((value: string) => orderExists(value))
-    .withMessage("`order` does not exist"),
+  param("id").custom(async (value: string) => {
+    const res = await orderExists(value);
+    if (!res) return Promise.reject("`order` does not exist");
+    return Promise.resolve();
+  }),
   checkSchema(newOrderItemSchema),
   handleSchemaErrors,
   (async (req, res) => {
-    const orderId = req.params.id as unknown as mongoose.Types.ObjectId;
-    const newOrderItem = parseValidated<OrderItemValidated>(req);
-    const orderItemObj: OrderItemToDB = { ...newOrderItem, order: orderId };
+    const orderItemObj: OrderItemToDB = {
+      ...parseValidated<OrderItemValidated>(req),
+      order: req.params.id as unknown as mongoose.Types.ObjectId,
+    };
     const savedOrderItem = await new OrderItem(orderItemObj).save();
     return res.status(200).json(savedOrderItem);
   }) as RequestHandler

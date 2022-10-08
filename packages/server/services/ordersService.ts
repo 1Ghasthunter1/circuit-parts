@@ -1,7 +1,12 @@
 import Order from "../models/order/order";
+import OrderItemModel from "../models/order/orderItem";
+import { PopulatedOrder } from "../types/orderTypes";
 
 export const getPopulatedOrder = async (orderId: string) => {
-  return await Order.findById(orderId).populate("items");
+  const order = await Order.findById(orderId);
+  if (!order) return null;
+  const orderItems = await OrderItemModel.find({ order: orderId });
+  return { ...order.toJSON(), items: orderItems } as PopulatedOrder;
 };
 
 export const orderExists = async (orderId: string) => {

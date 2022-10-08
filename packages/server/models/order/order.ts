@@ -15,7 +15,6 @@ const orderSchema = new mongoose.Schema<DatabaseOrder>({
     type: String,
     required: true,
   },
-  items: [{ type: mongoose.Schema.Types.ObjectId, ref: "orderItem" }],
   tax: Number,
   shipping: Number,
   purchaser: String,
