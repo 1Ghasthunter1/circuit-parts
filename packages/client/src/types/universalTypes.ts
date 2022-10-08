@@ -26,6 +26,7 @@ export const partStatuses = [
 export const priorities = ["low", "normal", "high", "urgent"] as const;
 export const parentTypes = ["assembly", "project"] as const;
 export const componentTypes = ["assembly", "project", "part"];
+export const orderStatuses = ["open", "ordered", "received"] as const;
 
 //========================================
 
@@ -37,6 +38,7 @@ export type ChildType = typeof childTypes[number];
 export type Priority = typeof priorities[number];
 export type ParentType = typeof parentTypes[number];
 export type ComponentType = typeof componentTypes[number];
+export type OrderStatus = typeof orderStatuses[number];
 
 //type guards and validators
 export const isUserRole = (value: string): value is UserRole => {
@@ -54,6 +56,9 @@ export const isParentType = (value: string): value is ParentType => {
 export const isComponentType = (value: unknown): value is ComponentType => {
   return componentTypes.includes(value as ComponentType);
 };
+export const isOrderStatus = (value: unknown): value is OrderStatus => {
+  return orderStatuses.includes(value as OrderStatus);
+};
 
 export interface Child {
   childType: ChildType;
@@ -70,7 +75,7 @@ export interface FooterState {
 }
 
 export interface DashboardState {
-  selectedProjectId: string; 
+  selectedProjectId: string;
 }
 export interface PopulatedPathItem {
   id: string;
