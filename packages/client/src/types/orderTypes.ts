@@ -1,6 +1,6 @@
 import { OrderStatus } from "./universalTypes";
 
-export interface DatabaseOrderItem {
+export interface OrderItem {
   id: string;
   order: string;
   partNumber: string;
@@ -9,11 +9,12 @@ export interface DatabaseOrderItem {
   unitCost?: number;
   notes?: string;
 }
-export interface DatabaseOrder {
+export interface Order {
   id: string;
   project: string;
   status: OrderStatus;
   vendor: string;
+  creationDate: Date;
   tracking?: {
     trackingNumber: string;
     carrier: string;
@@ -26,10 +27,10 @@ export interface DatabaseOrder {
   notes?: string;
 }
 
-export interface PopulatedOrder extends DatabaseOrder {
-  items: DatabaseOrderItem[];
+export interface PopulatedOrder extends Order {
+  items: OrderItem[];
 }
 
-export type OrderToDB = Omit<DatabaseOrder, "id">;
+export type OrderToDB = Omit<Order, "id">;
 
-export type OrderItemToServer = Omit<DatabaseOrderItem, "id" | "order">;
+export type OrderItemToServer = Omit<OrderItem, "id" | "order">;

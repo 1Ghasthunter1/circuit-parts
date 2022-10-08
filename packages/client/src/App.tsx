@@ -7,13 +7,13 @@ import ProjectsView from "./views/ProjectsView";
 import ProjectView from "./views/ProjectView";
 import AssemblyView from "./views/AssemblyView";
 import LoginView from "./views/LoginView";
-import UnderConstruction from "./components/components/UnderConstruction";
 import AppLayout from "./layouts/AppLayout";
 import AccountView from "./views/AccountView";
 import UsersView from "./views/UsersView";
 import TailwindToaster from "./utils/toast/TailwindToast";
 import DashboardView from "./views/DashboardView";
 import Footer from "./components/footer/Footer";
+import OrderView from "./views/orders/OrderView";
 
 const App = () => {
   return (
@@ -32,7 +32,7 @@ const App = () => {
             <Route path="/projects/:id" element={<ProjectView />}></Route>
             <Route path="/parts/:id" element={<PartView />}></Route>
             <Route path="/assemblies/:id" element={<AssemblyView />}></Route>
-            <Route path="/orders" element={<UnderConstruction />}></Route>
+            <Route path="/orders" element={<OrderView />}></Route>
             <Route path="/users" element={<UsersView />}></Route>
             <Route path="/account" element={<AccountView />}></Route>
           </Route>

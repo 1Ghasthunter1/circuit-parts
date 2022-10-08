@@ -1,6 +1,19 @@
-export const fetchOrders = async (assemblyId: string) => {
-  const { data } = await axios.get<Assembly>(
-    `${apiBaseUrl}/assemblies/${assemblyId}`
+import axios from "axios";
+import { apiBaseUrl } from "~/constants";
+import { Order } from "~/types/orderTypes";
+
+export const fetchOrders = async (projectId: string) => {
+  interface IDbOrderStringDate extends Omit<Order, "creationDate"> {
+    creationDate: string;
+  }
+  const { data } = await axios.get<IDbOrderStringDate[]>(
+    `${apiBaseUrl}/projects/${projectId}/orders`
   );
-  return data;
+  return data.map((order) => {
+    const newOrder: Order = {
+      ...order,
+      creationDate: new Date(order.creationDate),
+    };
+    return newOrder;
+  });
 };

@@ -1,6 +1,7 @@
 import express, { RequestHandler } from "express";
 import Order from "../models/order/order";
 import {
+  IValidatedOrder,
   OrderItemToDB,
   OrderItemValidated,
   OrderToDB,
@@ -40,7 +41,10 @@ orderRouter.post("/", checkSchema(newOrderSchema), handleSchemaErrors, (async (
   req,
   res
 ) => {
-  const newOrder = parseValidated<OrderToDB>(req);
+  const newOrder: OrderToDB = {
+    ...parseValidated<IValidatedOrder>(req),
+    creationDate: new Date(),
+  };
   const savedOrder = await new Order(newOrder).save();
   return res.status(200).json(savedOrder);
 }) as RequestHandler);

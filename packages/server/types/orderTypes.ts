@@ -15,6 +15,7 @@ export interface DatabaseOrder {
   project: Types.ObjectId;
   status: OrderStatus;
   vendor: string;
+  creationDate: Date;
   tracking?: {
     trackingNumber: string;
     carrier: string;
@@ -32,6 +33,8 @@ export interface PopulatedOrder extends DatabaseOrder {
 }
 
 export type OrderToDB = Omit<DatabaseOrder, "id">;
+
+export type IValidatedOrder = Omit<DatabaseOrder, "id" | "creationDate">;
 
 export type OrderItemToDB = Omit<DatabaseOrderItem, "id">;
 

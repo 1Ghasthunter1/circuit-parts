@@ -15,6 +15,10 @@ const orderSchema = new mongoose.Schema<DatabaseOrder>({
     type: String,
     required: true,
   },
+  creationDate: {
+    type: Date,
+    required: true,
+  },
   tax: Number,
   shipping: Number,
   purchaser: String,

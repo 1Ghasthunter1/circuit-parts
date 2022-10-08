@@ -1,25 +1,24 @@
-import { useQuery } from "react-query";
-import { useSnapshot } from "valtio";
-import ProjectsDashboard from "~/components/dashboard/ProjectsDashboard";
 import SelectProject from "~/components/dashboard/SelectProject";
-import DashboardSkeleton from "~/components/skeletons/DashboardSkeleton";
-import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
-import { fetchProjectComponents } from "~/services/projectsServices";
 import { projectSelectState } from "~/state/state";
-
-const DashboardView = () => {
+import { useSnapshot } from "valtio";
+import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
+import DashboardSkeleton from "~/components/skeletons/DashboardSkeleton";
+import { fetchOrders } from "~/services/ordersService";
+import { useQuery } from "react-query";
+import OrdersTable from "~/components/orders/projectOrders/OrdersTable";
+const OrderView = () => {
   const projectSelectSnapshot = useSnapshot(projectSelectState);
   const projectId = projectSelectSnapshot.project;
 
-  const projectComponentsQuery = useQuery(
-    `/projects/${projectId}/components`,
-    () => fetchProjectComponents(projectId),
+  const projectOrdersQuery = useQuery(
+    `/projects/${projectId}/orders`,
+    () => fetchOrders(projectId),
     { enabled: projectId !== "" }
   );
 
-  const data = projectComponentsQuery.data;
+  const orders = projectOrdersQuery.data;
 
-  const TopLeftContent = <div className="text-4xl font-bold">Dashboard</div>;
+  const TopLeftContent = <div className="text-4xl font-bold">Orders</div>;
   const TopRightContent = (
     <div className="w-[300px]">
       <SelectProject
@@ -35,10 +34,10 @@ const DashboardView = () => {
         topRightContent={TopRightContent}
       >
         {projectId !== "" ? (
-          !data ? (
+          !orders ? (
             <DashboardSkeleton rowCount={4} />
           ) : (
-            <ProjectsDashboard components={data} filter="nasd" />
+            <OrdersTable orders={orders} />
           )
         ) : (
           <div>Please select a project above...</div>
@@ -48,4 +47,4 @@ const DashboardView = () => {
   );
 };
 
-export default DashboardView;
+export default OrderView;

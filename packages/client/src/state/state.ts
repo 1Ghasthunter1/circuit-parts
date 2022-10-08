@@ -12,9 +12,8 @@ export const footerState = proxy<FooterState>({
     { text: "Sign Out", url: "/projects", onClick: () => logout() },
   ],
 });
-export const dashboardState = proxy<{ project: string; filter: string }>({
+export const projectSelectState = proxy<{ project: string }>({
   project: "",
-  filter: "",
 });
 
 const storage: string | null = localStorage.getItem("user");

@@ -18,7 +18,7 @@ const AppLayout = ({
   const content = user ? (
     <div className="bg-gray-100 min-h-screen relative">
       {header}
-      <div className="w-screen flex justify-center">
+      <div className="w-screen flex justify-center p-8">
         <div className="max-w-4xl w-full">
           <Outlet />
         </div>
