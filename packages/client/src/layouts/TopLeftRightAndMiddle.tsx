@@ -10,7 +10,7 @@ const TopLeftRightAndMiddle = ({
   children,
 }: PartsLayoutProps) => {
   return (
-    <div className="container mx-auto">
+    <div className="container">
       <div className="flow-root mb-6">
         <div className="float-left">{topLeftContent || <></>}</div>
         <div className="float-right">{topRightContent || <></>}</div>

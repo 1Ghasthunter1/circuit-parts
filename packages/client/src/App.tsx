@@ -13,7 +13,7 @@ import UsersView from "./views/UsersView";
 import TailwindToaster from "./utils/toast/TailwindToast";
 import DashboardView from "./views/DashboardView";
 import Footer from "./components/footer/Footer";
-import OrderView from "./views/orders/OrderView";
+import OrderView from "./views/orders/OrdersView";
 
 const App = () => {
   return (

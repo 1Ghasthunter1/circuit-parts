@@ -5,10 +5,12 @@ import {
   flexRender,
   getGroupedRowModel,
 } from "@tanstack/react-table";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Order } from "~/types/orderTypes";
 import OrderStatusBox from "./OrderStatusBox";
+import { useMemo } from "react";
+import { string } from "yup";
 
 interface IOrdersTable {
   orders: Order[];
@@ -17,8 +19,14 @@ interface IOrdersTable {
 const columnHelper = createColumnHelper<Order>();
 
 const columns = [
+  columnHelper.accessor("vendor", {
+    header: "Vendor",
+    cell: (info) => info.cell.getValue(),
+    footer: (info) => info.column.id,
+  }),
   columnHelper.display({
     header: "Name",
+    id: "name",
     cell: ({ row }) => {
       const order = row.original;
       return (
@@ -34,11 +42,35 @@ const columns = [
     cell: (info) => <div>{info.getValue().toLocaleDateString("en-US")}</div>,
     footer: (info) => info.column.id,
   }),
-  columnHelper.accessor("vendor", {
-    header: "Vendor",
-    cell: (info) => info.cell.getValue(),
+  columnHelper.accessor("tracking", {
+    header: "Tracking",
+    cell: (info) => {
+      const tracking = info.cell.getValue();
+      if (!tracking) return <div></div>;
+      return (
+        <a
+          href={
+            "https://tools.usps.com/go/TrackConfirmAction?tLabels=" +
+            tracking.trackingNumber
+          }
+          target="_blank"
+        >
+          <div className="w-min cursor-pointer">
+            <div className="flex items-center -mb-0.5">
+              {tracking.carrier}
+              <FontAwesomeIcon
+                className="pl-1.5"
+                size="sm"
+                icon="arrow-up-right-from-square"
+              />
+            </div>
+          </div>
+        </a>
+      );
+    },
     footer: (info) => info.column.id,
   }),
+
   columnHelper.accessor("status", {
     header: "Status",
     cell: (info) => <OrderStatusBox status={info.getValue()} />,
@@ -51,8 +83,10 @@ const OrdersTable = ({ orders }: { orders: Order[] }) => {
     data: orders,
     columns,
     state: {
-      grouping: ["vendor"],
+      grouping: useMemo(() => ["vendor"], []),
+      columnVisibility: { vendor: false },
     },
+
     getCoreRowModel: getCoreRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
   });
@@ -61,72 +95,80 @@ const OrdersTable = ({ orders }: { orders: Order[] }) => {
 
   return (
     <div>
-      <div className="mt-8 flex flex-col">
-        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle">
-            <div className="overflow-hidden shadow ring-1 rounded ring-black ring-opacity-5 md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <th
-                          key={header.id}
-                          scope="col"
-                          className="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                        >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </th>
-                      ))}
+      <div className="flex flex-col">
+        <div className="inline-block w-full py-2 align-middle">
+          <div className="overflow-hidden shadow ring-1 ring-opacity-5 m-1 rounded ring-black  md:rounded-lg">
+            <table className="min-w-full">
+              <thead className="bg-white">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        scope="col"
+                        className={
+                          header.index === 0
+                            ? "py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                            : "px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        }
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              {table.getGroupedRowModel().rows.map((group) => {
+                return (
+                  <tbody className="bg-white">
+                    <tr className="border-gray-200 border-t">
+                      <th
+                        colSpan={table.getVisibleFlatColumns().length}
+                        className="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
+                      >
+                        {group.original.vendor}
+                      </th>
                     </tr>
-                  ))}
-                </thead>
-                {table.getGroupedRowModel().rows.map((group) => {
-                  return (
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      <tr>
-                        <th
-                          colSpan={table.getVisibleFlatColumns().length}
-                          className="text-left"
+                    {group.getLeafRows().map((row) => {
+                      return (
+                        <tr
+                          key={row.id}
+                          className={`
+                            ${
+                              group.getLeafRows()[0].id === row.id
+                                ? "border-gray-300 border-t"
+                                : "border-gray-200 border-t"
+                            } hover:bg-gray-100
+                          `}
                         >
-                          <div className="w-full text-left pl-3 font-medium">
-                            {group.original.vendor}
-                          </div>
-                        </th>
-                      </tr>
-                      {group.getLeafRows().map((row) => {
-                        return (
-                          <tr key={row.id} className="hover:bg-gray-50">
-                            {row.getVisibleCells().map((cell) => {
-                              console.log(cell.column.id);
-                              return (
-                                <td
-                                  key={cell.id}
-                                  className={
-                                    cell.column.id === "vendor"
-                                      ? "whitespace-nowrap px-3 py-1 text-sm font-medium text-gray-900"
-                                      : "whitespace-nowrap px-3 py-1 text-sm text-gray-900"
-                                  }
-                                >
-                                  {flexRender(cell.column.columnDef.cell, {
-                                    ...cell.getContext(),
-                                  })}
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  );
-                })}
-              </table>
-            </div>
+                          {row.getVisibleCells().map((cell) => {
+                            return (
+                              <td
+                                key={cell.id}
+                                className={
+                                  cell.column.id === "name"
+                                    ? "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"
+                                    : "whitespace-nowrap px-3 py-2 text-sm text-gray-500"
+                                }
+                              >
+                                {flexRender(cell.column.columnDef.cell, {
+                                  ...cell.getContext(),
+                                })}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                );
+              })}
+            </table>
           </div>
         </div>
       </div>
