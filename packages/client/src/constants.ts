@@ -10,7 +10,7 @@ const getApiBaseUrl = () => {
     case "development_local":
       return "http://localhost:3001/api";
     case "development_vm":
-      return "http://localhost:3001/api";
+      return "http://172.16.0.138:3001/api";
     default:
       throw new Error(
         `VITE_NODE_ENV of '${
