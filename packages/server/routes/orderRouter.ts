@@ -44,9 +44,7 @@ orderRouter.post("/", checkSchema(newOrderSchema), handleSchemaErrors, (async (
   const newOrder: OrderToDB = {
     ...parseValidated<IValidatedOrder>(req),
     creationDate: new Date(),
-    tracking: { carrier: "USPS", trackingNumber: "12345678" },
   };
-  console.log(newOrder);
   const savedOrder = await new Order(newOrder).save();
   return res.status(200).json(savedOrder);
 }) as RequestHandler);
