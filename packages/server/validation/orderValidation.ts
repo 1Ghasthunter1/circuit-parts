@@ -62,6 +62,14 @@ export const newOrderSchema: Schema = {
       errorMessage: "`status` must be an order status",
     },
   },
+  orderNumber: {
+    isString: true,
+    isLength: {
+      options: { max: 250 },
+      errorMessage: "`orderNumber` cannot exceed 250 chars",
+    },
+    notEmpty: true,
+  },
   vendor: {
     isString: true,
     isLength: {

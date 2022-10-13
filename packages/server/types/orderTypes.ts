@@ -14,6 +14,7 @@ export interface DatabaseOrder {
   id: Types.ObjectId;
   project: Types.ObjectId;
   status: OrderStatus;
+  orderNumber: string;
   vendor: string;
   creationDate: Date;
   tracking?: {

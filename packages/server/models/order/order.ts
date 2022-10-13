@@ -7,6 +7,10 @@ const orderSchema = new mongoose.Schema<DatabaseOrder>({
     ref: "project",
     required: true,
   },
+  orderNumber: {
+    type: String,
+    required: true,
+  },
   status: {
     type: String,
     enum: [...orderStatuses],

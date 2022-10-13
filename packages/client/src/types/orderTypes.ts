@@ -13,6 +13,7 @@ export interface Order {
   id: string;
   project: string;
   status: OrderStatus;
+  orderNumber: string;
   vendor: string;
   creationDate: Date;
   tracking?: {
