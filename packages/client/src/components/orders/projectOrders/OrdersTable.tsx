@@ -9,6 +9,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Order } from "~/types/orderTypes";
 import OrderStatusBox from "./OrderStatusBox";
+import { useMemo } from "react";
+import { string } from "yup";
 
 interface IOrdersTable {
   orders: Order[];
@@ -51,8 +53,10 @@ const OrdersTable = ({ orders }: { orders: Order[] }) => {
     data: orders,
     columns,
     state: {
-      grouping: ["vendor"],
+      grouping: useMemo(() => ["vendor"], []),
+      columnVisibility: { vendor: false },
     },
+
     getCoreRowModel: getCoreRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
   });
@@ -92,26 +96,19 @@ const OrdersTable = ({ orders }: { orders: Order[] }) => {
                       <tr>
                         <th
                           colSpan={table.getVisibleFlatColumns().length}
-                          className="text-left"
+                          className="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
                         >
-                          <div className="w-full text-left pl-3 font-medium">
-                            {group.original.vendor}
-                          </div>
+                          {group.original.vendor}
                         </th>
                       </tr>
                       {group.getLeafRows().map((row) => {
                         return (
                           <tr key={row.id} className="hover:bg-gray-50">
                             {row.getVisibleCells().map((cell) => {
-                              console.log(cell.column.id);
                               return (
                                 <td
                                   key={cell.id}
-                                  className={
-                                    cell.column.id === "vendor"
-                                      ? "whitespace-nowrap px-3 py-1 text-sm font-medium text-gray-900"
-                                      : "whitespace-nowrap px-3 py-1 text-sm text-gray-900"
-                                  }
+                                  className="whitespace-nowrap px-3 py-1 text-sm text-gray-900"
                                 >
                                   {flexRender(cell.column.columnDef.cell, {
                                     ...cell.getContext(),
