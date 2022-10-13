@@ -13,7 +13,8 @@ import UsersView from "./views/UsersView";
 import TailwindToaster from "./utils/toast/TailwindToast";
 import DashboardView from "./views/DashboardView";
 import Footer from "./components/footer/Footer";
-import OrderView from "./views/orders/OrdersView";
+import OrdersView from "./views/orders/OrdersView";
+import OrderView from "./views/orders/OrderView";
 
 const App = () => {
   return (
@@ -32,7 +33,8 @@ const App = () => {
             <Route path="/projects/:id" element={<ProjectView />}></Route>
             <Route path="/parts/:id" element={<PartView />}></Route>
             <Route path="/assemblies/:id" element={<AssemblyView />}></Route>
-            <Route path="/orders" element={<OrderView />}></Route>
+            <Route path="/orders" element={<OrdersView />}></Route>
+            <Route path="/orders/:id" element={<OrderView />}></Route>
             <Route path="/users" element={<UsersView />}></Route>
             <Route path="/account" element={<AccountView />}></Route>
           </Route>

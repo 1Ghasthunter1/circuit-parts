@@ -12,10 +12,6 @@ import OrderStatusBox from "./OrderStatusBox";
 import { useMemo } from "react";
 import { string } from "yup";
 
-interface IOrdersTable {
-  orders: Order[];
-}
-
 const columnHelper = createColumnHelper<Order>();
 
 const columns = [
@@ -25,7 +21,7 @@ const columns = [
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("orderNumber", {
-    cell: (info) => <div>{info.cell.getValue()}</div>,
+    cell: (info) => <Link to={`/orders/${info.row.original.id}`}>{info.cell.getValue()}</Link>,
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("creationDate", {
