@@ -19,7 +19,14 @@ const DashboardView = () => {
 
   const data = projectComponentsQuery.data;
 
-  const TopLeftContent = <div className="text-4xl font-bold">Dashboard</div>;
+  const TopLeftContent = (
+    <div className="flex-auto">
+      <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+      <p className="mt-2 text-sm text-gray-700">
+        Dashboard for project selected at the right.
+      </p>
+    </div>
+  );
   const TopRightContent = (
     <div className="w-[300px]">
       <SelectProject

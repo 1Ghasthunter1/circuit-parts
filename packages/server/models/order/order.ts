@@ -19,6 +19,10 @@ const orderSchema = new mongoose.Schema<DatabaseOrder>({
     type: Date,
     required: true,
   },
+  tracking: {
+    carrier: { type: String },
+    trackingNumber: { type: String },
+  },
   tax: Number,
   shipping: Number,
   purchaser: String,

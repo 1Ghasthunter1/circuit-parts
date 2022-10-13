@@ -16,26 +16,24 @@ const UsersView = () => {
 
   return (
     <>
-      <div className="px-4 m-8">
-        <div className="flex items-center">
-          <div className="flex-auto">
-            <h1 className="text-2xl font-semibold text-gray-900">Users</h1>
-            <p className="mt-2 text-sm text-gray-700">
-              A list of all the users in the 696 PMS workspace.
-            </p>
-          </div>
-          <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <Button
-              iconName="user-plus"
-              color="green"
-              onClick={() => setShowModal(true)}
-            >
-              New User
-            </Button>
-          </div>
+      <div className="flex items-center">
+        <div className="flex-auto">
+          <h1 className="text-2xl font-semibold text-gray-900">Users</h1>
+          <p className="mt-2 text-sm text-gray-700">
+            A list of all the users in the 696 PMS workspace.
+          </p>
         </div>
-        <UsersTable data={users} />
+        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+          <Button
+            iconName="user-plus"
+            color="green"
+            onClick={() => setShowModal(true)}
+          >
+            New User
+          </Button>
+        </div>
       </div>
+      <UsersTable data={users} />
       <NewUserModal
         modalVisibility={showModal}
         setModalVisibility={setShowModal}
