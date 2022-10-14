@@ -20,7 +20,7 @@ const AppLayout = ({
       {header}
       <div className="w-screen flex justify-center p-8">
         <div className="max-w-6xl w-full">
-          <Outlet />
+          <Outlet/>
         </div>
       </div>
       <div className="h-24 mt-48"></div>
