@@ -32,24 +32,24 @@ const Button = ({
   const colors: colorsObject = {
     red: {
       primary: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
-      secondary: "bg-red-100 text-red-600 hover:bg-red-200 focus:ring-red-500",
+      secondary: "bg-red-200 text-red-600 hover:bg-red-300 focus:ring-red-400",
     },
     green: {
       primary:
         "bg-green-600 text-white hover:bg-green-700 focus:ring-green-500",
       secondary:
-        "bg-green-200 text-green-600 hover:bg-green-200 focus:ring-green-500",
+        "bg-green-200 text-green-600 hover:bg-green-200 focus:ring-green-400",
     },
     blue: {
       primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
       secondary:
-        "bg-blue-200 text-blue-600 hover:bg-blue-200 focus:ring-blue-500",
+        "bg-blue-200 text-blue-600 hover:bg-blue-300 focus:ring-blue-400",
     },
     default: {
       primary:
         "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500",
       secondary:
-        "bg-indigo-200 text-indigo-700 hover:bg-indigo-200 focus:ring-indigo-500",
+        "bg-indigo-200 text-indigo-700 hover:bg-indigo-200 focus:ring-indigo-400",
     },
   };
   const getStyle = () => {
@@ -83,7 +83,7 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
       type={type || "button"}
-      className={`inline-flex items-center rounded-md border border-transparent font-medium leading-4 ${getSize()} shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${getStyle()} ${
+      className={`transition duration-50 inline-flex items-center rounded-md border border-transparent font-medium leading-4 ${getSize()} shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${getStyle()} ${
         customStyle || ""
       } disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed ${
         isLoading && "cursor-not-allowed"
