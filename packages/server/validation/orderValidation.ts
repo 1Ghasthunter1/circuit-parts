@@ -11,6 +11,13 @@ export const newOrderItemSchema: Schema = {
     },
     notEmpty: true,
   },
+  vendorUrl: {
+    isLength: {
+      options: { max: 1000 },
+      errorMessage: "`vendorUrl` cannot exceed 1000 chars",
+    },
+    optional: true,
+  },
   quantity: {
     isInt: true,
     toInt: true,

@@ -5,6 +5,7 @@ export interface DatabaseOrderItem {
   id: Types.ObjectId;
   order: Types.ObjectId;
   partNumber: string;
+  vendorUrl?: string;
   quantity?: number;
   description?: string;
   unitCost?: number;

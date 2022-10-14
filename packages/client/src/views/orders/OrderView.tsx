@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import TitleTextOptions from "~/components/orders/order/TitleTextOptions";
 import OrderItemsTable from "~/components/orders/projectOrders/OrdersItemTable";
+import OrderStatusBox from "~/components/orders/projectOrders/OrderStatusBox";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import { fetchOrder } from "~/services/ordersService";
 
@@ -35,7 +36,7 @@ const OrderView = () => {
         <TopLeftRightAndMiddle
           topLeftContent={
             <div className="w-full">
-              <div className="text-2xl font-bold w-full relative">
+              <div className="text-2xl font-bold w-full relative mb-2">
                 <input
                   ref={ref}
                   value={editTitle}
@@ -56,6 +57,7 @@ const OrderView = () => {
                   </div>
                 )}
               </div>
+              <OrderStatusBox status={order.status} size="sm"/>
               <div className="text-gray-400 font-bold">
                 Vendor: {order.vendor}
               </div>

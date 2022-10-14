@@ -10,6 +10,7 @@ const orderItemSchema = new mongoose.Schema<DatabaseOrderItem>({
     type: String,
     required: true,
   },
+  vendorUrl: String,
   quantity: Number,
   description: String,
   unitCost: Number,

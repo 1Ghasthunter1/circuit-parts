@@ -4,6 +4,7 @@ export interface OrderItem {
   id: string;
   order: string;
   partNumber: string;
+  vendorUrl?: string;
   quantity?: number;
   description?: string;
   unitCost?: number;

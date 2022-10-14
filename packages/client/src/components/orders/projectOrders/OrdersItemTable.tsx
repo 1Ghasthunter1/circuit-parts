@@ -18,7 +18,17 @@ const columnHelper = createColumnHelper<OrderItem>();
 const columns = [
   columnHelper.accessor("partNumber", {
     header: "Part Number",
-    cell: (info) => info.cell.getValue(),
+    cell: (info) => {
+      const orderItem = info.row.original;
+
+      if (orderItem.vendorUrl)
+        return (
+          <a href={orderItem.vendorUrl} target="_blank" className="underline">
+            {info.cell.getValue()}
+          </a>
+        );
+      return <span>{info.cell.getValue()}</span>;
+    },
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("quantity", {
