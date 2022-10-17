@@ -19,7 +19,6 @@ const TitleTextOptions = ({
         style="secondary"
         color="blue"
         onClick={() => {
-          console.log("saved");
           setIsEditing(false);
         }}
       />
@@ -29,7 +28,6 @@ const TitleTextOptions = ({
         style="secondary"
         color="red"
         onClick={() => {
-          console.log("cancelled");
           setIsEditing(false);
         }}
       />

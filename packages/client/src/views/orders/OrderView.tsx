@@ -44,7 +44,7 @@ const OrderView = () => {
                   value={editTitle}
                   onFocus={() => setIsEditing(true)}
                   onKeyDown={onKeyDown}
-                  className={`font-bold bg-transparent px-2 py-1 -ml-1 rounded-lg hover:bg-blue-100 inline-block outline-none ${
+                  className={`font-bold bg-transparent px-[4px] py-[2px] -ml-1 rounded-lg hover:bg-blue-100 inline-block outline-none ${
                     isEditing &&
                     "ring-gray-900 ring-[1.5px] hover:bg-transparent"
                   }`}
@@ -54,8 +54,6 @@ const OrderView = () => {
                   <div className="absolute top-1/2 -translate-y-1/2 right-0 pr-1">
                     <TitleTextOptions
                       setIsEditing={(editing: boolean) => setIsEditing(editing)}
-                      onSave={() => console.log("saved")}
-                      onCancel={() => console.log("cancelled")}
                     />
                   </div>
                 )}

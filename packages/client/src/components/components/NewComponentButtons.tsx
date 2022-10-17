@@ -13,7 +13,7 @@ import CreateAssemblyModal from "../assemblies/CreateAssemblyModal";
 
 interface props {
   project: UnpopulatedProject | Project;
-  parent?: Parent;
+  parent: Parent;
   queriesToInvalidate: UseQueryResult[];
 }
 
