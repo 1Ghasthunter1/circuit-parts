@@ -3,11 +3,9 @@ import React from "react";
 import Button from "~/elements/Button";
 
 const TitleTextOptions = ({
-  setIsEditing,
   onSave,
   onCancel,
 }: {
-  setIsEditing: (inp: boolean) => void;
   onSave?: () => void;
   onCancel?: () => void;
 }) => {
@@ -18,18 +16,14 @@ const TitleTextOptions = ({
         size="sm"
         style="secondary"
         color="blue"
-        onClick={() => {
-          setIsEditing(false);
-        }}
+        onClick={onSave}
       />
       <Button
         iconName="x"
         size="sm"
         style="secondary"
         color="red"
-        onClick={() => {
-          setIsEditing(false);
-        }}
+        onClick={onCancel}
       />
     </div>
   );

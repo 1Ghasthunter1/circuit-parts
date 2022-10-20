@@ -162,7 +162,10 @@ const OrderItemsTable = ({ orderItems }: { orderItems: OrderItem[] }) => {
                   <tr key={group.id}>
                     {group.headers.map((header) => {
                       return (
-                        <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+                        <td
+                          key={header.id}
+                          className="whitespace-nowrap px-3 py-2 text-sm text-gray-500"
+                        >
                           {header.isPlaceholder
                             ? null
                             : flexRender(
