@@ -19,10 +19,10 @@ const EditableInput = ({ originalValue, placeholder }: IProps) => {
 
   const handleKeypress = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
-      save();
+      cancel();
       setShowInput(false);
     } else if (e.key === "Enter") {
-      cancel();
+      save();
       setShowInput(false);
     }
   };

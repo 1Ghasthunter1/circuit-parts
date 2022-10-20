@@ -68,4 +68,25 @@ orderRouter.post(
   }) as RequestHandler
 );
 
+orderRouter.put(
+  "/:id",
+  checkSchema(newOrderSchema),
+  handleSchemaErrors,
+  (async (req, res) => {
+    const newOrder: OrderToDB = {
+      ...parseValidated<IValidatedOrder>(req),
+      creationDate: new Date(),
+    };
+    const orderId = req.params.id as unknown as mongoose.Types.ObjectId;
+    const order = await Order.findByIdAndUpdate(orderId, newOrder, {
+      new: true,
+    });
+    console.log(order);
+    if (!order)
+      return res.status(404).json({ errors: [{ error: "order not found" }] });
+
+    return res.status(200).json(order);
+  }) as RequestHandler
+);
+
 export default orderRouter;

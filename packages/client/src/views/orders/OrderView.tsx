@@ -59,10 +59,12 @@ const OrderView = () => {
             </div>
           }
           topRightContent={
-            <div className="w-full h-full">
-              <Button iconName="plus" color="green">
-                Add Item
-              </Button>
+            <div className="h-full flex">
+              <div className="mt-auto">
+                <Button iconName="plus" color="green">
+                  Add Item
+                </Button>
+              </div>
             </div>
           }
         >
