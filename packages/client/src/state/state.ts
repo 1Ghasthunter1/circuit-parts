@@ -1,9 +1,12 @@
 import { proxy } from "valtio";
-import { AuthUser, UserFromAPI } from "../types/userTypes";
+import { UserFromAPI } from "../types/userTypes";
 import { FooterState } from "~/types/universalTypes";
 import { devtools } from "valtio/utils";
 import { logout } from "~/utils/authorization";
+import { Order } from "~/types/orderTypes";
+
 export const userState = proxy<{ user: UserFromAPI | null }>();
+
 export const footerState = proxy<FooterState>({
   links: [
     { text: "Projects", url: "/projects" },
@@ -12,8 +15,13 @@ export const footerState = proxy<FooterState>({
     { text: "Sign Out", url: "/projects", onClick: () => logout() },
   ],
 });
+
 export const projectSelectState = proxy<{ project: string }>({
   project: "",
+});
+
+export const orderState = proxy<{ order: Order | null }>({
+  order: null,
 });
 
 const storage: string | null = localStorage.getItem("user");

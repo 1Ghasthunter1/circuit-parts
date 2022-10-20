@@ -5,8 +5,15 @@ import TitleTextOptions from "~/components/orders/order/TitleTextOptions";
 interface IProps {
   originalValue: string;
   placeholder?: string;
+  onChange?: () => void;
+  onSave?: () => void;
 }
-const EditableInput = ({ originalValue, placeholder }: IProps) => {
+const EditableInput = ({
+  originalValue,
+  placeholder,
+  onChange,
+  onSave,
+}: IProps) => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [input, setInput] = useState<{
     originalValue: string;

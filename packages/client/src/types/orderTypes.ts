@@ -36,3 +36,5 @@ export interface PopulatedOrder extends Order {
 export type OrderToDB = Omit<Order, "id">;
 
 export type OrderItemToServer = Omit<OrderItem, "id" | "order">;
+
+export type IValidatedOrder = Omit<Order, "creationDate">;

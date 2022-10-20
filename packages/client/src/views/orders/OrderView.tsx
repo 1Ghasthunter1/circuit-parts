@@ -5,28 +5,31 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import TitleTextOptions from "~/components/orders/order/TitleTextOptions";
 import OrderItemsTable from "~/components/orders/projectOrders/OrdersItemTable";
 import OrderStatusBox from "~/components/orders/projectOrders/OrderStatusBox";
 import OrderTotals from "~/components/orders/projectOrders/OrderTotals";
 import Button from "~/elements/Button";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
-import { fetchOrder } from "~/services/ordersService";
+import { fetchOrder, updateOrder } from "~/services/ordersService";
+import { orderState } from "~/state/state";
+import { IValidatedOrder } from "~/types/orderTypes";
 import EditableInput from "./EditableInput";
 
 const OrderView = () => {
-  const [editTitle, setEditTitle] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
   const { id } = useParams();
 
   if (!id) return null;
 
   const orderQuery = useQuery(["order", id], () => fetchOrder(id));
+  const orderEditMutation = useMutation((order: IValidatedOrder) =>
+    updateOrder(order)
+  );
 
   const order = orderQuery.data;
-  useEffect(() => setEditTitle(order?.orderNumber || ""), [order?.orderNumber]);
+
+  useEffect(() => (orderState.order = order || null), [order]);
 
   const onKeyDown = (
     event: React.ChangeEvent<HTMLInputElement> &
