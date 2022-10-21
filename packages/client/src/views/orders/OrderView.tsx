@@ -1,12 +1,8 @@
-import React, {
-  DetailedHTMLProps,
-  HTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import { useSnapshot } from "valtio";
 import OrderItemsTable from "~/components/orders/projectOrders/OrdersItemTable";
 import OrderStatusBox from "~/components/orders/projectOrders/OrderStatusBox";
 import OrderTotals from "~/components/orders/projectOrders/OrderTotals";
@@ -14,22 +10,35 @@ import Button from "~/elements/Button";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import { fetchOrder, updateOrder } from "~/services/ordersService";
 import { orderState } from "~/state/state";
-import { IValidatedOrder } from "~/types/orderTypes";
+import { IValidatedOrder, Order } from "~/types/orderTypes";
 import EditableInput from "./EditableInput";
 
 const OrderView = () => {
+  const order = useSnapshot(orderState).order;
   const { id } = useParams();
 
   if (!id) return null;
 
   const orderQuery = useQuery(["order", id], () => fetchOrder(id));
-  const orderEditMutation = useMutation((order: IValidatedOrder) =>
-    updateOrder(order)
+  const orderEditMutation = useMutation(
+    async (order: IValidatedOrder) => await updateOrder(order),
+    {
+      onSuccess: (newOrder) => {
+        toast.success(<span>Saved <b>{newOrder.orderNumber}</b></span>);
+      },
+      onError: () => {
+        toast.error("Something went wrong when saving the order.");
+      },
+      onSettled: () => orderQuery.refetch(),
+    }
   );
 
-  const order = orderQuery.data;
+  const apiOrder = orderQuery.data;
 
-  useEffect(() => (orderState.order = order || null), [order]);
+  useEffect(() => {
+    orderState.order = apiOrder || null;
+    return undefined;
+  }, [apiOrder]);
 
   const onKeyDown = (
     event: React.ChangeEvent<HTMLInputElement> &
@@ -42,14 +51,18 @@ const OrderView = () => {
 
   return (
     <>
-      {order && editTitle ? (
+      {order ? (
         <TopLeftRightAndMiddle
           topLeftContent={
             <div className="w-full">
               <div className="mb-1">
                 <EditableInput
-                  originalValue={editTitle}
+                  value={order.orderNumber}
                   placeholder="Enter Title Here"
+                  onSave={(value) => {
+                    const newOrder: Order = { ...order, orderNumber: value };
+                    orderEditMutation.mutate(newOrder);
+                  }}
                 />
               </div>
               <OrderStatusBox status={order.status} size="sm" />
@@ -72,7 +85,7 @@ const OrderView = () => {
           }
         >
           <>
-            <OrderItemsTable orderItems={order.items} />
+            <OrderItemsTable orderItems={[...order.items]} />
             <div className="mt-6">
               <OrderTotals order={order} />
             </div>

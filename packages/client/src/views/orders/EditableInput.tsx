@@ -1,28 +1,34 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { string } from "yup/lib/locale";
 import TitleTextOptions from "~/components/orders/order/TitleTextOptions";
 
 interface IProps {
-  originalValue: string;
+  value: string;
   placeholder?: string;
-  onChange?: () => void;
-  onSave?: () => void;
+  onChangeFunc?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSave?: (val: string) => void;
 }
 const EditableInput = ({
-  originalValue,
+  value,
   placeholder,
-  onChange,
+  onChangeFunc,
   onSave,
 }: IProps) => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [input, setInput] = useState<{
     originalValue: string;
     currentValue: string;
-  }>({ originalValue, currentValue: originalValue });
+  }>({ originalValue: value, currentValue: value });
 
-  const save = () => setInput({ ...input, originalValue: input.currentValue });
-  const cancel = () =>
+  const save = () => {
+    setShowInput(false);
+    setInput({ ...input, originalValue: input.currentValue });
+    if (onSave) onSave(input.currentValue);
+  };
+  const cancel = () => {
+    setShowInput(false);
     setInput({ ...input, currentValue: input.originalValue });
+  };
 
   const handleKeypress = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -44,21 +50,13 @@ const EditableInput = ({
             className="ring-blue-600 px-2 py-1 ring-[1.5px] rounded-lg
           outline-none bg-transparent hover:bg-transparent"
             onKeyDown={(e) => handleKeypress(e)}
-            onChange={(e) =>
-              setInput({ ...input, currentValue: e.target.value })
-            }
+            onChange={(e) => {
+              setInput({ ...input, currentValue: e.target.value });
+              if (onChangeFunc) onChangeFunc(e);
+            }}
           />
           <div className="pl-3 w-min h-full my-auto">
-            <TitleTextOptions
-              onSave={() => {
-                setShowInput(false);
-                save();
-              }}
-              onCancel={() => {
-                setShowInput(false);
-                cancel();
-              }}
-            />
+            <TitleTextOptions onSave={() => save()} onCancel={() => cancel()} />
           </div>
         </div>
       ) : (

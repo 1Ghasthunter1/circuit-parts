@@ -81,7 +81,7 @@ orderRouter.put(
     const order = await Order.findByIdAndUpdate(orderId, newOrder, {
       new: true,
     });
-    console.log(order);
+    
     if (!order)
       return res.status(404).json({ errors: [{ error: "order not found" }] });
 

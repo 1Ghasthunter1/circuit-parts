@@ -3,7 +3,7 @@ import { UserFromAPI } from "../types/userTypes";
 import { FooterState } from "~/types/universalTypes";
 import { devtools } from "valtio/utils";
 import { logout } from "~/utils/authorization";
-import { Order } from "~/types/orderTypes";
+import { PopulatedOrder } from "~/types/orderTypes";
 
 export const userState = proxy<{ user: UserFromAPI | null }>();
 
@@ -20,7 +20,7 @@ export const projectSelectState = proxy<{ project: string }>({
   project: "",
 });
 
-export const orderState = proxy<{ order: Order | null }>({
+export const orderState = proxy<{ order: PopulatedOrder | null }>({
   order: null,
 });
 
