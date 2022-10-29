@@ -5,7 +5,7 @@ export interface OrderItem {
   order: string;
   partNumber: string;
   vendorUrl?: string;
-  quantity?: number;
+  quantity: number;
   description?: string;
   unitCost?: number;
   notes?: string;

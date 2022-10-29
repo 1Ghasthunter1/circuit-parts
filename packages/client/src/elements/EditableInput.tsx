@@ -94,7 +94,7 @@ const EditableInput = ({
           }}
         >
           {input.originalValue === "" ? (
-            <span>{"\u200b"}</span>
+            <span className="text-gray-300">{placeholder}</span>
           ) : (
             input.originalValue
           )}
