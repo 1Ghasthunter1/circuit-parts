@@ -5,7 +5,7 @@ import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import DashboardSkeleton from "~/components/skeletons/DashboardSkeleton";
 import { fetchOrders } from "~/services/ordersService";
 import { useQuery } from "react-query";
-import OrdersTable from "~/components/orders/projectOrders/OrdersTable";
+import OrdersTable from "~/components/orders/OrdersTable";
 import Button from "~/elements/Button";
 const OrderView = () => {
   const projectSelectSnapshot = useSnapshot(projectSelectState);

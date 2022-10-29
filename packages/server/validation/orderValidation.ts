@@ -22,7 +22,7 @@ export const newOrderItemSchema: Schema = {
     isInt: true,
     toInt: true,
     errorMessage: "`quantity` is not int or undefined",
-    optional: true,
+    notEmpty: true,
   },
   description: {
     isLength: {
@@ -34,8 +34,8 @@ export const newOrderItemSchema: Schema = {
   unitCost: {
     isFloat: true,
     toFloat: true,
-    errorMessage: "`unitCost` is not float",
-    optional: true,
+    errorMessage: "`unitCost` is not float or undefined",
+    notEmpty: true,
   },
   notes: {
     isLength: {

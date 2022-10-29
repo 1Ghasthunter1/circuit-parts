@@ -1,19 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { useSnapshot } from "valtio";
-import OrderItemsTable from "~/components/orders/projectOrders/OrdersItemTable";
-import OrderStatusBox from "~/components/orders/projectOrders/OrderStatusBox";
-import OrderTotals from "~/components/orders/projectOrders/OrderTotals";
+import NewOrderItemModal from "~/components/orders/NewOrderItemModal";
+import OrderItemsTable from "~/components/orders/OrdersItemTable";
+import OrderStatusBox from "~/components/orders/OrderStatusBox";
+import OrderTotals from "~/components/orders/OrderTotals";
 import Button from "~/elements/Button";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import { fetchOrder, updateOrder } from "~/services/ordersService";
-import { orderState } from "~/state/state";
+import { orderState, projectSelectState } from "~/state/state";
 import { IValidatedOrder, Order } from "~/types/orderTypes";
 import EditableInput from "./EditableInput";
 
 const OrderView = () => {
+  const [newItemModalVis, setNewItemModalVis] = useState<boolean>(false);
   const order = useSnapshot(orderState).order;
   const { id } = useParams();
 
@@ -24,7 +26,11 @@ const OrderView = () => {
     async (order: IValidatedOrder) => await updateOrder(order),
     {
       onSuccess: (newOrder) => {
-        toast.success(<span>Saved <b>{newOrder.orderNumber}</b></span>);
+        toast.success(
+          <span>
+            Saved <b>{newOrder.orderNumber}</b>
+          </span>
+        );
       },
       onError: () => {
         toast.error("Something went wrong when saving the order.");

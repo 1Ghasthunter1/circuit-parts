@@ -7,12 +7,18 @@ interface IProps {
   placeholder?: string;
   onChangeFunc?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSave?: (val: string) => void;
+  hideButtons?: boolean;
+  inputStyle?: string;
+  componentStyle?: string;
 }
-const EditableInputOrder = ({
+const EditableInput = ({
   value,
   placeholder,
   onChangeFunc,
   onSave,
+  hideButtons,
+  inputStyle,
+  componentStyle,
 }: IProps) => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [input, setInput] = useState<{
@@ -41,36 +47,61 @@ const EditableInputOrder = ({
   };
 
   return (
-    <div className="text-2xl font-bold bg-transparent -ml-1 rounded-lg inline-block outline-none">
+    <div
+      className={`${
+        componentStyle
+          ? componentStyle
+          : "text-2xl font-bold bg-transparent -ml-1 rounded-lg inline-block outline-none"
+      } bg-transparent rounded-lg inline-block outline-none w-full`}
+    >
       {showInput ? (
         <div className="flex w-full content-center">
           <input
             value={input.currentValue}
             placeholder={placeholder || ""}
-            className="ring-blue-600 px-2 py-1 ring-[1.5px] rounded-lg
-          outline-none bg-transparent hover:bg-transparent"
+            autoFocus
+            onBlur={save}
+            className={
+              inputStyle
+                ? inputStyle
+                : "ring-blue-600 px-2 py-1 w-full ring-[1.5px] rounded-lg outline-none bg-transparent hover:bg-transparent"
+            }
             onKeyDown={(e) => handleKeypress(e)}
             onChange={(e) => {
               setInput({ ...input, currentValue: e.target.value });
-              if (onChangeFunc) onChangeFunc(e);
+              if (onChangeFunc) {
+                onChangeFunc(e);
+              }
             }}
           />
-          <div className="pl-3 w-min h-full my-auto">
-            <TitleTextOptions onSave={() => save()} onCancel={() => cancel()} />
-          </div>
+          {!hideButtons && (
+            <div className="pl-3 w-min h-full my-auto">
+              <TitleTextOptions
+                onSave={() => save()}
+                onCancel={() => cancel()}
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div
-          className="hover:bg-blue-100 px-2 py-1 rounded-lg cursor-pointer"
+          className={`hover:bg-blue-100 px-2 py-1 rounded-lg cursor-pointer ${
+            input.originalValue === "" &&
+            "bg-white shadow-inner border border-2 h-full"
+          }`}
           onClick={() => {
             setShowInput(true);
           }}
         >
-          {input.originalValue}
+          {input.originalValue === "" ? (
+            <span>{"\u200b"}</span>
+          ) : (
+            input.originalValue
+          )}
         </div>
       )}
     </div>
   );
 };
 
-export default EditableInputOrder;
+export default EditableInput;

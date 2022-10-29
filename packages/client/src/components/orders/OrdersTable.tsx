@@ -21,6 +21,7 @@ const columns = [
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("orderNumber", {
+    header: "Order Number",
     cell: (info) => <Link to={`/orders/${info.row.original.id}`}>{info.cell.getValue()}</Link>,
     footer: (info) => info.column.id,
   }),

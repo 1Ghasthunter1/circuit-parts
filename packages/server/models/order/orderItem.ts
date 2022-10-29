@@ -11,9 +11,15 @@ const orderItemSchema = new mongoose.Schema<DatabaseOrderItem>({
     required: true,
   },
   vendorUrl: String,
-  quantity: Number,
+  quantity: {
+    type: Number,
+    required: true,
+  },
   description: String,
-  unitCost: Number,
+  unitCost: {
+    type: Number,
+    required: true,
+  },
   notes: String,
 });
 
