@@ -10,6 +10,11 @@ import {
   AnySchema,
   ValidationError,
 } from "yup";
+import { useMutation, useQueryClient } from "react-query";
+import { createOrderItem } from "~/services/ordersService";
+import { orderState } from "~/state/state";
+import { useSnapshot } from "valtio";
+import toast from "react-hot-toast";
 
 const NewItemRow = ({
   id,
@@ -27,6 +32,9 @@ const NewItemRow = ({
   }
   const [inputState, setInputState] = useState<INewItem>({});
   const [cleanState, setCleanState] = useState<OrderItemToServer | null>(null);
+
+  const orderSnapshot = useSnapshot(orderState).order;
+  const queryClient = useQueryClient();
 
   const itemSchema: ObjectSchema<Record<keyof OrderItemToServer, AnySchema>> =
     object({
@@ -49,9 +57,23 @@ const NewItemRow = ({
           setCleanState(null);
         });
       });
-
-    console.log(cleanState);
   }, [inputState]);
+
+  const createMutation = useMutation(
+    async () => {
+      if (orderSnapshot && cleanState) {
+        await createOrderItem(orderSnapshot.id, cleanState);
+      }
+    },
+    {
+      onSuccess: async () => {
+        toast.success("banger");
+        setNewItems(newItems.filter((itemId) => itemId !== id));
+      },
+      onSettled: async () =>
+        queryClient.invalidateQueries(["order", orderSnapshot?.id]),
+    }
+  );
 
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -127,6 +149,8 @@ const NewItemRow = ({
           color="blue"
           size="sm"
           disabled={!cleanState}
+          onClick={() => createMutation.mutate()}
+          isLoading={createMutation.isLoading}
         />
         <Button
           iconName="x"

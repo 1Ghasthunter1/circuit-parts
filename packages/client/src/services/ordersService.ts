@@ -1,6 +1,12 @@
 import axios from "axios";
 import { apiBaseUrl } from "~/constants";
-import { IValidatedOrder, Order, PopulatedOrder } from "~/types/orderTypes";
+import {
+  IValidatedOrder,
+  Order,
+  OrderItem,
+  OrderItemToServer,
+  PopulatedOrder,
+} from "~/types/orderTypes";
 
 export const fetchOrders = async (projectId: string) => {
   interface IDbOrderStringDate extends Omit<Order, "creationDate"> {
@@ -48,4 +54,14 @@ export const updateOrder = async (order: IValidatedOrder) => {
   };
 
   return updatedOrder;
+};
+
+export const createOrderItem = async (
+  orderId: string,
+  orderItem: OrderItemToServer
+) => {
+  return await axios.post<OrderItem>(
+    `${apiBaseUrl}/orders/${orderId}/items`,
+    orderItem
+  );
 };
