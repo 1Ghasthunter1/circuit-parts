@@ -89,7 +89,16 @@ const columns = [
   }),
 ];
 
-const OrderItemsTable = ({ orderItems }: { orderItems: OrderItem[] }) => {
+const OrderItemsTable = ({
+  orderItems,
+  newItemStuff,
+}: {
+  orderItems: OrderItem[];
+  newItemStuff: {
+    newItems: string[];
+    setNewItems: (newItems: string[]) => void;
+  };
+}) => {
   const table = useReactTable({
     data: orderItems,
     columns,
@@ -98,17 +107,6 @@ const OrderItemsTable = ({ orderItems }: { orderItems: OrderItem[] }) => {
   });
 
   type INewOrderTow = Omit<OrderItem, "id" | "order">;
-
-  const [newRows, setNewRows] = useState<INewOrderTow[]>([
-    {
-      partNumber: "asd",
-      quantity: 4,
-      description: "ASDASDASD",
-      unitCost: 123.23,
-      notes: "asd123",
-    },
-    { partNumber: "asd2", quantity: 2 },
-  ]);
 
   return (
     <div>
@@ -141,7 +139,7 @@ const OrderItemsTable = ({ orderItems }: { orderItems: OrderItem[] }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody>
+              <tbody className="transition delay-100 ">
                 <>
                   {table.getRowModel().rows.map((row) => {
                     return (
@@ -149,30 +147,32 @@ const OrderItemsTable = ({ orderItems }: { orderItems: OrderItem[] }) => {
                         key={row.id}
                         className="border-gray-200 border-t odd:bg-gray-50 even:bg-gray-100 hover:bg-gray-200"
                       >
-                        {row.getVisibleCells().map((cell) => {
-                          if (cell.column.id === "notes")
-                            console.log(cell.column.columnDef.size);
-                          return (
-                            <td
-                              key={cell.id}
-                              className={`whitespace-pre-wrap ${
-                                cell.column.id === "partNumber"
-                                  ? "whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"
-                                  : "whitespace-nowrap px-3 py-2 text-sm text-gray-500"
-                              }`}
-                            >
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </td>
-                          );
-                        })}
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className={`whitespace-pre-wrap ${
+                              cell.column.id === "partNumber"
+                                ? "whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"
+                                : "whitespace-nowrap px-3 py-2 text-sm text-gray-500"
+                            }`}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
                       </tr>
                     );
                   })}
-                  <NewItemRow />
-                  <NewItemRow />
+                  {newItemStuff.newItems.map((id) => (
+                    <NewItemRow
+                      key={id}
+                      id={id}
+                      newItems={newItemStuff.newItems}
+                      setNewItems={newItemStuff.setNewItems}
+                    />
+                  ))}
                 </>
               </tbody>
               <tfoot>

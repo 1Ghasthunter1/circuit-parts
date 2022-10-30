@@ -29,4 +29,5 @@ try {
   const userObj: UserFromAPI = JSON.parse(storage || "");
   userState.user = userObj;
 } catch {}
-devtools(userState, "userState");
+devtools(userState, { name: "userState" });
+devtools(orderState, { name: "orderState" });

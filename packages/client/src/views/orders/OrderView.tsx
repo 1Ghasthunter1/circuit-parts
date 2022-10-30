@@ -11,11 +11,12 @@ import Button from "~/elements/Button";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import { fetchOrder, updateOrder } from "~/services/ordersService";
 import { orderState, projectSelectState } from "~/state/state";
-import { IValidatedOrder, Order } from "~/types/orderTypes";
+import { IValidatedOrder, Order, OrderItemToServer } from "~/types/orderTypes";
 import EditableInput from "./EditableInput";
+import { v4 as uuidv4 } from "uuid";
 
 const OrderView = () => {
-  const [newItemModalVis, setNewItemModalVis] = useState<boolean>(false);
+  const [newItems, setNewItems] = useState<string[]>([]);
   const order = useSnapshot(orderState).order;
   const { id } = useParams();
 
@@ -46,15 +47,6 @@ const OrderView = () => {
     return undefined;
   }, [apiOrder]);
 
-  const onKeyDown = (
-    event: React.ChangeEvent<HTMLInputElement> &
-      React.KeyboardEvent<HTMLElement>
-  ) => {
-    if (event.key === "Enter" || event.key === "Escape") {
-      event.target.blur();
-    }
-  };
-
   return (
     <>
       {order ? (
@@ -83,7 +75,14 @@ const OrderView = () => {
           topRightContent={
             <div className="h-full flex">
               <div className="mt-auto">
-                <Button iconName="plus" color="green">
+                <Button
+                  iconName="plus"
+                  color="green"
+                  onClick={() => {
+                    const newId = uuidv4();
+                    setNewItems(newItems.concat(newId));
+                  }}
+                >
                   Add Item
                 </Button>
               </div>
@@ -91,7 +90,10 @@ const OrderView = () => {
           }
         >
           <>
-            <OrderItemsTable orderItems={[...order.items]} />
+            <OrderItemsTable
+              newItemStuff={{ newItems, setNewItems }}
+              orderItems={[...order.items]}
+            />
             <div className="mt-6">
               <OrderTotals order={order} />
             </div>

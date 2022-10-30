@@ -7,7 +7,7 @@ export interface OrderItem {
   vendorUrl?: string;
   quantity: number;
   description?: string;
-  unitCost?: number;
+  unitCost: number;
   notes?: string;
 }
 export interface Order {

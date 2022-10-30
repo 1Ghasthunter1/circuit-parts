@@ -11,14 +11,22 @@ import {
   ValidationError,
 } from "yup";
 
-const NewItemRow = () => {
+const NewItemRow = ({
+  id,
+  newItems,
+  setNewItems,
+}: {
+  id: string;
+  newItems: string[];
+  setNewItems: (newItems: string[]) => void;
+}) => {
   interface INewItem
     extends Partial<Omit<OrderItemToServer, "quantity" | "unitCost">> {
     quantity?: string;
     unitCost?: string;
   }
   const [inputState, setInputState] = useState<INewItem>({});
-  const [dataOk, setDataOk] = useState<boolean>(false);
+  const [cleanState, setCleanState] = useState<OrderItemToServer | null>(null);
 
   const itemSchema: ObjectSchema<Record<keyof OrderItemToServer, AnySchema>> =
     object({
@@ -31,20 +39,24 @@ const NewItemRow = () => {
     });
 
   useEffect(() => {
-    console.log(inputState);
     itemSchema
       .validate(inputState, { abortEarly: false })
-      .then(() => {
-        console.log("schema checks out!");
-        setDataOk(true);
+      .then((cleanState: OrderItemToServer) => {
+        setCleanState(cleanState);
       })
       .catch((err: ValidationError) => {
         err.inner.forEach((e) => {
-          setDataOk(false);
-          console.log(e.message, e.path);
+          setCleanState(null);
         });
       });
+
+    console.log(cleanState);
   }, [inputState]);
+
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 
   return (
     <tr className="border-gray-200 border-t odd:bg-gray-50 even:bg-gray-100 hover:bg-gray-200">
@@ -92,8 +104,12 @@ const NewItemRow = () => {
           componentStyle={"text-md font-bold"}
         />
       </td>
-      <td className={"whitespace-nowrap px-3 py-2 text-sm text-gray-500"}></td>
       <td className={"whitespace-nowrap px-3 py-2 text-sm text-gray-500"}>
+        {cleanState
+          ? formatter.format(cleanState.quantity * cleanState.unitCost)
+          : ""}
+      </td>
+      <td className={"whitespace-pre-wrap px-3 py-2 text-sm text-gray-500 "}>
         <EditableInput
           value={inputState.notes || ""}
           onChangeFunc={(e) => {
@@ -110,9 +126,17 @@ const NewItemRow = () => {
           style="secondary"
           color="blue"
           size="sm"
-          disabled={!dataOk}
+          disabled={!cleanState}
         />
-        <Button iconName="x" style="secondary" color="red" size="sm" />
+        <Button
+          iconName="x"
+          style="secondary"
+          color="red"
+          size="sm"
+          onClick={() =>
+            setNewItems(newItems.filter((itemId) => itemId !== id))
+          }
+        />
       </td>
     </tr>
   );
