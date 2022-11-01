@@ -18,6 +18,7 @@ interface CreateModalProps {
   setModalVisibility: (inp: boolean) => void;
   project: Project;
   queriesToInvalidate?: UseQueryResult[];
+  vendors: string[];
 }
 
 const NewOrderSchema = Yup.object().shape({
@@ -38,6 +39,7 @@ const NewOrderModal = ({
   setModalVisibility,
   queriesToInvalidate,
   project,
+  vendors,
 }: CreateModalProps) => {
   const projectSnap = useSnapshot(projectState).project;
   const createOrderMutation = useMutation(
@@ -94,6 +96,25 @@ const NewOrderModal = ({
 
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Vendor
+                </label>
+                <Field
+                  type="text"
+                  name="vendor"
+                  placeholder="Select a vendor"
+                  options="asdads"
+                  vendors={vendors}
+                  component={ECombobox}
+                />
+                <ErrorMessage
+                  name="vendor"
+                  component="div"
+                  className="text-xs text-red-400"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                   Order Number*
                 </label>
                 <Field
@@ -104,24 +125,6 @@ const NewOrderModal = ({
                 />
                 <ErrorMessage
                   name="orderNumber"
-                  component="div"
-                  className="text-xs text-red-400"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Vendor
-                </label>
-                <Field
-                  type="text"
-                  name="vendor"
-                  placeholder="Select a vendor"
-                  options="asdads"
-                  component={ECombobox}
-                />
-                <ErrorMessage
-                  name="vendor"
                   component="div"
                   className="text-xs text-red-400"
                 />

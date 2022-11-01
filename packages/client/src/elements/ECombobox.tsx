@@ -7,19 +7,12 @@ function classNames(...classes: (string | boolean)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const people: { id: number; name: string }[] = [
-  { id: 1, name: "Leslie Alexander" },
-  { id: 2, name: "ASD Alexander" },
-  { id: 3, name: "Leslie dsa" },
-  // More users...
-];
-
 const ECombobox = ({
   label,
   placeholder,
-  field: { value, onChange, name, onBlur },
+  field: { value },
   form: { setFieldValue },
-  randomProp,
+  vendors,
 }: {
   label?: string;
   placeholder?: string;
@@ -27,23 +20,23 @@ const ECombobox = ({
   value: string;
   field: FieldProps["field"];
   form: FormikHelpers<FieldProps>;
-  randomProp: string;
+  vendors: string[];
 }) => {
   const [query, setQuery] = useState("");
-  const filteredPeople =
+  const filteredVendors =
     query === ""
-      ? people
-      : people.filter((person) => {
-          return person.name.toLowerCase().includes(query.toLowerCase());
+      ? vendors
+      : vendors.filter((vendor) => {
+          return vendor.toLowerCase().includes(query.toLowerCase());
         });
-  console.log(randomProp);
+
   return (
     <>
       <Combobox
         as="div"
         name="vendor"
         value={value}
-        onChange={(val) => setFieldValue("vendor", val.name)}
+        onChange={(val) => setFieldValue("vendor", val)}
       >
         <Combobox.Label className="block text-sm font-medium text-gray-700">
           {label}
@@ -70,23 +63,10 @@ const ECombobox = ({
           </Combobox.Button>
 
           <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {true && (
+            {filteredVendors.map((vendor) => (
               <Combobox.Option
-                className={({ active }) =>
-                  classNames(
-                    "relative cursor-default select-none py-2 pl-3 pr-9",
-                    active ? "bg-indigo-600 text-white" : "text-gray-900"
-                  )
-                }
-                value={{ id: null, name: query }}
-              >
-                Create "{query}"
-              </Combobox.Option>
-            )}
-            {filteredPeople.map((person) => (
-              <Combobox.Option
-                key={person.id}
-                value={person}
+                key={vendor}
+                value={vendor}
                 className={({ active }) =>
                   classNames(
                     "relative cursor-default select-none py-2 pl-3 pr-9",
@@ -102,7 +82,7 @@ const ECombobox = ({
                         selected && "font-semibold"
                       )}
                     >
-                      {person.name}
+                      {vendor}
                     </span>
 
                     {selected && (
@@ -119,6 +99,19 @@ const ECombobox = ({
                 )}
               </Combobox.Option>
             ))}
+            {query !== "" && (
+              <Combobox.Option
+                className={({ active }) =>
+                  classNames(
+                    "relative cursor-default select-none py-2 pl-3 pr-9",
+                    active ? "bg-indigo-600 text-white" : "text-gray-900"
+                  )
+                }
+                value={query}
+              >
+                Create "{query}"
+              </Combobox.Option>
+            )}
           </Combobox.Options>
         </div>
       </Combobox>

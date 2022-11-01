@@ -40,6 +40,9 @@ const OrderView = () => {
       />
     </div>
   );
+
+  let vendors = [...new Set(orders?.map((order) => order.vendor))];
+
   return (
     <>
       <TopLeftRightAndMiddle
@@ -74,6 +77,7 @@ const OrderView = () => {
           modalVisibility={createModalVis}
           setModalVisibility={setCreateModalVis}
           queriesToInvalidate={[projectOrdersQuery]}
+          vendors={vendors}
         />
       )}
     </>
