@@ -1,7 +1,7 @@
 import axios from "axios";
 import { apiBaseUrl } from "~/constants";
 import {
-  IValidatedOrder,
+  IOrderToServer,
   Order,
   OrderItem,
   OrderItemToServer,
@@ -40,7 +40,7 @@ export const fetchOrder = async (orderId: string) => {
   return newOrder;
 };
 
-export const updateOrder = async (order: IValidatedOrder) => {
+export const updateOrder = async (order: Order) => {
   interface IOrderStringDate extends Omit<Order, "creationDate"> {
     creationDate: string;
   }
@@ -64,4 +64,8 @@ export const createOrderItem = async (
     `${apiBaseUrl}/orders/${orderId}/items`,
     orderItem
   );
+};
+
+export const createOrder = async (orderToServer: IOrderToServer) => {
+  return await axios.post<Order>(`${apiBaseUrl}/orders`, orderToServer);
 };

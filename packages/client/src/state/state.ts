@@ -4,6 +4,7 @@ import { FooterState } from "~/types/universalTypes";
 import { devtools } from "valtio/utils";
 import { logout } from "~/utils/authorization";
 import { PopulatedOrder } from "~/types/orderTypes";
+import { Project } from "~/types/projectTypes";
 
 export const userState = proxy<{ user: UserFromAPI | null }>();
 
@@ -20,6 +21,10 @@ export const projectSelectState = proxy<{ project: string }>({
   project: "",
 });
 
+export const projectState = proxy<{ project: Project | null }>({
+  project: null,
+});
+
 export const orderState = proxy<{ order: PopulatedOrder | null }>({
   order: null,
 });
@@ -31,3 +36,4 @@ try {
 } catch {}
 devtools(userState, { name: "userState" });
 devtools(orderState, { name: "orderState" });
+devtools(projectState, { name: "projectState" });

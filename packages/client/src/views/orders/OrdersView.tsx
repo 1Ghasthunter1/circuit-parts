@@ -1,5 +1,5 @@
 import SelectProject from "~/components/dashboard/SelectProject";
-import { projectSelectState } from "~/state/state";
+import { projectState } from "~/state/state";
 import { useSnapshot } from "valtio";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import DashboardSkeleton from "~/components/skeletons/DashboardSkeleton";
@@ -7,13 +7,18 @@ import { fetchOrders } from "~/services/ordersService";
 import { useQuery } from "react-query";
 import OrdersTable from "~/components/orders/OrdersTable";
 import Button from "~/elements/Button";
+import NewOrderModal from "~/components/orders/NewOrderModal";
+import { Project } from "~/types/projectTypes";
+import { useState } from "react";
+
 const OrderView = () => {
-  const projectSelectSnapshot = useSnapshot(projectSelectState);
-  const projectId = projectSelectSnapshot.project;
+  const [createModalVis, setCreateModalVis] = useState<boolean>(false);
+  const projectSnap = useSnapshot(projectState).project;
+  const projectId = projectSnap?.id;
 
   const projectOrdersQuery = useQuery(
     `/projects/${projectId}/orders`,
-    () => fetchOrders(projectId),
+    () => fetchOrders(projectId || ""),
     { enabled: projectId !== "" }
   );
 
@@ -30,8 +35,8 @@ const OrderView = () => {
   const TopRightContent = (
     <div className="w-[300px]">
       <SelectProject
-        projectId={projectSelectSnapshot.project}
-        setProjectId={(value) => (projectSelectState.project = value)}
+        project={projectSnap}
+        setProject={(project: Project) => (projectState.project = project)}
       />
     </div>
   );
@@ -41,7 +46,7 @@ const OrderView = () => {
         topLeftContent={TopLeftContent}
         topRightContent={TopRightContent}
       >
-        {projectId !== "" ? (
+        {projectSnap ? (
           !orders ? (
             <DashboardSkeleton rowCount={4} />
           ) : (
@@ -51,6 +56,7 @@ const OrderView = () => {
                   color="green"
                   customStyle="float-right"
                   iconName="file-invoice"
+                  onClick={() => setCreateModalVis(true)}
                 >
                   Create Order
                 </Button>
@@ -62,6 +68,14 @@ const OrderView = () => {
           <div>Please select a project above...</div>
         )}
       </TopLeftRightAndMiddle>
+      {projectSnap && (
+        <NewOrderModal
+          project={projectSnap}
+          modalVisibility={createModalVis}
+          setModalVisibility={setCreateModalVis}
+          queriesToInvalidate={[projectOrdersQuery]}
+        />
+      )}
     </>
   );
 };

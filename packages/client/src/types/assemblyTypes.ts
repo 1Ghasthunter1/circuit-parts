@@ -29,8 +29,6 @@ export interface UnpopulatedAssembly {
   notes?: string;
 }
 
-// eslint-disable-file @typescript-eslint/no-empty-interface
-
 export interface Assembly
   extends Omit<
     UnpopulatedAssembly,

@@ -67,7 +67,15 @@ const NewItemRow = ({
     },
     {
       onSuccess: async () => {
-        toast.success("banger");
+        toast.success(
+          <span>
+            Added <b>{cleanState?.partNumber}</b> to order
+          </span>
+        );
+        setNewItems(newItems.filter((itemId) => itemId !== id));
+      },
+      onError: async () => {
+        toast.error("banger");
         setNewItems(newItems.filter((itemId) => itemId !== id));
       },
       onSettled: async () =>

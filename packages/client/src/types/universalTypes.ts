@@ -1,3 +1,7 @@
+declare module "valtio" {
+  function useSnapshot<T extends object>(p: T): T;
+}
+
 // Type constants =======================
 export const userRoles = ["admin", "user", "owner"] as const;
 

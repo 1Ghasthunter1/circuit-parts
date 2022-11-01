@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { useSnapshot } from "valtio";
-import NewOrderItemModal from "~/components/orders/NewOrderItemModal";
 import OrderItemsTable from "~/components/orders/OrdersItemTable";
 import OrderStatusBox from "~/components/orders/OrderStatusBox";
 import OrderTotals from "~/components/orders/OrderTotals";
 import Button from "~/elements/Button";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import { fetchOrder, updateOrder } from "~/services/ordersService";
-import { orderState, projectSelectState } from "~/state/state";
-import { IValidatedOrder, Order, OrderItemToServer } from "~/types/orderTypes";
+import { orderState } from "~/state/state";
+import { Order } from "~/types/orderTypes";
 import EditableInput from "./EditableInput";
 import { v4 as uuidv4 } from "uuid";
+import { Combobox } from "@headlessui/react";
+import ECombobox from "~/elements/ECombobox";
 
 const OrderView = () => {
   const [newItems, setNewItems] = useState<string[]>([]);
@@ -24,7 +25,7 @@ const OrderView = () => {
 
   const orderQuery = useQuery(["order", id], () => fetchOrder(id));
   const orderEditMutation = useMutation(
-    async (order: IValidatedOrder) => await updateOrder(order),
+    async (order: Order) => await updateOrder(order),
     {
       onSuccess: (newOrder) => {
         toast.success(
@@ -97,6 +98,7 @@ const OrderView = () => {
             <div className="mt-6">
               <OrderTotals order={order} />
             </div>
+    
           </>
         </TopLeftRightAndMiddle>
       ) : (
