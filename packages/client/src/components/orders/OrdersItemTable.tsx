@@ -153,7 +153,7 @@ const OrderItemsTable = ({
                             className={`whitespace-pre-wrap ${
                               cell.column.id === "partNumber"
                                 ? "whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"
-                                : "whitespace-nowrap px-3 py-2 text-sm text-gray-500"
+                                : "whitespace-nowrap px-3 py-2 text-sm text-gray-500 max-w-min"
                             }`}
                           >
                             {flexRender(
@@ -173,6 +173,7 @@ const OrderItemsTable = ({
                       setNewItems={newItemStuff.setNewItems}
                     />
                   ))}
+                  
                 </>
               </tbody>
               <tfoot>

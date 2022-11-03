@@ -13,8 +13,6 @@ import { orderState } from "~/state/state";
 import { Order } from "~/types/orderTypes";
 import EditableInput from "./EditableInput";
 import { v4 as uuidv4 } from "uuid";
-import { Combobox } from "@headlessui/react";
-import ECombobox from "~/elements/ECombobox";
 
 const OrderView = () => {
   const [newItems, setNewItems] = useState<string[]>([]);

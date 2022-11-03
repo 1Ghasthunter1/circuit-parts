@@ -90,7 +90,9 @@ const NewItemRow = ({
 
   return (
     <tr className="border-gray-200 border-t odd:bg-gray-50 even:bg-gray-100 hover:bg-gray-200">
-      <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500 h-full">
+      <td
+        className="whitespace-nowrap px-3 py-2 text-sm text-gray-500 "
+      >
         <EditableInput
           value={inputState.partNumber || ""}
           onChangeFunc={(e) => {

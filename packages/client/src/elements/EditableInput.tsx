@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { string } from "yup/lib/locale";
 import TitleTextOptions from "~/components/orders/TitleTextOptions";
 
@@ -20,7 +20,9 @@ const EditableInput = ({
   inputStyle,
   componentStyle,
 }: IProps) => {
+  const thingRef = useRef(null);
   const [showInput, setShowInput] = useState<boolean>(false);
+  const [lastW, setLastW] = useState<number>(0);
   const [input, setInput] = useState<{
     originalValue: string;
     currentValue: string;
@@ -46,6 +48,10 @@ const EditableInput = ({
     }
   };
 
+  useEffect(() => {
+    thingRef.current ? setLastW(thingRef.current.offsetWidth - 2) : "";
+  }, [thingRef.current]);
+
   return (
     <div
       className={`${
@@ -55,7 +61,7 @@ const EditableInput = ({
       } bg-transparent rounded-lg inline-block outline-none w-full`}
     >
       {showInput ? (
-        <div className="flex w-full content-center">
+        <div className={`ml-[1.5px]`} style={{ width: lastW }}>
           <input
             value={input.currentValue}
             placeholder={placeholder || ""}
@@ -64,7 +70,7 @@ const EditableInput = ({
             className={
               inputStyle
                 ? inputStyle
-                : "ring-blue-600 px-2 py-1 w-full ring-[1.5px] rounded-lg outline-none bg-transparent hover:bg-transparent"
+                : "ring-blue-600 px-2 py-1 ring-[1.5px] max-w-full min-w-full rounded-lg outline-none bg-transparent hover:bg-transparent"
             }
             onKeyDown={(e) => handleKeypress(e)}
             onChange={(e) => {
@@ -85,9 +91,10 @@ const EditableInput = ({
         </div>
       ) : (
         <div
-          className={`hover:bg-blue-100 px-2 py-1 rounded-lg cursor-pointer ${
+          ref={thingRef}
+          className={`hover:bg-blue-200 px-2 py-1 rounded-lg cursor-pointer ${
             input.originalValue === "" &&
-            "bg-white shadow-inner border border-2 h-full"
+            "bg-white shadow-inner border-[1.5px] h-full w-full"
           }`}
           onClick={() => {
             setShowInput(true);
