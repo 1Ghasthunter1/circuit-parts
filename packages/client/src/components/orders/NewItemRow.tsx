@@ -89,10 +89,8 @@ const NewItemRow = ({
   });
 
   return (
-    <tr className="border-gray-200 border-t odd:bg-gray-50 even:bg-gray-100 hover:bg-gray-200">
-      <td
-        className="whitespace-nowrap px-3 py-2 text-sm text-gray-500 "
-      >
+    <div className="table-row border-gray-200 border-t odd:bg-gray-50 even:bg-gray-100 hover:bg-gray-200">
+      <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500 ">
         <EditableInput
           value={inputState.partNumber || ""}
           onChangeFunc={(e) => {
@@ -102,8 +100,8 @@ const NewItemRow = ({
           hideButtons={true}
           componentStyle={"text-md font-bold"}
         />
-      </td>
-      <td className={"whitespace-nowrap px-3 py-2 text-sm text-gray-500"}>
+      </div>
+      <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
         <EditableInput
           value={inputState.quantity || ""}
           onChangeFunc={(e) => {
@@ -113,8 +111,8 @@ const NewItemRow = ({
           hideButtons={true}
           componentStyle={"text-md font-bold"}
         />
-      </td>
-      <td className={"whitespace-nowrap px-3 py-2 text-sm text-gray-500"}>
+      </div>
+      <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
         <EditableInput
           value={inputState.description || ""}
           onChangeFunc={(e) => {
@@ -124,8 +122,8 @@ const NewItemRow = ({
           hideButtons={true}
           componentStyle={"text-md font-bold"}
         />
-      </td>
-      <td className={"whitespace-nowrap px-3 py-2 text-sm text-gray-500"}>
+      </div>
+      <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
         <EditableInput
           value={inputState.unitCost || ""}
           onChangeFunc={(e) => {
@@ -135,13 +133,13 @@ const NewItemRow = ({
           hideButtons={true}
           componentStyle={"text-md font-bold"}
         />
-      </td>
-      <td className={"whitespace-nowrap px-3 py-2 text-sm text-gray-500"}>
+      </div>
+      <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
         {cleanState
           ? formatter.format(cleanState.quantity * cleanState.unitCost)
           : ""}
-      </td>
-      <td className={"whitespace-pre-wrap px-3 py-2 text-sm text-gray-500 "}>
+      </div>
+      <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
         <EditableInput
           value={inputState.notes || ""}
           onChangeFunc={(e) => {
@@ -151,8 +149,8 @@ const NewItemRow = ({
           hideButtons={true}
           componentStyle={"text-md font-bold"}
         />
-      </td>
-      <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500 space-x-1">
+      </div>
+      <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
         <Button
           iconName="check"
           style="secondary"
@@ -171,8 +169,8 @@ const NewItemRow = ({
             setNewItems(newItems.filter((itemId) => itemId !== id))
           }
         />
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 };
 

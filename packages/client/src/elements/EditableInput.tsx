@@ -20,9 +20,7 @@ const EditableInput = ({
   inputStyle,
   componentStyle,
 }: IProps) => {
-  const thingRef = useRef(null);
   const [showInput, setShowInput] = useState<boolean>(false);
-  const [lastW, setLastW] = useState<number>(0);
   const [input, setInput] = useState<{
     originalValue: string;
     currentValue: string;
@@ -48,20 +46,16 @@ const EditableInput = ({
     }
   };
 
-  useEffect(() => {
-    thingRef.current ? setLastW(thingRef.current.offsetWidth - 2) : "";
-  }, [thingRef.current]);
-
   return (
     <div
       className={`${
         componentStyle
           ? componentStyle
           : "text-2xl font-bold bg-transparent -ml-1 rounded-lg inline-block outline-none"
-      } bg-transparent rounded-lg inline-block outline-none w-full`}
+      } bg-transparent rounded-lg outline-none`}
     >
       {showInput ? (
-        <div className={`ml-[1.5px]`} style={{ width: lastW }}>
+        <>
           <input
             value={input.currentValue}
             placeholder={placeholder || ""}
@@ -70,7 +64,7 @@ const EditableInput = ({
             className={
               inputStyle
                 ? inputStyle
-                : "ring-blue-600 px-2 py-1 ring-[1.5px] max-w-full min-w-full rounded-lg outline-none bg-transparent hover:bg-transparent"
+                : "ring-blue-600 px-2 py-1 ring-[1.5px] w-full box-border rounded-lg outline-none bg-transparent hover:bg-transparent"
             }
             onKeyDown={(e) => handleKeypress(e)}
             onChange={(e) => {
@@ -88,10 +82,9 @@ const EditableInput = ({
               />
             </div>
           )}
-        </div>
+        </>
       ) : (
         <div
-          ref={thingRef}
           className={`hover:bg-blue-200 px-2 py-1 rounded-lg cursor-pointer ${
             input.originalValue === "" &&
             "bg-white shadow-inner border-[1.5px] h-full w-full"
