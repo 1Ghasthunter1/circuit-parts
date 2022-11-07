@@ -98,7 +98,7 @@ const NewItemRow = ({
           }}
           placeholder="Part Number"
           hideButtons={true}
-          componentStyle={"text-md font-bold"}
+          componentStyle="text-md"
         />
       </div>
       <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
@@ -109,7 +109,7 @@ const NewItemRow = ({
           }}
           placeholder="Qty"
           hideButtons={true}
-          componentStyle={"text-md font-bold"}
+          componentStyle="text-md"
         />
       </div>
       <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
@@ -120,7 +120,7 @@ const NewItemRow = ({
           }}
           placeholder="Description"
           hideButtons={true}
-          componentStyle={"text-md font-bold"}
+          componentStyle="text-md"
         />
       </div>
       <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
@@ -131,7 +131,7 @@ const NewItemRow = ({
           }}
           placeholder="Unit Cost"
           hideButtons={true}
-          componentStyle={"text-md font-bold"}
+          componentStyle="text-md"
         />
       </div>
       <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
@@ -147,7 +147,7 @@ const NewItemRow = ({
           }}
           placeholder="Notes"
           hideButtons={true}
-          componentStyle={"text-md font-bold"}
+          componentStyle="text-md"
         />
       </div>
       <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">

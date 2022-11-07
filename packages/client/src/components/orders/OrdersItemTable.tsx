@@ -10,6 +10,11 @@ import NewItemRow from "./NewItemRow";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
+const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
 const columns = [
   columnHelper.accessor("partNumber", {
     header: "Part Number",
@@ -35,6 +40,7 @@ const columns = [
   columnHelper.accessor("quantity", {
     header: "Quantity",
     cell: (info) => info.cell.getValue(),
+    size: 10,
   }),
 
   columnHelper.accessor("description", {
@@ -45,16 +51,8 @@ const columns = [
     header: "Unit Cost",
     cell: (info) => {
       const unitCost = info.cell.getValue();
-      if (unitCost) return `${info.cell.getValue()}`;
+      if (unitCost) return formatter.format(info.cell.getValue());
       return "";
-    },
-    aggregationFn: "sum",
-    footer: (info) => {
-      const rows = info.table.getCoreRowModel().rows;
-      const aggregationFn = info.column.getAggregationFn();
-      if (!aggregationFn) return null;
-      const output = aggregationFn(info.column.id, rows, rows) as number;
-      return <div>${Math.round(output * 100) / 100}</div>;
     },
   }),
 
@@ -63,27 +61,50 @@ const columns = [
     cell: (info) => {
       const qty = info.row.original.quantity;
       const unitCost = info.row.original.unitCost;
-      if (qty && unitCost) return `${qty * unitCost}`;
+      if (qty && unitCost) return formatter.format(qty * unitCost);
+    },
+    aggregationFn: "sum",
+    footer: (info) => {
+      const rows = info.table.getCoreRowModel().rows;
+      const total = rows.reduce((net, row) => {
+        const cells = row.getAllCells();
+        let qty: number | undefined = undefined;
+        let amt: number | undefined = undefined;
+        for (let i = 0; i < cells.length; i++) {
+          const cell = cells[i];
+          switch (cell.column.id) {
+            case "quantity":
+              qty = cell.getValue() as number;
+              break;
+            case "unitCost":
+              amt = cell.getValue() as number;
+              break;
+            default:
+          }
+        }
+        if (!(qty && amt)) throw Error();
+        return net + qty * amt;
+      }, 0);
+      const aggregationFn = info.column.getAggregationFn();
+      if (!aggregationFn) return null;
+      const output = aggregationFn("unitCost", rows, rows) as number;
+      return formatter.format(total);
     },
   }),
 
   columnHelper.accessor("notes", {
     header: "Notes",
     cell: (info) => info.cell.getValue(),
-    size: 20,
   }),
   columnHelper.display({
     header: "Edit",
-    cell: (info) => (
+    cell: () => (
       <div>
         <div className="text-indigo-500 underline cursor-pointer min-w-min	">
           Edit
         </div>
       </div>
     ),
-    footer: (info) => {
-      return <div>thiung</div>;
-    },
   }),
 ];
 
@@ -104,8 +125,6 @@ const OrderItemsTable = ({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  type INewOrderTow = Omit<OrderItem, "id" | "order">;
-
   return (
     <div>
       <div className="flex flex-col">
@@ -118,13 +137,13 @@ const OrderItemsTable = ({
                     {headerGroup.headers.map((header) => (
                       <div
                         key={header.id}
+                        style={{ width: header.getSize() }}
                         className={`table-cell text-left text-sm font-semibold text-gray-900 ${
                           header.index === 0
-                            ? "py-3.5 pl-4 pr-3 sm:pl-6"
+                            ? "py-3.5 pl-4 pr-3 sm:pl-6 "
                             : "px-3 py-3.5"
                         }
                         `}
-                        style={{ width: header.getSize() }}
                       >
                         {header.isPlaceholder
                           ? null
@@ -180,7 +199,7 @@ const OrderItemsTable = ({
                       return (
                         <div
                           key={header.id}
-                          className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500"
+                          className="border-t-[2px] border-gray-300 table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500"
                         >
                           {header.isPlaceholder
                             ? null
