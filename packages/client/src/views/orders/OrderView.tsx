@@ -13,6 +13,7 @@ import { orderState } from "~/state/state";
 import { Order } from "~/types/orderTypes";
 import EditableInput from "./EditableInput";
 import { v4 as uuidv4 } from "uuid";
+import TrackingCard from "~/components/orders/TrackingCard";
 
 const OrderView = () => {
   const [newItems, setNewItems] = useState<string[]>([]);
@@ -89,14 +90,18 @@ const OrderView = () => {
           }
         >
           <>
+            <div className="flex my-6 space-x-12 w-full">
+              <div className=" w-full">
+                <TrackingCard order={order} />
+              </div>
+              <div className=" w-full">
+                <OrderTotals order={order} />
+              </div>
+            </div>
             <OrderItemsTable
               newItemStuff={{ newItems, setNewItems }}
               orderItems={[...order.items]}
             />
-            <div className="mt-6">
-              <OrderTotals order={order} />
-            </div>
-    
           </>
         </TopLeftRightAndMiddle>
       ) : (
