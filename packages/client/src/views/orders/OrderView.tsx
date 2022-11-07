@@ -90,12 +90,12 @@ const OrderView = () => {
           }
         >
           <>
-            <div className="flex my-6 space-x-12 w-full">
-              <div className=" w-full">
-                <TrackingCard order={order} />
+            <div className="flex  my-6 space-x-12 w-full ">
+              <div className="w-full self-stretch">
+                <TrackingCard />
               </div>
-              <div className=" w-full">
-                <OrderTotals order={order} />
+              <div className="self-stretch w-full">
+                <OrderTotals editMutation={orderEditMutation} />
               </div>
             </div>
             <OrderItemsTable

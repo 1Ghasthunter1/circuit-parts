@@ -3,15 +3,13 @@ import { string } from "yup/lib/locale";
 import TitleTextOptions from "~/components/orders/TitleTextOptions";
 
 interface IProps {
-  value: string;
   placeholder?: string;
   onChangeFunc?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSave?: (val: string) => void;
   hideButtons?: boolean;
   inputStyle?: string;
   componentStyle?: string;
 }
-const EditableInput = ({
+const EditableInput = <T extends string | number>({
   value,
   placeholder,
   onChangeFunc,
@@ -19,12 +17,20 @@ const EditableInput = ({
   hideButtons,
   inputStyle,
   componentStyle,
-}: IProps) => {
+  aggregationFn,
+  validatorFn,
+}: IProps & {
+  value: T;
+  onSave?: (val: T) => void;
+  aggregationFn?: (val: T) => string | number;
+  validatorFn?: (val: T) => boolean;
+}) => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [input, setInput] = useState<{
-    originalValue: string;
-    currentValue: string;
+    originalValue: T;
+    currentValue: T;
   }>({ originalValue: value, currentValue: value });
+  const [isValid, setIsValid] = useState<boolean>(false);
 
   const save = () => {
     setShowInput(false);
@@ -46,6 +52,12 @@ const EditableInput = ({
     }
   };
 
+  useEffect(() => {
+    validatorFn
+      ? setIsValid(validatorFn(input.currentValue))
+      : setIsValid(true);
+  }, [input.currentValue]);
+
   return (
     <div
       className={`${
@@ -60,15 +72,22 @@ const EditableInput = ({
             value={input.currentValue}
             placeholder={placeholder || ""}
             autoFocus
-            onBlur={save}
-            className={
-              inputStyle
-                ? inputStyle
-                : "ring-blue-600 px-2 py-1 ring-[1.5px] w-full box-border rounded-lg outline-none bg-transparent hover:bg-transparent"
+            onBlur={isValid ?  save : cancel}
+            className={`
+            ${
+              !isValid
+                ? "ring-rose-400 ring-[1.5px] bg-rose-50 text-rose-400 outline-none "
+                : ""
             }
+              ${
+                inputStyle
+                  ? inputStyle
+                  : "ring-blue-600 px-2 py-1 ring-[1.5px] w-full box-border rounded-lg outline-none bg-transparent "
+              }
+            `}
             onKeyDown={(e) => handleKeypress(e)}
             onChange={(e) => {
-              setInput({ ...input, currentValue: e.target.value });
+              setInput({ ...input, currentValue: e.target.value as T });
               if (onChangeFunc) {
                 onChangeFunc(e);
               }
@@ -95,6 +114,8 @@ const EditableInput = ({
         >
           {input.originalValue === "" ? (
             <span className="text-gray-300">{placeholder}</span>
+          ) : aggregationFn ? (
+            aggregationFn(input.originalValue)
           ) : (
             input.originalValue
           )}

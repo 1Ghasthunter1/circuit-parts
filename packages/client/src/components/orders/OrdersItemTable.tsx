@@ -53,7 +53,7 @@ const columns = [
       const unitCost = info.cell.getValue();
       if (unitCost) return formatter.format(info.cell.getValue());
       return "";
-    },
+    }
   }),
 
   columnHelper.display({

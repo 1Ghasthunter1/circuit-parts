@@ -66,6 +66,17 @@ export const createOrderItem = async (
   );
 };
 
+export const calculateOrderTotals = (order: PopulatedOrder) => {
+  const items = order.items;
+  const subtotal = items.reduce((sum, item) => {
+    return sum + item.quantity * item.unitCost;
+  }, 0);
+  return {
+    subtotal,
+    total: subtotal + (order.shipping || 0) + (order.tax || 0),
+  };
+};
+
 export const createOrder = async (orderToServer: IOrderToServer) => {
   return await axios.post<Order>(`${apiBaseUrl}/orders`, orderToServer);
 };

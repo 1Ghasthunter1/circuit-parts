@@ -98,7 +98,7 @@ const NewItemRow = ({
           }}
           placeholder="Part Number"
           hideButtons={true}
-          componentStyle="text-md"
+          componentStyle="text-md font-bold"
         />
       </div>
       <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
@@ -150,7 +150,7 @@ const NewItemRow = ({
           componentStyle="text-md"
         />
       </div>
-      <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+      <div className="table-cell whitespace-nowrap px-3 space-x-1 py-2 text-sm text-gray-500">
         <Button
           iconName="check"
           style="secondary"
