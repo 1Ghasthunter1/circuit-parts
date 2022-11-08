@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { string } from "yup/lib/locale";
 import TitleTextOptions from "~/components/orders/TitleTextOptions";
 
 interface IProps {
@@ -34,8 +33,10 @@ const EditableInput = <T extends string | number>({
 
   const save = () => {
     setShowInput(false);
-    setInput({ ...input, originalValue: input.currentValue });
-    if (onSave) onSave(input.currentValue);
+    if (!(input.originalValue === input.currentValue)) {
+      setInput({ ...input, originalValue: input.currentValue });
+      if (onSave) onSave(input.currentValue);
+    }
   };
   const cancel = () => {
     setShowInput(false);
@@ -72,7 +73,7 @@ const EditableInput = <T extends string | number>({
             value={input.currentValue}
             placeholder={placeholder || ""}
             autoFocus
-            onBlur={isValid ?  save : cancel}
+            onBlur={isValid ? save : cancel}
             className={`
             ${
               !isValid
