@@ -1,6 +1,11 @@
 import express from "express";
 import { RequestHandler } from "express";
-import { checkSchema, validationResult, matchedData } from "express-validator";
+import {
+  checkSchema,
+  validationResult,
+  matchedData,
+  param,
+} from "express-validator";
 import { newProjectSchema } from "../validation/projectValidation";
 import {
   NewProject,
@@ -18,6 +23,8 @@ import { ChildType } from "../types/universalTypes";
 import { DatabaseAssembly } from "../types/assemblyTypes";
 import { DatabasePart } from "../types/partsTypes";
 import { adminRequired } from "../utils/middleware/middleware";
+import Order from "../models/order/order";
+import { handleSchemaErrors } from "../utils/middleware/schemaValidation";
 require("express-async-errors");
 
 const projectsRouter = express.Router();
@@ -112,5 +119,20 @@ projectsRouter.delete("/:id", adminRequired, (async (req, res) => {
 
   return res.status(204).end();
 }) as RequestHandler);
+
+projectsRouter.get(
+  "/:id/orders",
+  param("id").custom(async (value: string) => {
+    const res = await ProjectModel.findById(value);
+    if (!res) return Promise.reject("`project` does not exist");
+    return Promise.resolve();
+  }),
+  handleSchemaErrors,
+  (async (req, res) => {
+    const projectId = req.params.id;
+    const orders = await Order.find({ project: projectId });
+    return res.status(200).json(orders);
+  }) as RequestHandler
+);
 
 export default projectsRouter;

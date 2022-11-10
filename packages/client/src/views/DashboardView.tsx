@@ -5,26 +5,33 @@ import SelectProject from "~/components/dashboard/SelectProject";
 import DashboardSkeleton from "~/components/skeletons/DashboardSkeleton";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import { fetchProjectComponents } from "~/services/projectsServices";
-import { dashboardState } from "~/state/state";
+import { projectState } from "~/state/state";
 
 const DashboardView = () => {
-  const dashboardSnapshot = useSnapshot(dashboardState);
-  const projectId = dashboardSnapshot.project;
+  const projectSnap = useSnapshot(projectState).project;
+  const projectId = projectSnap?.id;
 
   const projectComponentsQuery = useQuery(
     `/projects/${projectId}/components`,
-    () => fetchProjectComponents(projectId),
-    { enabled: projectId !== "" }
+    () => fetchProjectComponents(projectId || ""),
+    { enabled: projectId !== null }
   );
 
   const data = projectComponentsQuery.data;
 
-  const TopLeftContent = <div className="text-4xl font-bold">Dashboard</div>;
+  const TopLeftContent = (
+    <div className="flex-auto">
+      <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+      <p className="mt-2 text-sm text-gray-700">
+        Dashboard for project selected at the right.
+      </p>
+    </div>
+  );
   const TopRightContent = (
     <div className="w-[300px]">
       <SelectProject
-        projectId={dashboardSnapshot.project}
-        setProjectId={(value) => (dashboardState.project = value)}
+        project={projectSnap}
+        setProject={(proj) => (projectState.project = proj)}
       />
     </div>
   );

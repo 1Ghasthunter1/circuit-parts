@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isComponentType = exports.isParentType = exports.isPriority = exports.isChildType = exports.isUserRole = exports.componentTypes = exports.parentTypes = exports.priorities = exports.partStatuses = exports.assemblyStatuses = exports.childTypes = exports.userRoles = void 0;
+exports.isOrderStatus = exports.isComponentType = exports.isParentType = exports.isPriority = exports.isChildType = exports.isUserRole = exports.orderStatuses = exports.componentTypes = exports.parentTypes = exports.priorities = exports.partStatuses = exports.assemblyStatuses = exports.childTypes = exports.userRoles = void 0;
 // Type constants =======================
 exports.userRoles = ["admin", "user", "owner"];
 exports.childTypes = ["assembly", "part"];
@@ -25,6 +25,7 @@ exports.partStatuses = [
 exports.priorities = ["low", "normal", "high", "urgent"];
 exports.parentTypes = ["assembly", "project"];
 exports.componentTypes = ["assembly", "project", "part"];
+exports.orderStatuses = ["open", "ordered", "received"];
 //type guards and validators
 const isUserRole = (value) => {
     return exports.userRoles.includes(value);
@@ -46,4 +47,8 @@ const isComponentType = (value) => {
     return exports.componentTypes.includes(value);
 };
 exports.isComponentType = isComponentType;
+const isOrderStatus = (value) => {
+    return exports.orderStatuses.includes(value);
+};
+exports.isOrderStatus = isOrderStatus;
 //# sourceMappingURL=universalTypes.js.map
