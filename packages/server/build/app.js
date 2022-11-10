@@ -9,6 +9,7 @@ const projectsRouter_1 = __importDefault(require("./routes/projectsRouter"));
 const assemblyRouter_1 = __importDefault(require("./routes/assemblyRouter"));
 const usersRouter_1 = __importDefault(require("./routes/usersRouter"));
 const loginRouter_1 = __importDefault(require("./routes/loginRouter"));
+const orderRouter_1 = __importDefault(require("./routes/orderRouter"));
 const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = __importDefault(require("./utils/config"));
@@ -41,6 +42,7 @@ app.use("/api/users", usersRouter_1.default);
 app.use("/api/parts", partsRouter_1.default);
 app.use("/api/projects", projectsRouter_1.default);
 app.use("/api/assemblies", assemblyRouter_1.default);
+app.use("/api/orders", orderRouter_1.default);
 app.use("/api/*", middleware_2.adminRequired);
 app.use("/api/*", middleware_1.errorHandler);
 app.get("*", function (_req, res) {

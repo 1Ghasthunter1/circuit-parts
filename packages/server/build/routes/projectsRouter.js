@@ -20,6 +20,8 @@ const project_1 = __importDefault(require("../models/project"));
 const part_1 = __importDefault(require("../models/part"));
 const assembly_1 = __importDefault(require("../models/assembly"));
 const middleware_1 = require("../utils/middleware/middleware");
+const order_1 = __importDefault(require("../models/order/order"));
+const schemaValidation_1 = require("../utils/middleware/schemaValidation");
 require("express-async-errors");
 const projectsRouter = express_1.default.Router();
 projectsRouter.get("/", ((_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -78,6 +80,16 @@ projectsRouter.delete("/:id", middleware_1.adminRequired, ((req, res) => __await
     });
     yield foundProject.delete();
     return res.status(204).end();
+})));
+projectsRouter.get("/:id/orders", (0, express_validator_1.param)("id").custom((value) => __awaiter(void 0, void 0, void 0, function* () {
+    const res = yield project_1.default.findById(value);
+    if (!res)
+        return Promise.reject("`project` does not exist");
+    return Promise.resolve();
+})), schemaValidation_1.handleSchemaErrors, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const projectId = req.params.id;
+    const orders = yield order_1.default.find({ project: projectId });
+    return res.status(200).json(orders);
 })));
 exports.default = projectsRouter;
 //# sourceMappingURL=projectsRouter.js.map
