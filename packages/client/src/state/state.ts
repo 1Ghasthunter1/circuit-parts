@@ -1,9 +1,13 @@
 import { proxy } from "valtio";
-import { AuthUser, UserFromAPI } from "../types/userTypes";
+import { UserFromAPI } from "../types/userTypes";
 import { FooterState } from "~/types/universalTypes";
 import { devtools } from "valtio/utils";
 import { logout } from "~/utils/authorization";
+import { PopulatedOrder } from "~/types/orderTypes";
+import { Project } from "~/types/projectTypes";
+
 export const userState = proxy<{ user: UserFromAPI | null }>();
+
 export const footerState = proxy<FooterState>({
   links: [
     { text: "Projects", url: "/projects" },
@@ -12,9 +16,17 @@ export const footerState = proxy<FooterState>({
     { text: "Sign Out", url: "/projects", onClick: () => logout() },
   ],
 });
-export const dashboardState = proxy<{ project: string; filter: string }>({
+
+export const projectSelectState = proxy<{ project: string }>({
   project: "",
-  filter: "",
+});
+
+export const projectState = proxy<{ project: Project | null }>({
+  project: null,
+});
+
+export const orderState = proxy<{ order: PopulatedOrder | null }>({
+  order: null,
 });
 
 const storage: string | null = localStorage.getItem("user");
@@ -22,4 +34,6 @@ try {
   const userObj: UserFromAPI = JSON.parse(storage || "");
   userState.user = userObj;
 } catch {}
-devtools(userState, "userState");
+devtools(userState, { name: "userState" });
+devtools(orderState, { name: "orderState" });
+devtools(projectState, { name: "projectState" });

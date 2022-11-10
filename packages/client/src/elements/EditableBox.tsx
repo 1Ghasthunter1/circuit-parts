@@ -1,28 +1,35 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import { Assembly } from "../../types/assemblyTypes";
-import { AssemblyStatus, assemblyStatuses } from "../../types/universalTypes";
+import { useMutation, UseMutationResult, useQueryClient } from "react-query";
+import { editPart } from "~/services/partsServices";
+import { Assembly } from "~/types/assemblyTypes";
+import { Part } from "~/types/partsTypes";
+import { PartStatus, partStatuses } from "~/types/universalTypes";
 import toast from "react-hot-toast";
-import { editAssemblyById } from "../../services/assemblyServices";
-import { Part } from "../../types/partsTypes";
-import StatusBox from "../components/StatusBox";
+import StatusBox from "~/components/components/StatusBox";
 
-interface StatusProps {
-  assembly: Assembly;
-  queryKey: string;
+interface EditableBoxProps {
+  box: JSX.Element;
+  items: Array<string>;
+  queryKey?: string;
+  editMutation: UseMutationResult<any, 
 }
 
-const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
+const EditableBox = ({ part, queryKey, editMutation }: EditableBoxProps) => {
   const [onInput, setOnInput] = useState<boolean>(false);
-  const [newStatus, setNewStatus] = useState<AssemblyStatus>(assembly.status);
+  const [newStatus, setNewStatus] = useState<PartStatus>(part.status);
 
   const queryClient = useQueryClient();
 
   const editMutation = useMutation(
     async () => {
-      await editAssemblyById(assembly.id, {
-        ...assembly,
+      await editPart(part.id, {
+        ...part,
+        notes: part.notes || "",
+        sourceMaterial: part.sourceMaterial || "",
+        haveMaterial: part.haveMaterial || false,
+        materialCutLength: part.materialCutLength || "",
+        quantityRequired: part.quantityRequired || 0,
         status: newStatus,
       });
     },
@@ -33,8 +40,8 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
           (previous) => {
             if (previous)
               return previous.map((rowItem) => {
-                if (rowItem.id === assembly.id)
-                  return { ...assembly, status: newStatus };
+                if (rowItem.id === part.id)
+                  return { ...part, status: newStatus };
                 return rowItem;
               });
             return [];
@@ -48,34 +55,6 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
       },
     }
   );
-
-  let content;
-  let color;
-  switch (assembly.status) {
-    case "design in progress":
-      content = "Design In Progress";
-      color = "bg-blue-600";
-      break;
-    case "ready for assembly":
-      content = "Ready for assembly";
-      color = "bg-cyan-500";
-      break;
-    case "assembly in progress":
-      content = "Assembly in progress";
-      color = "bg-yellow-500";
-      break;
-    case "design review needed":
-      content = "Design review needed";
-      color = "bg-red-500";
-      break;
-    case "done":
-      content = "Done";
-      color = "bg-green-500";
-      break;
-    default:
-      content = "Unknown";
-      color = "bg-red-500";
-  }
   const inputStyle =
     "w-36 bg-gray-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2";
   return (
@@ -83,16 +62,16 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
       className="whitespace-nowrap w-min cursor-pointer"
       onClick={(e) => e.stopPropagation()}
     >
-      {onInput ? (
+      {onInput && queryKey ? (
         <div className="flex items-center">
           <select
             className={inputStyle}
             value={newStatus}
             onChange={(e) => {
-              setNewStatus(e.target.value as AssemblyStatus);
+              setNewStatus(e.target.value as PartStatus);
             }}
           >
-            {assemblyStatuses.map((status) => (
+            {partStatuses.map((status) => (
               <option key={status} value={status}>
                 {`${status.charAt(0).toUpperCase()}${status.slice(1)}`}
               </option>
@@ -111,11 +90,11 @@ const AssemblyStatusBox = ({ assembly, queryKey }: StatusProps) => {
         </div>
       ) : (
         <div onClick={() => setOnInput(true)}>
-          <StatusBox status={assembly.status} />
+          <StatusBox status={part.status} />
         </div>
       )}
     </div>
   );
 };
 
-export default AssemblyStatusBox;
+export default EditableBox;

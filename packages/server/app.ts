@@ -4,6 +4,7 @@ import projectsRouter from "./routes/projectsRouter";
 import assemblyRouter from "./routes/assemblyRouter";
 import usersRouter from "./routes/usersRouter";
 import loginRouter from "./routes/loginRouter";
+import orderRouter from "./routes/orderRouter";
 import cors from "cors";
 import mongoose from "mongoose";
 import config from "./utils/config";
@@ -48,6 +49,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/parts", partsRouter);
 app.use("/api/projects", projectsRouter);
 app.use("/api/assemblies", assemblyRouter);
+app.use("/api/orders", orderRouter);
 
 app.use("/api/*", adminRequired);
 

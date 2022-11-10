@@ -18,7 +18,7 @@ interface CreateModalProps {
   modalVisibility: boolean;
   setModalVisibility: (inp: boolean) => void;
   project: UnpopulatedProject | Project;
-  parent?: Parent;
+  parent: Parent;
   queriesToInvalidate: UseQueryResult[];
 }
 
@@ -41,7 +41,9 @@ const CreateAssemblyModal = ({
   parent,
 }: CreateModalProps) => {
   const createAssemblyMutation = useMutation(
-    async (newAssembly: NewAssembly) => await createAssembly(newAssembly),
+    async (newAssembly: NewAssembly) => {
+      return await createAssembly(newAssembly);
+    },
     {
       onSuccess: async (newAssembly) => {
         queriesToInvalidate.map((query) => query.refetch());
@@ -81,12 +83,7 @@ const CreateAssemblyModal = ({
             const newAssembly: NewAssembly = {
               ...values,
               project: project.id,
-              parent: {
-                parentType: values.parentId.startsWith("PROJECT:")
-                  ? "project"
-                  : "assembly",
-                parent: values.parentId.replace("PROJECT:", ""),
-              },
+              parent,
             };
             createAssemblyMutation.mutate(newAssembly);
           }}

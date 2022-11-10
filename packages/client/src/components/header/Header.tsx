@@ -45,12 +45,12 @@ const Header = () => {
                 <div className="flex flex-shrink-0 items-center cursor-pointer">
                   <img
                     className="block h-8 w-auto lg:hidden"
-                    src="icon.svg"
+                    src="/icon.svg"
                     onClick={() => navigate("/projects")}
                   />
                   <img
                     className="hidden h-8 w-auto lg:block cursor-pointer"
-                    src="icon.svg"
+                    src="/icon.svg"
                     onClick={() => navigate("/projects")}
                   />
                 </div>

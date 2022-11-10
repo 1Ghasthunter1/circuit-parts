@@ -46,7 +46,6 @@ export const refreshTokenService = async () => {
     if (axios.isAxiosError(error)) {
       const err = error.response?.data as { error: string };
       const errMsg = err.error;
-      console.log(errMsg);
     }
   }
 };
