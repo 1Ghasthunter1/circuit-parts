@@ -20,6 +20,7 @@ import { number } from "yup";
 
 const OrderView = () => {
   const [newItems, setNewItems] = useState<string[]>([]);
+  const [showStatus, setShowStatus] = useState<boolean>(false);
   const order = useSnapshot(orderState).order;
   const { id } = useParams();
 
@@ -29,6 +30,9 @@ const OrderView = () => {
   const orderEditMutation = useMutation(
     async (order: Order) => await updateOrder(order),
     {
+      onMutate: (newOrder) => {
+        orderState.order = { ...newOrder, items: order?.items || [] };
+      },
       onSuccess: (newOrder) => {
         toast.success(
           <span>
@@ -71,7 +75,46 @@ const OrderView = () => {
                   }}
                 />
               </div>
-              <OrderStatusBox status={order.status} size="sm" />
+
+              <div className="w-min">
+                <div className="group relative">
+                  <div onClick={() => setShowStatus(!showStatus)}>
+                    <OrderStatusBox status={order.status} size="sm" />
+                  </div>
+
+                  <div className="absolute opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 transition duration-100 top-1/2 left-1/4 transform translate-x-1/2 -translate-y-1/2 px-4 py-2 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:-translate-y-1/2 after:top-1/2 after:right-[100%] after:border-8 after:rotate-90 after:border-x-transparent after:border-b-transparent after:border-t-gray-700">
+                    <div className="flex flex-col items-center space-y-2">
+                      <span
+                        onClick={() =>
+                          orderEditMutation.mutate({ ...order, status: "open" })
+                        }
+                      >
+                        <OrderStatusBox status="open" size="sm" />
+                      </span>
+                      <span
+                        onClick={() =>
+                          orderEditMutation.mutate({
+                            ...order,
+                            status: "ordered",
+                          })
+                        }
+                      >
+                        <OrderStatusBox status="ordered" size="sm" />
+                      </span>
+                      <span
+                        onClick={() =>
+                          orderEditMutation.mutate({
+                            ...order,
+                            status: "received",
+                          })
+                        }
+                      >
+                        <OrderStatusBox status="received" size="sm" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="text-gray-400 font-bold flex items-center">
                 Vendor:
                 <EditableInput<string>

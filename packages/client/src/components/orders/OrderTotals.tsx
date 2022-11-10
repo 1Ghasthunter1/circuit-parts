@@ -39,12 +39,10 @@ const OrderTotals = ({
                   emptyType="text"
                   componentStyle=" "
                   onSave={(value) => {
-                    const newOrder: PopulatedOrder = {
+                    editMutation.mutate({
                       ...order,
                       purchaser: value,
-                    };
-                    orderState.order = newOrder;
-                    editMutation.mutate(newOrder);
+                    });
                   }}
                 />
               </span>
@@ -75,12 +73,10 @@ const OrderTotals = ({
                     (number()
                       .round("round")
                       .cast(value * 100) || 0) / 100;
-                  const newOrder: PopulatedOrder = {
+                  editMutation.mutate({
                     ...order,
                     shipping: num,
-                  };
-                  orderState.order = newOrder;
-                  editMutation.mutate(newOrder);
+                  });
                 }}
               />
             </dd>
@@ -101,12 +97,11 @@ const OrderTotals = ({
                     (number()
                       .round("round")
                       .cast(value * 100) || 0) / 100;
-                  const newOrder: PopulatedOrder = {
+
+                  editMutation.mutate({
                     ...order,
                     tax: num,
-                  };
-                  orderState.order = newOrder;
-                  editMutation.mutate(newOrder);
+                  });
                 }}
               />
             </dd>
