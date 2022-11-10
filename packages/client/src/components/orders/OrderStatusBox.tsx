@@ -14,11 +14,17 @@ const OrderStatusBox = ({
     const getStatus = () => {
       switch (status) {
         case "open":
-          return { text: "Open", color: "bg-blue-500 hover:bg-blue-600 focus:ring-blue-500" };
+          return {
+            text: "Open",
+            color: "bg-blue-500 hover:bg-blue-600",
+          };
         case "ordered":
-          return { text: "Ordered", color: "bg-yellow-500 hover:bg-yellow-600" };
+          return {
+            text: "Ordered",
+            color: "bg-yellow-500 hover:bg-yellow-600",
+          };
         case "received":
-          return { text: "Received", color: "bg-green-500 hover:bg-green-600" };
+          return { text: "Received", color: "bg-green-500" };
       }
     };
 
@@ -36,7 +42,7 @@ const OrderStatusBox = ({
   };
   const { returnedStatus, returnedSize } = getStuff();
   return (
-    <div className="whitespace-nowrap w-min transition duration-100 focus:ring">
+    <div className="whitespace-nowrap w-min transition duration-100">
       <div
         className={`${returnedSize} text-white  ${
           disabled ? "bg-gray-300" : returnedStatus.color

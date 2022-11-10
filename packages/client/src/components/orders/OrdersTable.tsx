@@ -9,75 +9,114 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Order } from "~/types/orderTypes";
 import OrderStatusBox from "./OrderStatusBox";
-import { useMemo } from "react";
-import { string } from "yup";
+import { useMemo, useState } from "react";
+import Button from "~/elements/Button";
+import DeleteOrderModal from "../modals/DeleteOrderModal";
+import { userState } from "~/state/state";
+import { useMutation, UseQueryResult } from "react-query";
+import { deleteOrderById } from "~/services/ordersService";
+import toast from "react-hot-toast";
 
-const columnHelper = createColumnHelper<Order>();
+const OrdersTable = ({
+  orders,
+  ordersQuery,
+}: {
+  orders: Order[];
+  ordersQuery: UseQueryResult<Order[], unknown>;
+}) => {
+  const columnHelper = createColumnHelper<Order>();
 
-const columns = [
-  columnHelper.accessor("vendor", {
-    header: "Vendor",
-    cell: (info) => info.cell.getValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("orderNumber", {
-    header: "Order Number",
-    cell: (info) => <Link to={`/orders/${info.row.original.id}`}>{info.cell.getValue()}</Link>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("creationDate", {
-    header: "Creation Date",
-    cell: (info) => <div>{info.getValue().toLocaleDateString("en-US")}</div>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("tracking", {
-    header: "Tracking",
-    cell: (info) => {
-      const tracking = info.cell.getValue();
-      if (!tracking) return <div></div>;
-      return (
-        <a
-          href={
-            "https://tools.usps.com/go/TrackConfirmAction?tLabels=" +
-            tracking.trackingNumber
-          }
-          target="_blank"
-        >
-          <div className="w-min cursor-pointer">
-            <div className="flex items-center -mb-0.5">
-              {tracking.carrier}
-              <FontAwesomeIcon
-                className="pl-1.5"
-                size="sm"
-                icon="arrow-up-right-from-square"
-              />
+  const columns = [
+    columnHelper.accessor("vendor", {
+      header: "Vendor",
+      cell: (info) => info.cell.getValue(),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor("orderNumber", {
+      header: "Order Number",
+      cell: (info) => (
+        <Link to={`/orders/${info.row.original.id}`}>
+          {info.cell.getValue()}
+        </Link>
+      ),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor("creationDate", {
+      header: "Creation Date",
+      cell: (info) => <div>{info.getValue().toLocaleDateString("en-US")}</div>,
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor("tracking", {
+      header: "Tracking",
+      cell: (info) => {
+        const tracking = info.cell.getValue();
+        if (!tracking) return <div></div>;
+        return (
+          <a
+            href={
+              "https://tools.usps.com/go/TrackConfirmAction?tLabels=" +
+              tracking.trackingNumber
+            }
+            target="_blank"
+          >
+            <div className="w-min cursor-pointer">
+              <div className="flex items-center -mb-0.5">
+                {tracking.carrier}
+                <FontAwesomeIcon
+                  className="pl-1.5"
+                  size="sm"
+                  icon="arrow-up-right-from-square"
+                />
+              </div>
             </div>
-          </div>
-        </a>
-      );
-    },
-    footer: (info) => info.column.id,
-  }),
+          </a>
+        );
+      },
+      footer: (info) => info.column.id,
+    }),
 
-  columnHelper.accessor("status", {
-    header: "Status",
-    cell: (info) => <OrderStatusBox status={info.getValue()} />,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.display({
-    header: "Edit",
-    cell: (info) => (
-      <div>
-        <div className="text-indigo-500 underline cursor-pointer min-w-min	">
-          Edit
-        </div>
-      </div>
-    ),
-    footer: (info) => info.column.id,
-  }),
-];
+    columnHelper.accessor("status", {
+      header: "Status",
+      cell: (info) => <OrderStatusBox status={info.getValue()} />,
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.display({
+      header: "Edit",
+      cell: (info) => {
+        const [modalVis, setModalVis] = useState<boolean>(false);
+        const deleteMutation = useMutation(
+          async () => await deleteOrderById(info.row.original.id),
+          {
+            onSuccess: async () => toast.success("Deleted order"),
+            onError: async () => toast.error("Error deleting order"),
+            onSettled: async () => {
+              setModalVis(false);
+              ordersQuery.refetch();
+            },
+          }
+        );
+        return (
+          <>
+            <Button
+              iconName="trash"
+              color="red"
+              style="secondary"
+              onClick={() => setModalVis(true)}
+            />
+            <DeleteOrderModal
+              order={info.row.original}
+              modalVisibility={modalVis}
+              setModalVisibility={setModalVis}
+              deleteMutation={deleteMutation}
+            />
+          </>
+        );
+      },
+      size: 12,
+      footer: (info) => info.column.id,
+    }),
+  ];
 
-const OrdersTable = ({ orders }: { orders: Order[] }) => {
   const table = useReactTable({
     data: orders,
     columns,
@@ -89,8 +128,6 @@ const OrdersTable = ({ orders }: { orders: Order[] }) => {
     getCoreRowModel: getCoreRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
   });
-
-  const navigate = useNavigate();
 
   return (
     <div>
