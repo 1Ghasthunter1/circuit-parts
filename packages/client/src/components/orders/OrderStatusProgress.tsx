@@ -11,7 +11,7 @@ const OrderStatusProgress = ({ status }: { status: OrderStatus }) => {
   switch (status) {
     case "open":
       steps = [
-        { name: "Open", status: "current" },
+        { name: "Open", status: "complete" },
         { name: "Ordered", status: "" },
         { name: "Received", status: "" },
       ];
