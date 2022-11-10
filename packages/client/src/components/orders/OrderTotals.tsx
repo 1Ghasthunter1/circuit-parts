@@ -34,8 +34,9 @@ const OrderTotals = ({
               <span className="block whitespace-nowrap -ml-2 w-full">
                 <EditableInput<string>
                   value={order.purchaser || ""}
-                  placeholder="Enter Purchaser"
+                  placeholder="Add purchaser"
                   hideButtons
+                  emptyType="text"
                   componentStyle=" "
                   onSave={(value) => {
                     const newOrder: PopulatedOrder = {
@@ -63,8 +64,9 @@ const OrderTotals = ({
             <dd className="font-medium text-gray-900 ml-auto">
               <EditableInput<number>
                 value={Number(order.shipping) || 0}
-                placeholder="Enter Shipping"
+                placeholder="Add shipping"
                 hideButtons
+                emptyType="text"
                 componentStyle=" "
                 aggregationFn={(val) => `${formatter.format(val)}`}
                 validatorFn={(val) => !isNaN(val)}
@@ -87,9 +89,10 @@ const OrderTotals = ({
             <dt className="text-gray-600">Tax</dt>
             <dd className="font-medium text-gray-900">
               <EditableInput<number>
-                value={Number(order.shipping) || 0}
-                placeholder="Enter Tax"
+                value={Number(order.tax) || 0}
+                placeholder="Add tax"
                 hideButtons
+                emptyType="text"
                 componentStyle=" "
                 aggregationFn={(val) => `${formatter.format(val)}`}
                 validatorFn={(val) => !isNaN(val)}

@@ -10,10 +10,13 @@ import Button from "~/elements/Button";
 import TopLeftRightAndMiddle from "~/layouts/TopLeftRightAndMiddle";
 import { fetchOrder, updateOrder } from "~/services/ordersService";
 import { orderState } from "~/state/state";
-import { Order } from "~/types/orderTypes";
-import EditableInput from "./EditableInput";
+import { Order, PopulatedOrder } from "~/types/orderTypes";
+import EditableInput from "~/elements/EditableInput";
+import EditableInput2 from "./EditableInput";
+
 import { v4 as uuidv4 } from "uuid";
 import TrackingCard from "~/components/orders/TrackingCard";
+import { number } from "yup";
 
 const OrderView = () => {
   const [newItems, setNewItems] = useState<string[]>([]);
@@ -47,6 +50,11 @@ const OrderView = () => {
     return undefined;
   }, [apiOrder]);
 
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+
   return (
     <>
       {order ? (
@@ -54,7 +62,7 @@ const OrderView = () => {
           topLeftContent={
             <div className="w-full">
               <div className="mb-1">
-                <EditableInput
+                <EditableInput2
                   value={order.orderNumber}
                   placeholder="Enter Title Here"
                   onSave={(value) => {
@@ -64,8 +72,24 @@ const OrderView = () => {
                 />
               </div>
               <OrderStatusBox status={order.status} size="sm" />
-              <div className="text-gray-400 font-bold">
-                Vendor: {order.vendor}
+              <div className="text-gray-400 font-bold flex items-center">
+                Vendor:
+                <EditableInput<string>
+                  value={order.vendor}
+                  placeholder="Add vendor"
+                  hideButtons
+                  emptyType="text"
+                  componentStyle=" "
+                  validatorFn={(val) => val.length > 0}
+                  onSave={(value) => {
+                    const newOrder: PopulatedOrder = {
+                      ...order,
+                      vendor: value,
+                    };
+                    orderState.order = newOrder;
+                    orderEditMutation.mutate(newOrder);
+                  }}
+                />
               </div>
               <div className="text-gray-400 ">
                 Created {order.creationDate.toLocaleDateString("en-us")}

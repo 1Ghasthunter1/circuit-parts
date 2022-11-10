@@ -5,6 +5,7 @@ interface IProps {
   placeholder?: string;
   onChangeFunc?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   hideButtons?: boolean;
+  emptyType?: "box" | "text";
   inputStyle?: string;
   componentStyle?: string;
 }
@@ -14,6 +15,7 @@ const EditableInput = <T extends string | number>({
   onChangeFunc,
   onSave,
   hideButtons,
+  emptyType,
   inputStyle,
   componentStyle,
   aggregationFn,
@@ -107,7 +109,13 @@ const EditableInput = <T extends string | number>({
         <div
           className={`hover:bg-blue-200 px-2 py-1 rounded-lg cursor-pointer ${
             input.originalValue === "" &&
+            emptyType !== "text" &&
             "bg-white shadow-inner border-[1.5px] h-full w-full"
+          }
+          ${
+            input.originalValue === "" &&
+            emptyType === "text" &&
+            "bg-white h-full w-full"
           }`}
           onClick={() => {
             setShowInput(true);
