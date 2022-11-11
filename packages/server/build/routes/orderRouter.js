@@ -56,6 +56,10 @@ orderRouter.delete("/:id", ((req, res) => __awaiter(void 0, void 0, void 0, func
 })));
 orderRouter.put("/:id", (0, express_validator_1.checkSchema)(orderValidation_1.newOrderSchema), schemaValidation_1.handleSchemaErrors, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newOrder = Object.assign(Object.assign({}, (0, schemaValidation_1.parseValidated)(req)), { creationDate: new Date() });
+    if (newOrder.tracking) {
+        if (!(newOrder.tracking.carrier && newOrder.tracking.trackingNumber))
+            return res.status(400).end();
+    }
     const orderId = req.params.id;
     const order = yield order_1.default.findByIdAndUpdate(orderId, newOrder, {
         new: true,

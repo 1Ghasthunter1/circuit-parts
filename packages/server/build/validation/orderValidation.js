@@ -96,6 +96,22 @@ exports.newOrderSchema = {
         },
         notEmpty: true,
     },
+    "tracking.carrier": {
+        isString: true,
+        isLength: {
+            options: { max: 1000 },
+            errorMessage: "`tracking.carrier` cannot exceed 1000 chars",
+        },
+        optional: true,
+    },
+    "tracking.trackingNumber": {
+        isString: true,
+        isLength: {
+            options: { max: 1000 },
+            errorMessage: "`tracking.trackingNumber` cannot exceed 1000 chars",
+        },
+        optional: true,
+    },
     tax: {
         isFloat: true,
         toFloat: true,
