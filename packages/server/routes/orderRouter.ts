@@ -85,9 +85,9 @@ orderRouter.put(
       ...parseValidated<IValidatedOrder>(req),
       creationDate: new Date(),
     };
-    if (newOrder.tracking) {
-      if (!(newOrder.tracking.carrier && newOrder.tracking.trackingNumber))
-        return res.status(400).end();
+    if (newOrder.tracking?.carrier || newOrder.tracking?.trackingNumber) {
+      if (!(newOrder.tracking?.carrier && newOrder.tracking?.trackingNumber))
+        return res.status(400).json("bad tracking request");
     }
     const orderId = req.params.id as unknown as mongoose.Types.ObjectId;
     const order = await Order.findByIdAndUpdate(orderId, newOrder, {
