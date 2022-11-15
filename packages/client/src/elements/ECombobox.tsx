@@ -62,43 +62,41 @@ const ECombobox = ({
             )}
           </Combobox.Button>
 
-          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {!filteredItems.includes(query) && query !== "" && (
-              <Combobox.Option
-                className={({ active }) =>
-                  classNames(
-                    "relative cursor-default select-none py-2 pl-3 pr-9",
-                    active ? "bg-indigo-600 text-white" : "text-gray-900"
-                  )
-                }
-                value={query}
-              >
-                Create "{query}"
-              </Combobox.Option>
-            )}
-            {filteredItems.map((item) => (
-              <Combobox.Option
-                key={item}
-                value={item}
-                className={({ active }) =>
-                  classNames(
-                    "relative cursor-default select-none py-2 pl-3 pr-9",
-                    active ? "bg-indigo-600 text-white" : "text-gray-900"
-                  )
-                }
-              >
-                {({ active, selected }) => (
-                  <>
-                    <span
-                      className={classNames(
-                        "block truncate",
-                        selected && "font-semibold"
-                      )}
-                    >
-                      {item}
-                    </span>
-
-                    {selected && (
+          <Transition
+            enter="transition duration-100 ease-out"
+            enterFrom="transform scale-95 opacity-0"
+            enterTo="transform scale-100 opacity-100"
+            leave="transition duration-75 ease-out"
+            leaveFrom="transform scale-100 opacity-100"
+            leaveTo="transform scale-95 opacity-0"
+          >
+            <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              {!filteredItems.includes(query) && query !== "" && (
+                <Combobox.Option
+                  className={({ active }) =>
+                    classNames(
+                      "relative cursor-default select-none py-2 pl-3 pr-9",
+                      active ? "bg-indigo-600 text-white" : "text-gray-900"
+                    )
+                  }
+                  value={query}
+                >
+                  Create "{query}"
+                </Combobox.Option>
+              )}
+              {filteredItems.map((item) => (
+                <Combobox.Option
+                  key={item}
+                  value={item}
+                  className={({ active }) =>
+                    classNames(
+                      "relative cursor-default select-none py-2 pl-3 pr-9",
+                      active ? "bg-indigo-600 text-white" : "text-gray-900"
+                    )
+                  }
+                >
+                  {({ active, selected }) => (
+                    <>
                       <span
                         className={classNames(
                           "block truncate",
