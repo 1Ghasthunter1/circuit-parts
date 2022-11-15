@@ -5,7 +5,7 @@ interface IProps {
   placeholder?: string;
   onChangeFunc?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   hideButtons?: boolean;
-  emptyType?: "box" | "text";
+  emptyType?: "box" | "text" | "none";
   inputStyle?: string;
   componentStyle?: string;
 }
@@ -105,7 +105,7 @@ const EditableInput = <T extends string | number>({
             </div>
           )}
         </>
-      ) : (
+      ) : emptyType === "none" && input.originalValue === "" ? null : (
         <div
           className={`hover:bg-blue-200 px-2 py-1 rounded-lg cursor-pointer ${
             input.originalValue === "" &&

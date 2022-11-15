@@ -81,9 +81,8 @@ orderRouter.put(
   checkSchema(newOrderSchema),
   handleSchemaErrors,
   (async (req, res) => {
-    const newOrder: OrderToDB = {
+    const newOrder: IValidatedOrder = {
       ...parseValidated<IValidatedOrder>(req),
-      creationDate: new Date(),
     };
     const orderId = req.params.id as unknown as mongoose.Types.ObjectId;
     const order = await Order.findByIdAndUpdate(orderId, newOrder, {

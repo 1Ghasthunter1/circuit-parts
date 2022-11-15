@@ -3,10 +3,14 @@ import {
   createColumnHelper,
   getCoreRowModel,
   flexRender,
+  ColumnDef,
+  RowData,
 } from "@tanstack/react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OrderItem } from "~/types/orderTypes";
 import NewItemRow from "./NewItemRow";
+import { useEffect, useState } from "react";
+import EditableInput from "~/elements/EditableInput";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
@@ -15,10 +19,52 @@ const formatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 
+const OrderItemCell = <T extends string | number>({
+  initialValue,
+  rowIdx,
+  colIdx,
+  aggregationFn,
+}: {
+  initialValue: T;
+  rowIdx: number;
+  colIdx: string;
+  aggregationFn?: (val: T) => string | number;
+}) => {
+  // We need to keep and update the state of the cell normally
+  const [value, setValue] = useState<T>(initialValue);
+
+  // When the input is blurred, we'll call our table meta's updateData function
+  const onBlur = () => {
+    //
+  };
+
+  // If the initialValue is changed external, sync it up with our state
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  console.log(value)
+
+  return (
+    <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500 ">
+      <EditableInput
+        value={value}
+        onChangeFunc={(e) => setValue(e.target.value as unknown as T)}
+        placeholder={colIdx}
+        aggregationFn={aggregationFn || undefined}
+        hideButtons={true}
+        emptyType="none"
+        componentStyle="text-md"
+      />
+    </div>
+  );
+};
+
 const columns = [
   columnHelper.accessor("partNumber", {
     header: "Part Number",
     cell: (info) => {
+      const table = info.table._getDefaultColumnDef();
       const orderItem = info.row.original;
 
       if (orderItem.vendorUrl)
@@ -39,21 +85,37 @@ const columns = [
   }),
   columnHelper.accessor("quantity", {
     header: "Quantity",
-    cell: (info) => info.cell.getValue(),
     size: 10,
   }),
 
   columnHelper.accessor("description", {
     header: "Description",
-    cell: (info) => info.cell.getValue(),
+    cell: (info) => {
+      return (
+        <OrderItemCell
+          initialValue={info.cell.getValue() || ""}
+          rowIdx={info.row.index}
+          colIdx={info.column.id}
+        />
+      );
+    },
   }),
   columnHelper.accessor("unitCost", {
     header: "Unit Cost",
     cell: (info) => {
+      return (
+        <OrderItemCell<number>
+          initialValue={info.cell.getValue()}
+          rowIdx={info.row.index}
+          colIdx={info.column.id}
+          aggregationFn={(val) => `${formatter.format(val)}`}
+        />
+      );
+
       const unitCost = info.cell.getValue();
       if (unitCost) return formatter.format(info.cell.getValue());
       return "";
-    }
+    },
   }),
 
   columnHelper.display({
@@ -94,7 +156,6 @@ const columns = [
 
   columnHelper.accessor("notes", {
     header: "Notes",
-    cell: (info) => info.cell.getValue(),
   }),
   columnHelper.display({
     header: "Edit",
