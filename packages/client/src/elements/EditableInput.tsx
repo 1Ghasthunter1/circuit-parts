@@ -7,6 +7,7 @@ interface IProps {
   hideButtons?: boolean;
   emptyType?: "box" | "text" | "none";
   inputStyle?: string;
+  editable?: boolean;
   componentStyle?: string;
 }
 const EditableInput = <T extends string | number>({
@@ -17,6 +18,7 @@ const EditableInput = <T extends string | number>({
   hideButtons,
   emptyType,
   inputStyle,
+  editable,
   componentStyle,
   aggregationFn,
   validatorFn,
@@ -61,12 +63,41 @@ const EditableInput = <T extends string | number>({
       : setIsValid(true);
   }, [input.currentValue]);
 
+  const NotInputState = () => {
+    const getStyle = () => {
+      if (!editable) return null;
+      switch (emptyType) {
+        case "box":
+          return "bg-white shadow-inner border-[1.5px] ";
+        case "text":
+          return "bg-white";
+      }
+    };
+
+    return (
+      <div
+        className={`h-full w-full ${
+          editable ? "hover:bg-blue-200 cursor-pointer" : null
+        } px-2 py-1 rounded-lg  ${getStyle()} `}
+        onClick={editable ? () => setShowInput(true) : () => null}
+      >
+        {input.originalValue === "" ? (
+          <span className="text-gray-300">{editable ? placeholder : null}</span>
+        ) : aggregationFn ? (
+          aggregationFn(input.originalValue)
+        ) : (
+          input.originalValue
+        )}
+      </div>
+    );
+  };
+
   return (
     <div
       className={`${
         componentStyle
           ? componentStyle
-          : "text-2xl font-bold bg-transparent -ml-1 rounded-lg inline-block outline-none"
+          : "text-2xl font-bold -ml-1  inline-block outline-none"
       } bg-transparent rounded-lg outline-none`}
     >
       {showInput ? (
@@ -106,29 +137,8 @@ const EditableInput = <T extends string | number>({
           )}
         </>
       ) : emptyType === "none" && input.originalValue === "" ? null : (
-        <div
-          className={`hover:bg-blue-200 px-2 py-1 rounded-lg cursor-pointer ${
-            input.originalValue === "" &&
-            emptyType !== "text" &&
-            "bg-white shadow-inner border-[1.5px] h-full w-full"
-          }
-          ${
-            input.originalValue === "" &&
-            emptyType === "text" &&
-            "bg-white h-full w-full"
-          }`}
-          onClick={() => {
-            setShowInput(true);
-          }}
-        >
-          {input.originalValue === "" ? (
-            <span className="text-gray-300">{placeholder}</span>
-          ) : aggregationFn ? (
-            aggregationFn(input.originalValue)
-          ) : (
-            input.originalValue
-          )}
-        </div>
+        // Handles cases where input is empty but emptyType is not none
+        <NotInputState />
       )}
     </div>
   );

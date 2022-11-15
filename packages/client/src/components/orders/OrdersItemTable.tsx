@@ -21,13 +21,13 @@ const formatter = new Intl.NumberFormat("en-US", {
 
 const OrderItemCell = <T extends string | number>({
   initialValue,
-  rowIdx,
   colIdx,
+  editable,
   aggregationFn,
 }: {
   initialValue: T;
-  rowIdx: number;
   colIdx: string;
+  editable: boolean;
   aggregationFn?: (val: T) => string | number;
 }) => {
   // We need to keep and update the state of the cell normally
@@ -43,8 +43,6 @@ const OrderItemCell = <T extends string | number>({
     setValue(initialValue);
   }, [initialValue]);
 
-  console.log(value)
-
   return (
     <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500 ">
       <EditableInput
@@ -52,8 +50,9 @@ const OrderItemCell = <T extends string | number>({
         onChangeFunc={(e) => setValue(e.target.value as unknown as T)}
         placeholder={colIdx}
         aggregationFn={aggregationFn || undefined}
-        hideButtons={true}
-        emptyType="none"
+        hideButtons
+        editable={editable}
+        emptyType="box"
         componentStyle="text-md"
       />
     </div>
@@ -64,7 +63,6 @@ const columns = [
   columnHelper.accessor("partNumber", {
     header: "Part Number",
     cell: (info) => {
-      const table = info.table._getDefaultColumnDef();
       const orderItem = info.row.original;
 
       if (orderItem.vendorUrl)
@@ -85,6 +83,15 @@ const columns = [
   }),
   columnHelper.accessor("quantity", {
     header: "Quantity",
+    cell: (info) => {
+      return (
+        <OrderItemCell<number>
+          initialValue={info.cell.getValue()}
+          colIdx={info.column.id}
+          editable={info.row.getIsSelected()}
+        />
+      );
+    },
     size: 10,
   }),
 
@@ -94,8 +101,8 @@ const columns = [
       return (
         <OrderItemCell
           initialValue={info.cell.getValue() || ""}
-          rowIdx={info.row.index}
           colIdx={info.column.id}
+          editable={info.row.getIsSelected()}
         />
       );
     },
@@ -106,15 +113,11 @@ const columns = [
       return (
         <OrderItemCell<number>
           initialValue={info.cell.getValue()}
-          rowIdx={info.row.index}
           colIdx={info.column.id}
+          editable={info.row.getIsSelected()}
           aggregationFn={(val) => `${formatter.format(val)}`}
         />
       );
-
-      const unitCost = info.cell.getValue();
-      if (unitCost) return formatter.format(info.cell.getValue());
-      return "";
     },
   }),
 
@@ -159,8 +162,8 @@ const columns = [
   }),
   columnHelper.display({
     header: "Edit",
-    cell: () => (
-      <div>
+    cell: ({ row }) => (
+      <div onClick={row.getToggleSelectedHandler()}>
         <div className="text-indigo-500 underline cursor-pointer min-w-min	">
           Edit
         </div>
