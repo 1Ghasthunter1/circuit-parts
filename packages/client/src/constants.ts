@@ -19,4 +19,11 @@ const getApiBaseUrl = () => {
       );
   }
 };
+
+export const knownCarriers: Record<string, { baseUrl: string }> = {
+  USPS: { baseUrl: "https://tools.usps.com/go/TrackConfirmAction?tLabels=" },
+  UPS: {
+    baseUrl: "https://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=",
+  },
+};
 export const apiBaseUrl = getApiBaseUrl();

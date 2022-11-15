@@ -41,7 +41,6 @@ export const fetchOrder = async (orderId: string) => {
 };
 
 export const deleteOrderById = async (orderId: string) => {
-  console.log(`${apiBaseUrl}/orders/${orderId}`);
   const response = await axios.delete<Order>(`${apiBaseUrl}/orders/${orderId}`);
   return response;
 };
