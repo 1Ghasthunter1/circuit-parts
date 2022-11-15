@@ -14,11 +14,17 @@ const OrderStatusBox = ({
     const getStatus = () => {
       switch (status) {
         case "open":
-          return { text: "Open", color: "bg-blue-500 hover:bg-blue-600" };
+          return {
+            text: "Open",
+            color: "bg-blue-500 hover:bg-blue-600",
+          };
         case "ordered":
-          return { text: "Ordered", color: "bg-yellow-500 hover:bg-yellow-600" };
+          return {
+            text: "Ordered",
+            color: "bg-yellow-500 hover:bg-yellow-600",
+          };
         case "received":
-          return { text: "Received", color: "bg-green-500 hover:bg-green-600" };
+          return { text: "Received", color: "bg-green-500" };
       }
     };
 

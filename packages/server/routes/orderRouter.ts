@@ -68,6 +68,14 @@ orderRouter.post(
   }) as RequestHandler
 );
 
+orderRouter.delete("/:id", (async (req, res) => {
+  const orderId = req.params.id;
+  const response = await Order.findByIdAndDelete(orderId);
+
+  if (!response) return res.status(404).json("order not found");
+  return res.status(204).end();
+}) as RequestHandler);
+
 orderRouter.put(
   "/:id",
   checkSchema(newOrderSchema),
@@ -77,11 +85,15 @@ orderRouter.put(
       ...parseValidated<IValidatedOrder>(req),
       creationDate: new Date(),
     };
+    if (newOrder.tracking?.carrier || newOrder.tracking?.trackingNumber) {
+      if (!(newOrder.tracking?.carrier && newOrder.tracking?.trackingNumber))
+        return res.status(400).json("bad tracking request");
+    }
     const orderId = req.params.id as unknown as mongoose.Types.ObjectId;
     const order = await Order.findByIdAndUpdate(orderId, newOrder, {
       new: true,
     });
-    
+
     if (!order)
       return res.status(404).json({ errors: [{ error: "order not found" }] });
 

@@ -64,7 +64,7 @@ const OrderView = () => {
                   Create Order
                 </Button>
               </div>
-              <OrdersTable orders={orders} />
+              <OrdersTable orders={orders} ordersQuery={projectOrdersQuery} />
             </div>
           )
         ) : (

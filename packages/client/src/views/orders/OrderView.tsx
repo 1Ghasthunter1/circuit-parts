@@ -82,7 +82,7 @@ const OrderView = () => {
                     <OrderStatusBox status={order.status} size="sm" />
                   </div>
 
-                  <div className="absolute opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 transition duration-100 top-1/2 left-1/4 transform translate-x-1/2 -translate-y-1/2 px-4 py-2 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:-translate-y-1/2 after:top-1/2 after:right-[100%] after:border-8 after:rotate-90 after:border-x-transparent after:border-b-transparent after:border-t-gray-700">
+                  <div className="absolute opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 transition duration-100 top-1/2 transform -right-2  translate-x-full -translate-y-1/2 px-4 py-2 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:-translate-y-1/2 after:top-1/2 after:right-[99%] after:border-8 after:rotate-90 after:border-x-transparent after:border-b-transparent after:border-t-gray-700">
                     <div className="flex flex-col items-center space-y-2">
                       <span
                         onClick={() =>

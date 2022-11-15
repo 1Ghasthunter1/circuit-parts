@@ -6,27 +6,31 @@ import { useMutation, UseQueryResult } from "react-query";
 import * as Yup from "yup";
 import Button from "../../elements/Button";
 import toast from "react-hot-toast";
-import { Project } from "~/types/projectTypes";
 import { IOrderToServer, Order } from "~/types/orderTypes";
 import { createOrder } from "~/services/ordersService";
-import { projectState } from "~/state/state";
-import { useSnapshot } from "valtio";
 import ECombobox from "~/elements/ECombobox";
+import { knownCarriers } from "~/constants";
 
 interface CreateModalProps {
   modalVisibility: boolean;
   setModalVisibility: (inp: boolean) => void;
-  project: Project;
+  order: Order;
+  onSubmit: ({
+    carrier,
+    trackingNumber,
+  }: {
+    carrier: string;
+    trackingNumber: string;
+  }) => void;
   queriesToInvalidate?: UseQueryResult[];
-  vendors: string[];
 }
 
 const NewOrderSchema = Yup.object().shape({
-  orderNumber: Yup.string()
+  carrier: Yup.string()
     .min(3, "Must be at least 3 characters long")
     .max(255, "Too Long!")
     .required("Required"),
-  vendor: Yup.string()
+  trackingNumber: Yup.string()
     .min(3, "Must be at least 3 characters long")
     .max(255, "Too Long!")
     .required("Required"),
@@ -34,80 +38,47 @@ const NewOrderSchema = Yup.object().shape({
 
 Modal.setAppElement("#root");
 
-const NewOrderModal = ({
+const TrackingModal = ({
   modalVisibility,
   setModalVisibility,
   queriesToInvalidate,
-  project,
-  vendors,
+  onSubmit,
+  order,
 }: CreateModalProps) => {
-  const projectSnap = useSnapshot(projectState).project;
-  const createOrderMutation = useMutation(
-    async (newOrder: IOrderToServer) => await createOrder(newOrder),
-    {
-      onSuccess: async (newOrder) => {
-        if (queriesToInvalidate)
-          queriesToInvalidate.map((query) => query.refetch());
-        setModalVisibility(false);
-        toast.success(`Created ${newOrder.data.orderNumber}`);
-      },
-    }
-  );
-
   return (
     <BaseModal
       modalVisibility={modalVisibility}
       setModalVisibility={setModalVisibility}
     >
       <GenericModalLayout
-        title="Create New Order"
-        subtitle={project.prefix}
+        title="Order Tracking"
+        subtitle={order.orderNumber}
         closeModal={() => setModalVisibility(false)}
       >
         <Formik
           initialValues={{
-            orderNumber: "",
-            vendor: "",
+            carrier: order.tracking?.carrier || "",
+            trackingNumber: order.tracking?.trackingNumber || "",
           }}
           validationSchema={NewOrderSchema}
-          onSubmit={(values) =>
-            createOrderMutation.mutate({
-              ...values,
-              status: "open",
-              project: projectSnap?.id || "",
-            })
-          }
+          onSubmit={(values) => onSubmit(values)}
         >
           {({ isSubmitting, values }) => (
             <Form>
               <div className="mb-4 ">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Project*
-                </label>
-                <Field
-                  className={`cursor-not-allowed bg-gray-200 border border-gray-300 text-sm rounded-lg text-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-                  type="text"
-                  name="project"
-                  placeholder={`${project.name} (${project.prefix})`}
-                  value={`${project.name} (${project.prefix})`}
-                  disabled={true}
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Vendor
+                  Carrier*
                 </label>
                 <Field
                   type="text"
-                  name="vendor"
-                  placeholder="Select a vendor"
+                  name="carrier"
+                  placeholder="Select a carrier"
                   options="asdads"
-                  items={vendors}
+                  items={Object.keys(knownCarriers)}
                   component={ECombobox}
                 />
                 <ErrorMessage
-                  name="vendor"
+                  name="carrier"
                   component="div"
                   className="text-xs text-red-400"
                 />
@@ -115,16 +86,16 @@ const NewOrderModal = ({
 
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Order Number*
+                  Tracking Number*
                 </label>
                 <Field
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   type="text"
-                  name="orderNumber"
-                  placeholder="123-456789"
+                  name="trackingNumber"
+                  placeholder="9400123456"
                 />
                 <ErrorMessage
-                  name="orderNumber"
+                  name="trackingNumber"
                   component="div"
                   className="text-xs text-red-400"
                 />
@@ -134,11 +105,11 @@ const NewOrderModal = ({
                 <Button
                   type="submit"
                   style="primary"
-                  color="green"
-                  iconName="plus"
+                  color="blue"
+                  iconName="check"
                   isLoading={isSubmitting}
                 >
-                  Create Order
+                  Save Tracking
                 </Button>
               </div>
             </Form>
@@ -149,4 +120,4 @@ const NewOrderModal = ({
   );
 };
 
-export default NewOrderModal;
+export default TrackingModal;

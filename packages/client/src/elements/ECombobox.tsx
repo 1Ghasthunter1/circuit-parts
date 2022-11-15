@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { Combobox } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FieldProps, FormikHelpers } from "formik";
+import { FieldProps, Form, FormikHelpers } from "formik";
 
 function classNames(...classes: (string | boolean)[]) {
   return classes.filter(Boolean).join(" ");
@@ -10,9 +10,9 @@ function classNames(...classes: (string | boolean)[]) {
 const ECombobox = ({
   label,
   placeholder,
-  field: { value },
+  field: { value, name },
   form: { setFieldValue },
-  vendors,
+  items,
 }: {
   label?: string;
   placeholder?: string;
@@ -20,23 +20,23 @@ const ECombobox = ({
   value: string;
   field: FieldProps["field"];
   form: FormikHelpers<FieldProps>;
-  vendors: string[];
+  items: string[];
 }) => {
   const [query, setQuery] = useState("");
-  const filteredVendors =
+  const filteredItems =
     query === ""
-      ? vendors
-      : vendors.filter((vendor) => {
-          return vendor.toLowerCase().includes(query.toLowerCase());
+      ? items
+      : items.filter((item) => {
+          return item.toLowerCase().includes(query.toLowerCase());
         });
 
   return (
     <>
       <Combobox
         as="div"
-        name="vendor"
+        name={name}
         value={value}
-        onChange={(val) => setFieldValue("vendor", val)}
+        onChange={(val) => setFieldValue(name, val)}
       >
         <Combobox.Label className="block text-sm font-medium text-gray-700">
           {label}
@@ -46,7 +46,7 @@ const ECombobox = ({
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             onChange={(value) => setQuery(value.target.value)}
             value={query}
-            name="vendor"
+            name={name}
             placeholder={placeholder}
           />
           <Combobox.Button className="absolute text-gray-400 inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
@@ -63,7 +63,7 @@ const ECombobox = ({
           </Combobox.Button>
 
           <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {!filteredVendors.includes(query) && query !== "" && (
+            {!filteredItems.includes(query) && query !== "" && (
               <Combobox.Option
                 className={({ active }) =>
                   classNames(
@@ -76,10 +76,10 @@ const ECombobox = ({
                 Create "{query}"
               </Combobox.Option>
             )}
-            {filteredVendors.map((vendor) => (
+            {filteredItems.map((item) => (
               <Combobox.Option
-                key={vendor}
-                value={vendor}
+                key={item}
+                value={item}
                 className={({ active }) =>
                   classNames(
                     "relative cursor-default select-none py-2 pl-3 pr-9",
@@ -95,7 +95,7 @@ const ECombobox = ({
                         selected && "font-semibold"
                       )}
                     >
-                      {vendor}
+                      {item}
                     </span>
 
                     {selected && (
