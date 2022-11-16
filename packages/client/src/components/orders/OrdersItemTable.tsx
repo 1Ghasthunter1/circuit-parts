@@ -34,15 +34,8 @@ const OrderItemCell = <T extends string | number>({
   notEditable: boolean;
   aggregationFn?: (val: T) => string | number;
 }) => {
-  // We need to keep and update the state of the cell normally
   const [value, setValue] = useState<T>(initialValue);
 
-  // When the input is blurred, we'll call our table meta's updateData function
-  const onBlur = () => {
-    //
-  };
-
-  // If the initialValue is changed external, sync it up with our state
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
@@ -63,128 +56,6 @@ const OrderItemCell = <T extends string | number>({
   );
 };
 
-const columns = [
-  columnHelper.accessor("partNumber", {
-    header: "Part Number",
-    cell: (info) => {
-      const orderItem = info.row.original;
-
-      if (orderItem.vendorUrl)
-        return (
-          <div className="flex items-center -mb-0.5">
-            <a href={orderItem.vendorUrl} target="_blank" className="underline">
-              {info.cell.getValue()}
-            </a>
-            <FontAwesomeIcon
-              className="pl-1.5"
-              size="sm"
-              icon="arrow-up-right-from-square"
-            />
-          </div>
-        );
-      return <span>{info.cell.getValue()}</span>;
-    },
-  }),
-  columnHelper.accessor("quantity", {
-    header: "Quantity",
-    cell: (info) => {
-      return (
-        <OrderItemCell<number>
-          initialValue={info.cell.getValue()}
-          colIdx={info.column.id}
-          notEditable={!info.row.getIsSelected()}
-        />
-      );
-    },
-    size: 10,
-  }),
-
-  columnHelper.accessor("description", {
-    header: "Description",
-    cell: (info) => {
-      return (
-        <OrderItemCell
-          initialValue={info.cell.getValue() || ""}
-          colIdx={info.column.id}
-          notEditable={!info.row.getIsSelected()}
-        />
-      );
-    },
-  }),
-  columnHelper.accessor("unitCost", {
-    header: "Unit Cost",
-    cell: (info) => {
-      return (
-        <OrderItemCell<number>
-          initialValue={info.cell.getValue()}
-          colIdx={info.column.id}
-          notEditable={!info.row.getIsSelected()}
-          aggregationFn={(val) => `${formatter.format(val)}`}
-        />
-      );
-    },
-  }),
-
-  columnHelper.display({
-    header: "Total Cost",
-    cell: (info) => {
-      const qty = info.row.original.quantity;
-      const unitCost = info.row.original.unitCost;
-      if (qty && unitCost) return formatter.format(qty * unitCost);
-    },
-    aggregationFn: "sum",
-    footer: (info) => {
-      const rows = info.table.getCoreRowModel().rows;
-      const total = rows.reduce((net, row) => {
-        const cells = row.getAllCells();
-        let qty: number | undefined = undefined;
-        let amt: number | undefined = undefined;
-        for (let i = 0; i < cells.length; i++) {
-          const cell = cells[i];
-          switch (cell.column.id) {
-            case "quantity":
-              qty = cell.getValue() as number;
-              break;
-            case "unitCost":
-              amt = cell.getValue() as number;
-              break;
-            default:
-          }
-        }
-        if (!(qty && amt)) throw Error();
-        return net + qty * amt;
-      }, 0);
-      const aggregationFn = info.column.getAggregationFn();
-      if (!aggregationFn) return null;
-      const output = aggregationFn("unitCost", rows, rows) as number;
-      return formatter.format(total);
-    },
-  }),
-
-  columnHelper.accessor("notes", {
-    header: "Notes",
-  }),
-  columnHelper.display({
-    header: "Edit",
-    cell: ({ row }) => {
-      const out = row.getIsSelected() ? (
-        <OrderItemActions
-          orderItem={row.original}
-          onDelete={row.getToggleSelectedHandler()}
-        />
-      ) : (
-        <div
-          className="text-blue-600 underline justify-center cursor-pointer"
-          onClick={row.getToggleSelectedHandler()}
-        >
-          Edit
-        </div>
-      );
-      return out;
-    },
-  }),
-];
-
 const OrderItemsTable = ({
   orderItems,
   newItemStuff,
@@ -195,6 +66,142 @@ const OrderItemsTable = ({
     setNewItems: (newItems: string[]) => void;
   };
 }) => {
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  const toggleEdit = (id: string) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+    }
+    setSelectedRows(selectedRows.concat(id));
+  };
+
+  const isSelected = (id: string) => selectedRows.includes(id);
+
+  const columns = [
+    columnHelper.accessor("partNumber", {
+      header: "Part Number",
+      cell: (info) => {
+        const orderItem = info.row.original;
+
+        if (orderItem.vendorUrl)
+          return (
+            <div className="flex items-center -mb-0.5">
+              <a
+                href={orderItem.vendorUrl}
+                target="_blank"
+                className="underline"
+              >
+                {info.cell.getValue()}
+              </a>
+              <FontAwesomeIcon
+                className="pl-1.5"
+                size="sm"
+                icon="arrow-up-right-from-square"
+              />
+            </div>
+          );
+        return <span>{info.cell.getValue()}</span>;
+      },
+    }),
+    columnHelper.accessor("quantity", {
+      header: "Quantity",
+      cell: (info) => {
+        return (
+          <OrderItemCell<number>
+            initialValue={info.cell.getValue()}
+            colIdx={info.column.id}
+            notEditable={!isSelected(info.row.original.id)}
+          />
+        );
+      },
+      size: 10,
+    }),
+
+    columnHelper.accessor("description", {
+      header: "Description",
+      cell: (info) => {
+        return (
+          <OrderItemCell
+            initialValue={info.cell.getValue() || ""}
+            colIdx={info.column.id}
+            notEditable={!isSelected(info.row.original.id)}
+          />
+        );
+      },
+    }),
+    columnHelper.accessor("unitCost", {
+      header: "Unit Cost",
+      cell: (info) => {
+        return (
+          <OrderItemCell<number>
+            initialValue={info.cell.getValue()}
+            colIdx={info.column.id}
+            notEditable={!isSelected(info.row.original.id)}
+            aggregationFn={(val) => `${formatter.format(val)}`}
+          />
+        );
+      },
+    }),
+
+    columnHelper.display({
+      header: "Total Cost",
+      cell: (info) => {
+        const qty = info.row.original.quantity;
+        const unitCost = info.row.original.unitCost;
+        if (qty && unitCost) return formatter.format(qty * unitCost);
+      },
+      aggregationFn: "sum",
+      footer: (info) => {
+        const rows = info.table.getCoreRowModel().rows;
+        const total = rows.reduce((net, row) => {
+          const cells = row.getAllCells();
+          let qty: number | undefined = undefined;
+          let amt: number | undefined = undefined;
+          for (let i = 0; i < cells.length; i++) {
+            const cell = cells[i];
+            switch (cell.column.id) {
+              case "quantity":
+                qty = cell.getValue() as number;
+                break;
+              case "unitCost":
+                amt = cell.getValue() as number;
+                break;
+              default:
+            }
+          }
+          if (!(qty && amt)) throw Error();
+          return net + qty * amt;
+        }, 0);
+        const aggregationFn = info.column.getAggregationFn();
+        if (!aggregationFn) return null;
+        return formatter.format(total);
+      },
+    }),
+
+    columnHelper.accessor("notes", {
+      header: "Notes",
+    }),
+    columnHelper.display({
+      header: "Edit",
+      cell: ({ row }) => {
+        const out = selectedRows.includes(row.original.id) ? (
+          <OrderItemActions
+            orderItem={row.original}
+            onDelete={() => toggleEdit(row.original.id)}
+          />
+        ) : (
+          <div
+            className="text-blue-600 underline justify-center cursor-pointer"
+            onClick={() => toggleEdit(row.original.id)}
+          >
+            Edit
+          </div>
+        );
+        return out;
+      },
+    }),
+  ];
+
   const table = useReactTable({
     data: orderItems,
     columns,
