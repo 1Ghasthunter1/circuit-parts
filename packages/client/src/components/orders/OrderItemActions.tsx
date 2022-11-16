@@ -6,7 +6,13 @@ import { orderState } from "~/state/state";
 import { OrderItem } from "~/types/orderTypes";
 import { useSnapshot } from "valtio";
 
-const OrderItemActions = ({ orderItem }: { orderItem: OrderItem }) => {
+const OrderItemActions = ({
+  orderItem,
+  onDelete,
+}: {
+  orderItem: OrderItem;
+  onDelete: () => void;
+}) => {
   const order = orderState.order;
   const orderSnap = useSnapshot(orderState).order;
   const deleteMutation = useMutation(
@@ -31,14 +37,16 @@ const OrderItemActions = ({ orderItem }: { orderItem: OrderItem }) => {
     }
   );
   return (
-    <div className="flex space-x-1">
+    <div className="flex space-x-1" onClick={onDelete}>
       <Button iconName="check" size="sm" color="blue" style="secondary" />
       <Button
         iconName="trash"
         size="sm"
         color="red"
         style="secondary"
-        onClick={() => deleteMutation.mutate()}
+        onClick={() => {
+          deleteMutation.mutate();
+        }}
       />
     </div>
   );

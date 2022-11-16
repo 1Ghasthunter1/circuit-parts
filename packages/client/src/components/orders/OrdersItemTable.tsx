@@ -168,7 +168,10 @@ const columns = [
     header: "Edit",
     cell: ({ row }) => {
       const out = row.getIsSelected() ? (
-        <OrderItemActions orderItem={row.original} />
+        <OrderItemActions
+          orderItem={row.original}
+          onDelete={row.getToggleSelectedHandler()}
+        />
       ) : (
         <div
           className="text-blue-600 underline justify-center cursor-pointer"
