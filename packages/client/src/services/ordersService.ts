@@ -45,6 +45,13 @@ export const deleteOrderById = async (orderId: string) => {
   return response;
 };
 
+export const deleteOrderItemById = async (orderItemId: string) => {
+  const response = await axios.delete<OrderItem>(
+    `${apiBaseUrl}/orders/items/${orderItemId}`
+  );
+  return response;
+};
+
 export const updateOrder = async (order: Order) => {
   interface IOrderStringDate extends Omit<Order, "creationDate"> {
     creationDate: string;

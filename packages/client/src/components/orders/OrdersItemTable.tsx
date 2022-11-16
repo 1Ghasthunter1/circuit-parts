@@ -11,6 +11,10 @@ import { OrderItem } from "~/types/orderTypes";
 import NewItemRow from "./NewItemRow";
 import { useEffect, useState } from "react";
 import EditableInput from "~/elements/EditableInput";
+import OrderItemActions from "./OrderItemActions";
+import { useMutation } from "react-query";
+import { deleteOrderItemById } from "~/services/ordersService";
+import toast from "react-hot-toast";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
@@ -44,7 +48,7 @@ const OrderItemCell = <T extends string | number>({
   }, [initialValue]);
 
   return (
-    <div className="table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500 ">
+    <div className="table-cell whitespace-nowrap  text-sm text-gray-500 ">
       <EditableInput
         value={value}
         onChangeFunc={(e) => setValue(e.target.value as unknown as T)}
@@ -162,13 +166,19 @@ const columns = [
   }),
   columnHelper.display({
     header: "Edit",
-    cell: ({ row }) => (
-      <div onClick={row.getToggleSelectedHandler()}>
-        <div className="text-indigo-500 underline cursor-pointer min-w-min	">
+    cell: ({ row }) => {
+      const out = row.getIsSelected() ? (
+        <OrderItemActions orderItem={row.original} />
+      ) : (
+        <div
+          className="text-blue-600 underline justify-center cursor-pointer"
+          onClick={row.getToggleSelectedHandler()}
+        >
           Edit
         </div>
-      </div>
-    ),
+      );
+      return out;
+    },
   }),
 ];
 

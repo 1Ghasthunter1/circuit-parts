@@ -76,6 +76,14 @@ orderRouter.delete("/:id", (async (req, res) => {
   return res.status(204).end();
 }) as RequestHandler);
 
+orderRouter.delete("/items/:itemId", (async (req, res) => {
+  const itemId = req.params.itemId;
+  const response = await OrderItem.findByIdAndDelete(itemId);
+
+  if (!response) return res.status(404).json("order item not found");
+  return res.status(204).end();
+}) as RequestHandler);
+
 orderRouter.put(
   "/:id",
   checkSchema(newOrderSchema),
