@@ -11,7 +11,7 @@ const OrderItemActions = ({
   onDelete,
 }: {
   orderItem: OrderItem;
-  onDelete: () => void;
+  onDelete: (event: unknown) => void;
 }) => {
   const order = orderState.order;
   const orderSnap = useSnapshot(orderState).order;
