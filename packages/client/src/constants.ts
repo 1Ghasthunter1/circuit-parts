@@ -25,5 +25,6 @@ export const knownCarriers: Record<string, { baseUrl: string }> = {
   UPS: {
     baseUrl: "https://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=",
   },
+  FedEx: { baseUrl: "https://www.fedex.com/fedextrack/?trknbr=" },
 };
 export const apiBaseUrl = getApiBaseUrl();

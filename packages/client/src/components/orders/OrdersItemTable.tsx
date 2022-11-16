@@ -26,12 +26,12 @@ const formatter = new Intl.NumberFormat("en-US", {
 const OrderItemCell = <T extends string | number>({
   initialValue,
   colIdx,
-  editable,
+  notEditable,
   aggregationFn,
 }: {
   initialValue: T;
   colIdx: string;
-  editable: boolean;
+  notEditable: boolean;
   aggregationFn?: (val: T) => string | number;
 }) => {
   // We need to keep and update the state of the cell normally
@@ -55,7 +55,7 @@ const OrderItemCell = <T extends string | number>({
         placeholder={colIdx}
         aggregationFn={aggregationFn || undefined}
         hideButtons
-        editable={editable}
+        notEditable={notEditable}
         emptyType="box"
         componentStyle="text-md"
       />
@@ -92,7 +92,7 @@ const columns = [
         <OrderItemCell<number>
           initialValue={info.cell.getValue()}
           colIdx={info.column.id}
-          editable={info.row.getIsSelected()}
+          notEditable={!info.row.getIsSelected()}
         />
       );
     },
@@ -106,7 +106,7 @@ const columns = [
         <OrderItemCell
           initialValue={info.cell.getValue() || ""}
           colIdx={info.column.id}
-          editable={info.row.getIsSelected()}
+          notEditable={!info.row.getIsSelected()}
         />
       );
     },
@@ -118,7 +118,7 @@ const columns = [
         <OrderItemCell<number>
           initialValue={info.cell.getValue()}
           colIdx={info.column.id}
-          editable={info.row.getIsSelected()}
+          notEditable={!info.row.getIsSelected()}
           aggregationFn={(val) => `${formatter.format(val)}`}
         />
       );

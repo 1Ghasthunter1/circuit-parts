@@ -16,7 +16,6 @@ import EditableInput2 from "./EditableInput";
 
 import { v4 as uuidv4 } from "uuid";
 import TrackingCard from "~/components/orders/TrackingCard";
-import { number } from "yup";
 
 const OrderView = () => {
   const [newItems, setNewItems] = useState<string[]>([]);

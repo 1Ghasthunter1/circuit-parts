@@ -7,7 +7,7 @@ interface IProps {
   hideButtons?: boolean;
   emptyType?: "box" | "text" | "none";
   inputStyle?: string;
-  editable?: boolean;
+  notEditable?: boolean;
   componentStyle?: string;
 }
 const EditableInput = <T extends string | number>({
@@ -18,7 +18,7 @@ const EditableInput = <T extends string | number>({
   hideButtons,
   emptyType,
   inputStyle,
-  editable,
+  notEditable,
   componentStyle,
   aggregationFn,
   validatorFn,
@@ -65,24 +65,26 @@ const EditableInput = <T extends string | number>({
 
   const NotInputState = () => {
     const getStyle = () => {
-      if (!editable) return null;
+      if (notEditable) return null;
       switch (emptyType) {
         case "box":
           return "bg-white shadow-inner border-[1.5px] ";
         case "text":
-          return "bg-white";
+          return "";
       }
     };
 
     return (
       <div
         className={`h-full w-full ${
-          editable ? "hover:bg-blue-200 cursor-pointer" : null
+          !notEditable ? "hover:bg-blue-200 cursor-pointer" : null
         } px-2 py-1 rounded-lg  ${getStyle()} `}
-        onClick={editable ? () => setShowInput(true) : () => null}
+        onClick={!notEditable ? () => setShowInput(true) : () => null}
       >
         {input.originalValue === "" ? (
-          <span className="text-gray-300">{editable ? placeholder : null}</span>
+          <span className="text-gray-300">
+            {!notEditable ? placeholder : null}
+          </span>
         ) : aggregationFn ? (
           aggregationFn(input.originalValue)
         ) : (

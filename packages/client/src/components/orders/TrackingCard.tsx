@@ -60,7 +60,11 @@ const TrackingCard = () => {
             </dt>
             <dd className="text-gray-500">
               <span className="block whitespace-nowrap cursor-pointer">
-                {<TrackingNumber {...order.tracking} /> || "No tracking number"}
+                {order.tracking?.carrier && order.tracking.trackingNumber ? (
+                  <TrackingNumber {...order.tracking} />
+                ) : (
+                  "No tracking number specified"
+                )}
               </span>
             </dd>
           </div>

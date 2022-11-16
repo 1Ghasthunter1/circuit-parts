@@ -72,10 +72,11 @@ export const createOrderItem = async (
   orderId: string,
   orderItem: OrderItemToServer
 ) => {
-  return await axios.post<OrderItem>(
+  const out = await axios.post<OrderItem>(
     `${apiBaseUrl}/orders/${orderId}/items`,
     orderItem
   );
+  return out;
 };
 
 export const calculateOrderTotals = (order: PopulatedOrder) => {

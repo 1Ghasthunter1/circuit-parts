@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from "~/elements/Button";
 import EditableInput from "~/elements/EditableInput";
-import { OrderItemToServer } from "~/types/orderTypes";
+import { OrderItem, OrderItemToServer } from "~/types/orderTypes";
 import {
   object,
   number,
@@ -10,11 +10,12 @@ import {
   AnySchema,
   ValidationError,
 } from "yup";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { createOrderItem } from "~/services/ordersService";
 import { orderState } from "~/state/state";
 import { useSnapshot } from "valtio";
 import toast from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
 
 const NewItemRow = ({
   id,
@@ -33,8 +34,7 @@ const NewItemRow = ({
   const [inputState, setInputState] = useState<INewItem>({});
   const [cleanState, setCleanState] = useState<OrderItemToServer | null>(null);
 
-  const orderSnapshot = useSnapshot(orderState).order;
-  const queryClient = useQueryClient();
+  const orderSnapshot = useSnapshot(orderState, { sync: true }).order;
 
   const itemSchema: ObjectSchema<Record<keyof OrderItemToServer, AnySchema>> =
     object({
@@ -59,27 +59,46 @@ const NewItemRow = ({
       });
   }, [inputState]);
 
+  const newItemTempId = uuidv4();
+
   const createMutation = useMutation(
     async () => {
       if (orderSnapshot && cleanState) {
-        await createOrderItem(orderSnapshot.id, cleanState);
+        return await createOrderItem(orderSnapshot.id, cleanState);
       }
     },
     {
-      onSuccess: async () => {
-        toast.success(
-          <span>
-            Added <b>{cleanState?.partNumber}</b> to order
-          </span>
-        );
-        setNewItems(newItems.filter((itemId) => itemId !== id));
+      onMutate: async () => {
+        if (orderSnapshot && orderState.order && cleanState) {
+          orderState.order.items = orderSnapshot.items.concat({
+            ...cleanState,
+            id: newItemTempId,
+            order: orderSnapshot.id,
+          });
+          setNewItems(newItems.filter((itemId) => itemId !== id));
+        }
+      },
+      onSuccess: async (response) => {
+        if (orderSnapshot && orderState.order && response) {
+          orderState.order.items = orderSnapshot.items.concat(response.data);
+          toast.success(
+            <span>
+              Added <b>{cleanState?.partNumber}</b> to order
+            </span>
+          );
+        }
       },
       onError: async () => {
-        toast.error("banger");
-        setNewItems(newItems.filter((itemId) => itemId !== id));
+        toast.error("Couldn't add order item");
+        setNewItems(newItems);
+        if (orderState.order && orderSnapshot) {
+          // orderState.order.items = orderSnapshot.items.filter(
+          //   (oItem) => oItem.id !== newItemTempId
+          // );
+        }
       },
-      onSettled: async () =>
-        queryClient.invalidateQueries(["order", orderSnapshot?.id]),
+      onSettled: async () => {},
+      //queryClient.invalidateQueries(["order", orderSnapshot?.id]),
     }
   );
 
@@ -98,6 +117,7 @@ const NewItemRow = ({
           }}
           placeholder="Part Number"
           hideButtons={true}
+          emptyType="box"
           componentStyle="text-md font-bold"
         />
       </div>
@@ -108,6 +128,7 @@ const NewItemRow = ({
             setInputState({ ...inputState, quantity: e.target.value });
           }}
           placeholder="Qty"
+          emptyType="box"
           hideButtons={true}
           componentStyle="text-md"
         />
@@ -120,6 +141,7 @@ const NewItemRow = ({
           }}
           placeholder="Description"
           hideButtons={true}
+          emptyType="box"
           componentStyle="text-md"
         />
       </div>
@@ -131,6 +153,7 @@ const NewItemRow = ({
           }}
           placeholder="Unit Cost"
           hideButtons={true}
+          emptyType="box"
           componentStyle="text-md"
         />
       </div>
@@ -147,6 +170,7 @@ const NewItemRow = ({
           }}
           placeholder="Notes"
           hideButtons={true}
+          emptyType="box"
           componentStyle="text-md"
         />
       </div>
