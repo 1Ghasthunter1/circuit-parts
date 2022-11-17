@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { useSnapshot } from "valtio";
-import OrderItemsTable from "~/components/orders/OrdersItemTable";
+import OrderItemsTable from "~/components/orders/OrderItemsTable";
 import OrderStatusBox from "~/components/orders/OrderStatusBox";
 import OrderTotals from "~/components/orders/OrderTotals";
 import Button from "~/elements/Button";
@@ -171,7 +171,7 @@ const OrderView = () => {
           </>
         </TopLeftRightAndMiddle>
       ) : (
-        <div>asd</div>
+        <div></div>
       )}
     </>
   );

@@ -9,9 +9,11 @@ import { useSnapshot } from "valtio";
 const OrderItemActions = ({
   orderItem,
   onDelete,
+  onSave,
 }: {
   orderItem: OrderItem;
   onDelete: (event: unknown) => void;
+  onSave: (event: unknown) => void;
 }) => {
   const order = orderState.order;
   const orderSnap = useSnapshot(orderState).order;
@@ -37,14 +39,23 @@ const OrderItemActions = ({
     }
   );
   return (
-    <div className="flex space-x-1" onClick={onDelete}>
-      <Button iconName="check" size="sm" color="blue" style="secondary" />
+    <div className="flex space-x-1">
+      <Button
+        iconName="check"
+        size="sm"
+        color="blue"
+        style="secondary"
+        onClick={(e) => {
+          onSave(e);
+        }}
+      />
       <Button
         iconName="trash"
         size="sm"
         color="red"
         style="secondary"
-        onClick={() => {
+        onClick={(e) => {
+          onDelete(e);
           deleteMutation.mutate();
         }}
       />

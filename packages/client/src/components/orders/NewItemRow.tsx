@@ -16,6 +16,7 @@ import { orderState } from "~/state/state";
 import { useSnapshot } from "valtio";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
+import { orderItemSchema } from "~/utils/orders/orderItemSchema";
 
 const NewItemRow = ({
   id,
@@ -36,18 +37,8 @@ const NewItemRow = ({
 
   const orderSnapshot = useSnapshot(orderState, { sync: true }).order;
 
-  const itemSchema: ObjectSchema<Record<keyof OrderItemToServer, AnySchema>> =
-    object({
-      partNumber: string().required().defined(),
-      quantity: number().integer().required().positive(),
-      unitCost: number().required().min(0),
-      vendorUrl: string().url(),
-      description: string().max(255),
-      notes: string().max(500),
-    });
-
   useEffect(() => {
-    itemSchema
+    orderItemSchema
       .validate(inputState, { abortEarly: false })
       .then((cleanState: OrderItemToServer) => {
         setCleanState(cleanState);

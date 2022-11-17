@@ -96,11 +96,11 @@ const EditableInput = <T extends string | number>({
 
   return (
     <div
-      className={`${
+      className={`outline-none ${
         componentStyle
           ? componentStyle
-          : "text-2xl font-bold -ml-1  inline-block outline-none"
-      } bg-transparent rounded-lg outline-none`}
+          : "text-2xl font-bold -ml-1  inline-block "
+      } bg-transparent rounded-lg `}
     >
       {showInput ? (
         <>
@@ -110,15 +110,16 @@ const EditableInput = <T extends string | number>({
             autoFocus
             onBlur={isValid ? save : cancel}
             className={`
-            ${
-              !isValid
-                ? "ring-rose-400 ring-[1.5px] bg-rose-50 text-rose-400 outline-none "
-                : ""
-            }
+
               ${
                 inputStyle
                   ? inputStyle
-                  : "ring-blue-600 px-2 py-1 ring-[1.5px] w-full box-border rounded-lg outline-none bg-transparent "
+                  : " px-2 py-1 ring-[1.5px] w-full box-border rounded-lg outline-none bg-transparent "
+              }            
+              ${
+                !isValid
+                  ? "ring-rose-400 ring-[1.5px] bg-rose-50 text-rose-400 outline-none "
+                  : "ring-blue-600"
               }
             `}
             onKeyDown={(e) => handleKeypress(e)}
