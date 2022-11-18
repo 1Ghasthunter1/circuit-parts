@@ -16,6 +16,12 @@ import EditableInput2 from "./EditableInput";
 
 import { v4 as uuidv4 } from "uuid";
 import TrackingCard from "~/components/orders/TrackingCard";
+import OrderSaveStatus from "~/components/orders/OrderSaveStatus";
+import {
+  orderError,
+  orderSave,
+  orderSaved,
+} from "~/utils/orders/orderSaveStatus";
 
 const OrderView = () => {
   const [newItems, setNewItems] = useState<string[]>([]);
@@ -30,17 +36,15 @@ const OrderView = () => {
     async (order: Order) => await updateOrder(order),
     {
       onMutate: (newOrder) => {
+        orderSave();
         orderState.order = { ...newOrder, items: order?.items || [] };
       },
       onSuccess: (newOrder) => {
-        toast.success(
-          <span>
-            Saved <b>{newOrder.orderNumber}</b>
-          </span>
-        );
+        orderSaved();
       },
       onError: () => {
         toast.error("Something went wrong when saving the order.");
+        orderError();
       },
       onSettled: () => orderQuery.refetch(),
     }
@@ -139,7 +143,11 @@ const OrderView = () => {
             </div>
           }
           topRightContent={
-            <div className="h-full flex">
+            <div className="h-full flex flex-col justify-right">
+              <div className="ml-auto">
+                <OrderSaveStatus />
+              </div>
+
               <div className="mt-auto">
                 <Button
                   iconName="plus"

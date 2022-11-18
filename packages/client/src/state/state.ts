@@ -41,6 +41,11 @@ export const editedOrderItemsState = proxy<{
   orderItems: {},
 });
 
+export const orderSavingState = proxy<{
+  status: "saving" | "saved" | "error" | null;
+  lastActionTime: Date;
+}>({ status: null, lastActionTime: new Date() });
+
 devtools(userState, { name: "userState" });
 devtools(orderState, { name: "orderState" });
 devtools(projectState, { name: "projectState" });
