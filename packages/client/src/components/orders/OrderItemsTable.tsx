@@ -69,6 +69,7 @@ const OrderItemsTable = ({
 }) => {
   const selectedOrderItems = useSnapshot(editedOrderItemsState).orderItems;
 
+<<<<<<< Updated upstream:packages/client/src/components/orders/OrderItemsTable.tsx
   const rowIds = Object.keys(selectedOrderItems);
 
   const toggleEdit = (orderItem: OrderItem) => {
@@ -79,6 +80,12 @@ const OrderItemsTable = ({
       return;
     } else {
       mutableOrderItems[orderItem.id] = orderItem;
+=======
+  const toggleEdit = (id: string) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+      return;
+>>>>>>> Stashed changes:packages/client/src/components/orders/OrdersItemTable.tsx
     }
     editedOrderItemsState.orderItems = mutableOrderItems;
   };
@@ -245,8 +252,13 @@ const OrderItemsTable = ({
         return isSelected(row.original.id) ? (
           <OrderItemActions
             orderItem={row.original}
+<<<<<<< Updated upstream:packages/client/src/components/orders/OrderItemsTable.tsx
             onDelete={() => toggleEdit(row.original)}
             onSave={() => toggleEdit(row.original)}
+=======
+            onDelete={() => toggleEdit(row.original.id)}
+            onSave={() => toggleEdit(row.original.id)}
+>>>>>>> Stashed changes:packages/client/src/components/orders/OrdersItemTable.tsx
           />
         ) : (
           <div
