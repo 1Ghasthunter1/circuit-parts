@@ -25,12 +25,12 @@ const formatter = new Intl.NumberFormat("en-US", {
 
 const OrderItemCell = <T extends string | number>({
   initialValue,
-  colIdx,
+  placeholder,
   notEditable,
   aggregationFn,
 }: {
   initialValue: T;
-  colIdx: string;
+  placeholder: string;
   notEditable: boolean;
   aggregationFn?: (val: T) => string | number;
 }) => {
@@ -45,7 +45,7 @@ const OrderItemCell = <T extends string | number>({
       <EditableInput
         value={value}
         onChangeFunc={(e) => setValue(e.target.value as unknown as T)}
-        placeholder={colIdx}
+        placeholder={placeholder}
         aggregationFn={aggregationFn || undefined}
         hideButtons
         notEditable={notEditable}
@@ -110,7 +110,7 @@ const OrderItemsTable = ({
         return (
           <OrderItemCell<number>
             initialValue={info.cell.getValue()}
-            colIdx={info.column.id}
+            placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original.id)}
           />
         );
@@ -124,7 +124,7 @@ const OrderItemsTable = ({
         return (
           <OrderItemCell
             initialValue={info.cell.getValue() || ""}
-            colIdx={info.column.id}
+            placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original.id)}
           />
         );
@@ -136,7 +136,7 @@ const OrderItemsTable = ({
         return (
           <OrderItemCell<number>
             initialValue={info.cell.getValue()}
-            colIdx={info.column.id}
+            placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original.id)}
             aggregationFn={(val) => `${formatter.format(val)}`}
           />
@@ -181,6 +181,15 @@ const OrderItemsTable = ({
 
     columnHelper.accessor("notes", {
       header: "Notes",
+      cell: (info) => {
+        return (
+          <OrderItemCell
+            initialValue={info.cell.getValue() || ""}
+            placeholder={String(info.column.columnDef.header) || ""}
+            notEditable={!isSelected(info.row.original.id)}
+          />
+        );
+      },
     }),
     columnHelper.display({
       header: "Edit",
