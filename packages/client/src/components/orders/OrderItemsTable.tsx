@@ -3,8 +3,6 @@ import {
   createColumnHelper,
   getCoreRowModel,
   flexRender,
-  ColumnDef,
-  RowData,
 } from "@tanstack/react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OrderItem } from "~/types/orderTypes";
@@ -12,9 +10,8 @@ import NewItemRow from "./NewItemRow";
 import { useEffect, useState } from "react";
 import EditableInput from "~/elements/EditableInput";
 import OrderItemActions from "./OrderItemActions";
-import { useMutation } from "react-query";
-import { deleteOrderItemById } from "~/services/ordersService";
-import toast from "react-hot-toast";
+import { editOIState } from "~/state/state";
+import { useSnapshot } from "valtio";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
@@ -67,16 +64,22 @@ const OrderItemsTable = ({
   };
 }) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const editOISnap = useSnapshot(editOIState).orderItems;
 
-  const toggleEdit = (id: string) => {
-    if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+  const toggleEdit = (orderItem: OrderItem) => {
+    const newOI = { ...editOISnap };
+    if (selectedRows.includes(orderItem.id)) {
+      //order already exists
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== orderItem.id));
+      delete newOI[orderItem.id];
+      editOIState.orderItems = newOI;
       return;
     }
-    setSelectedRows(selectedRows.concat(id));
+    setSelectedRows(selectedRows.concat(orderItem.id));
+    editOIState.orderItems[orderItem.id] = orderItem;
   };
 
-  const isSelected = (id: string) => selectedRows.includes(id);
+  const isSelected = (orderItem: OrderItem) => Object.keys(editOISnap).includes(orderItem.id);
 
   const columns = [
     columnHelper.accessor("partNumber", {
@@ -111,7 +114,7 @@ const OrderItemsTable = ({
           <OrderItemCell<number>
             initialValue={info.cell.getValue()}
             placeholder={String(info.column.columnDef.header) || ""}
-            notEditable={!isSelected(info.row.original.id)}
+            notEditable={!isSelected(info.row.original)}
           />
         );
       },
@@ -125,7 +128,7 @@ const OrderItemsTable = ({
           <OrderItemCell
             initialValue={info.cell.getValue() || ""}
             placeholder={String(info.column.columnDef.header) || ""}
-            notEditable={!isSelected(info.row.original.id)}
+            notEditable={!isSelected(info.row.original)}
           />
         );
       },
@@ -137,7 +140,7 @@ const OrderItemsTable = ({
           <OrderItemCell<number>
             initialValue={info.cell.getValue()}
             placeholder={String(info.column.columnDef.header) || ""}
-            notEditable={!isSelected(info.row.original.id)}
+            notEditable={!isSelected(info.row.original)}
             aggregationFn={(val) => `${formatter.format(val)}`}
           />
         );
@@ -186,7 +189,7 @@ const OrderItemsTable = ({
           <OrderItemCell
             initialValue={info.cell.getValue() || ""}
             placeholder={String(info.column.columnDef.header) || ""}
-            notEditable={!isSelected(info.row.original.id)}
+            notEditable={!isSelected(info.row.original)}
           />
         );
       },
@@ -197,13 +200,13 @@ const OrderItemsTable = ({
         const out = selectedRows.includes(row.original.id) ? (
           <OrderItemActions
             orderItem={row.original}
-            onDelete={() => toggleEdit(row.original.id)}
-            onSave={() => toggleEdit(row.original.id)}
+            onDelete={() => toggleEdit(row.original)}
+            onSave={() => toggleEdit(row.original)}
           />
         ) : (
           <div
             className="text-blue-600 underline justify-center cursor-pointer"
-            onClick={() => toggleEdit(row.original.id)}
+            onClick={() => toggleEdit(row.original)}
           >
             Edit
           </div>

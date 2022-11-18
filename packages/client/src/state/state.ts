@@ -35,7 +35,7 @@ try {
   userState.user = userObj;
 } catch {}
 
-export const editedOrderItemsState = proxy<{
+export const editOIState = proxy<{
   orderItems: Record<string, OrderItem>;
 }>({
   orderItems: {},
@@ -49,4 +49,4 @@ export const orderSavingState = proxy<{
 devtools(userState, { name: "userState" });
 devtools(orderState, { name: "orderState" });
 devtools(projectState, { name: "projectState" });
-devtools(editedOrderItemsState, { name: "editedOrderItemsState" });
+devtools(editOIState, { name: "editOIState" });
