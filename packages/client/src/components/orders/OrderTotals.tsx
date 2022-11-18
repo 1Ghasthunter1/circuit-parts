@@ -47,6 +47,25 @@ const OrderTotals = ({
                 />
               </span>
             </dd>
+            <dt className="font-medium text-gray-900 mt-2">Reimbursed</dt>
+            <dd>
+              <div className="flex h-5 items-center">
+                <input
+                  id="reimbursed"
+                  name="reimbursex"
+                  type="checkbox"
+                  defaultChecked={order.reimbursed}
+                  onChange={() => {
+                    editMutation.mutate({
+                      ...order,
+                      reimbursed: !order.reimbursed,
+                    });
+                  }}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span className="ml-1">Reimbursed</span>
+              </div>
+            </dd>
           </div>
         </dl>
 
