@@ -143,12 +143,12 @@ const OrderView = () => {
             </div>
           }
           topRightContent={
-            <div className="h-full flex flex-col justify-right">
+            <div className="h-full flex flex-col">
               <div className="ml-auto">
                 <OrderSaveStatus />
               </div>
 
-              <div className="mt-auto">
+              <div className="mt-auto ml-auto">
                 <Button
                   iconName="plus"
                   color="green"
