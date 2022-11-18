@@ -3,6 +3,8 @@ import {
   createColumnHelper,
   getCoreRowModel,
   flexRender,
+  ColumnDef,
+  RowData,
 } from "@tanstack/react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OrderItem } from "~/types/orderTypes";
@@ -11,10 +13,8 @@ import { useEffect, useState } from "react";
 import EditableInput from "~/elements/EditableInput";
 import OrderItemActions from "./OrderItemActions";
 import { useMutation } from "react-query";
-import { editedOrderItemsState } from "~/state/state";
-import { useSnapshot } from "valtio";
-import { AnySchema, ObjectSchema, string, ValidationError } from "yup";
-import { orderItemSchema } from "~/utils/orders/orderItemSchema";
+import { deleteOrderItemById } from "~/services/ordersService";
+import toast from "react-hot-toast";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
@@ -25,29 +25,28 @@ const formatter = new Intl.NumberFormat("en-US", {
 
 const OrderItemCell = <T extends string | number>({
   initialValue,
-  placeholder,
+  colIdx,
   notEditable,
   aggregationFn,
-  validatorFn,
-  onChange,
-  value,
 }: {
   initialValue: T;
-  placeholder: string;
+  colIdx: string;
   notEditable: boolean;
   aggregationFn?: (val: T) => string | number;
-  validatorFn?: ((val: T) => boolean) | undefined;
-  onChange?: (val: T) => void;
-  value: T;
 }) => {
+  const [value, setValue] = useState<T>(initialValue);
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
   return (
-    <div className="table-cell whitespace-nowrap text-sm text-gray-500 ">
+    <div className="table-cell whitespace-nowrap  text-sm text-gray-500 ">
       <EditableInput
         value={value}
-        onChangeFunc={(e) => (onChange ? onChange(e.target.value as T) : null)}
-        placeholder={placeholder}
+        onChangeFunc={(e) => setValue(e.target.value as unknown as T)}
+        placeholder={colIdx}
         aggregationFn={aggregationFn || undefined}
-        validatorFn={validatorFn || undefined}
         hideButtons
         notEditable={notEditable}
         emptyType="text"
@@ -67,38 +66,17 @@ const OrderItemsTable = ({
     setNewItems: (newItems: string[]) => void;
   };
 }) => {
-  const selectedOrderItems = useSnapshot(editedOrderItemsState).orderItems;
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const rowIds = Object.keys(selectedOrderItems);
-
-  const toggleEdit = (orderItem: OrderItem) => {
-    const mutableOrderItems = { ...selectedOrderItems };
-    if (rowIds.includes(orderItem.id)) {
-      delete mutableOrderItems[orderItem.id];
-      editedOrderItemsState.orderItems = mutableOrderItems;
+  const toggleEdit = (id: string) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
       return;
-    } else {
-      mutableOrderItems[orderItem.id] = orderItem;
     }
-    editedOrderItemsState.orderItems = mutableOrderItems;
+    setSelectedRows(selectedRows.concat(id));
   };
 
-  const isSelected = (id: string) => rowIds.includes(id);
-
-  const isRowValid = (id: string) => {
-    const foundOrderItem = selectedOrderItems[id];
-    if (!foundOrderItem) return false;
-    orderItemSchema
-      .validate(foundOrderItem, { abortEarly: false })
-      .then(() => {
-        return true;
-      })
-      .catch((err: ValidationError) => {
-        err.inner.forEach((e) => {
-          console.log(e);
-        });
-      });
-  };
+  const isSelected = (id: string) => selectedRows.includes(id);
 
   const columns = [
     columnHelper.accessor("partNumber", {
@@ -131,15 +109,9 @@ const OrderItemsTable = ({
       cell: (info) => {
         return (
           <OrderItemCell<number>
-            value={selectedOrderItems[info.row.original.id].quantity}
-            onChange={(val: number) =>
-              (editedOrderItemsState.orderItems[info.row.original.id].quantity =
-                val)
-            }
             initialValue={info.cell.getValue()}
-            placeholder="Add quantity"
+            colIdx={info.column.id}
             notEditable={!isSelected(info.row.original.id)}
-            validatorFn={(val: number) => !isNaN(val)}
           />
         );
       },
@@ -150,15 +122,9 @@ const OrderItemsTable = ({
       header: "Description",
       cell: (info) => {
         return (
-          <OrderItemCell<string>
-            value={selectedOrderItems[info.row.original.id].description || ""}
-            onChange={(val: string) =>
-              (editedOrderItemsState.orderItems[
-                info.row.original.id
-              ].description = val)
-            }
+          <OrderItemCell
             initialValue={info.cell.getValue() || ""}
-            placeholder="Add description"
+            colIdx={info.column.id}
             notEditable={!isSelected(info.row.original.id)}
           />
         );
@@ -170,15 +136,9 @@ const OrderItemsTable = ({
         return (
           <OrderItemCell<number>
             initialValue={info.cell.getValue()}
-            value={selectedOrderItems[info.row.original.id].unitCost}
-            onChange={(val: number) =>
-              (editedOrderItemsState.orderItems[info.row.original.id].unitCost =
-                val)
-            }
-            placeholder="Add cost"
+            colIdx={info.column.id}
             notEditable={!isSelected(info.row.original.id)}
             aggregationFn={(val) => `${formatter.format(val)}`}
-            validatorFn={(val: number) => !isNaN(val)}
           />
         );
       },
@@ -221,41 +181,25 @@ const OrderItemsTable = ({
 
     columnHelper.accessor("notes", {
       header: "Notes",
-      cell: (info) => {
-        return (
-          <div className="w-full">
-            <OrderItemCell<string>
-              value={selectedOrderItems[info.row.original.id].notes || ""}
-              onChange={(val: string) =>
-                (editedOrderItemsState.orderItems[info.row.original.id].notes =
-                  val)
-              }
-              initialValue={info.cell.getValue() || ""}
-              placeholder="Add notes"
-              notEditable={!isSelected(info.row.original.id)}
-            />
-          </div>
-        );
-      },
     }),
     columnHelper.display({
       header: "Edit",
       cell: ({ row }) => {
-        useEffect(() => {});
-        return isSelected(row.original.id) ? (
+        const out = selectedRows.includes(row.original.id) ? (
           <OrderItemActions
             orderItem={row.original}
-            onDelete={() => toggleEdit(row.original)}
-            onSave={() => toggleEdit(row.original)}
+            onDelete={() => toggleEdit(row.original.id)}
+            onSave={() => toggleEdit(row.original.id)}
           />
         ) : (
           <div
             className="text-blue-600 underline justify-center cursor-pointer"
-            onClick={() => toggleEdit(row.original)}
+            onClick={() => toggleEdit(row.original.id)}
           >
             Edit
           </div>
         );
+        return out;
       },
     }),
   ];
