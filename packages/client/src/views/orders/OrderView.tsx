@@ -46,7 +46,6 @@ const OrderView = () => {
         toast.error("Something went wrong when saving the order.");
         orderError();
       },
-      onSettled: () => orderQuery.refetch(),
     }
   );
 

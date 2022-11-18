@@ -63,23 +63,20 @@ const OrderItemsTable = ({
     setNewItems: (newItems: string[]) => void;
   };
 }) => {
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const editOISnap = useSnapshot(editOIState).orderItems;
 
   const toggleEdit = (orderItem: OrderItem) => {
     const newOI = { ...editOISnap };
-    if (selectedRows.includes(orderItem.id)) {
-      //order already exists
-      setSelectedRows(selectedRows.filter((rowId) => rowId !== orderItem.id));
+    if (isSelected(orderItem)) {
       delete newOI[orderItem.id];
       editOIState.orderItems = newOI;
       return;
     }
-    setSelectedRows(selectedRows.concat(orderItem.id));
     editOIState.orderItems[orderItem.id] = orderItem;
   };
 
-  const isSelected = (orderItem: OrderItem) => Object.keys(editOISnap).includes(orderItem.id);
+  const isSelected = (orderItem: OrderItem) =>
+    Object.keys(editOISnap).includes(orderItem.id);
 
   const columns = [
     columnHelper.accessor("partNumber", {
@@ -197,7 +194,7 @@ const OrderItemsTable = ({
     columnHelper.display({
       header: "Edit",
       cell: ({ row }) => {
-        const out = selectedRows.includes(row.original.id) ? (
+        return isSelected(row.original) ? (
           <OrderItemActions
             orderItem={row.original}
             onDelete={() => toggleEdit(row.original)}
@@ -211,7 +208,6 @@ const OrderItemsTable = ({
             Edit
           </div>
         );
-        return out;
       },
     }),
   ];
