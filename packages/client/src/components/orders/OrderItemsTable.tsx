@@ -25,13 +25,23 @@ const OrderItemCell = <T extends string | number>({
   placeholder,
   notEditable,
   aggregationFn,
+  orderItem,
+  oItemProperty,
 }: {
   initialValue: T;
   placeholder: string;
   notEditable: boolean;
   aggregationFn?: (val: T) => string | number;
+  orderItem: OrderItem;
+  oItemProperty: keyof OrderItem;
 }) => {
   const [value, setValue] = useState<T>(initialValue);
+  const editOISnap = useSnapshot(editOIState).orderItems;
+  const foundItem = editOISnap[orderItem.id] as OrderItem | undefined;
+
+  if (foundItem) {
+    console.log(oItemProperty + " " + foundItem[oItemProperty]);
+  }
 
   useEffect(() => {
     setValue(initialValue);
@@ -40,8 +50,15 @@ const OrderItemCell = <T extends string | number>({
   return (
     <div className="table-cell whitespace-nowrap  text-sm text-gray-500 ">
       <EditableInput
-        value={value}
-        onChangeFunc={(e) => setValue(e.target.value as unknown as T)}
+        value={foundItem ? (foundItem[oItemProperty] as T) : value}
+        onChangeFunc={
+          foundItem
+            ? (e) => {
+                const val = e.target.value as unknown as T;
+                editOIState.orderItems[orderItem.id][oItemProperty] = val as never;
+              }
+            : (e) => setValue(e.target.value as unknown as T)
+        }
         placeholder={placeholder}
         aggregationFn={aggregationFn || undefined}
         hideButtons
@@ -109,6 +126,8 @@ const OrderItemsTable = ({
       cell: (info) => {
         return (
           <OrderItemCell<number>
+            orderItem={info.row.original}
+            oItemProperty="quantity"
             initialValue={info.cell.getValue()}
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
@@ -122,8 +141,10 @@ const OrderItemsTable = ({
       header: "Description",
       cell: (info) => {
         return (
-          <OrderItemCell
+          <OrderItemCell<string>
             initialValue={info.cell.getValue() || ""}
+            orderItem={info.row.original}
+            oItemProperty="description"
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
           />
@@ -136,6 +157,8 @@ const OrderItemsTable = ({
         return (
           <OrderItemCell<number>
             initialValue={info.cell.getValue()}
+            orderItem={info.row.original}
+            oItemProperty="unitCost"
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
             aggregationFn={(val) => `${formatter.format(val)}`}
@@ -183,8 +206,10 @@ const OrderItemsTable = ({
       header: "Notes",
       cell: (info) => {
         return (
-          <OrderItemCell
+          <OrderItemCell<string>
             initialValue={info.cell.getValue() || ""}
+            orderItem={info.row.original}
+            oItemProperty="notes"
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
           />
