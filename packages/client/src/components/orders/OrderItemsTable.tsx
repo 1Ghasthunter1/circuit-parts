@@ -68,16 +68,10 @@ const OrderItemsTable = ({
 }) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const rowIds = Object.keys(selectedOrderItems);
-
-  const toggleEdit = (orderItem: OrderItem) => {
-    const mutableOrderItems = { ...selectedOrderItems };
-    if (rowIds.includes(orderItem.id)) {
-      delete mutableOrderItems[orderItem.id];
-      editedOrderItemsState.orderItems = mutableOrderItems;
+  const toggleEdit = (id: string) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
       return;
-    } else {
-      mutableOrderItems[orderItem.id] = orderItem;
     }
     setSelectedRows(selectedRows.concat(id));
   };
@@ -194,8 +188,8 @@ const OrderItemsTable = ({
         const out = selectedRows.includes(row.original.id) ? (
           <OrderItemActions
             orderItem={row.original}
-            onDelete={() => toggleEdit(row.original)}
-            onSave={() => toggleEdit(row.original)}
+            onDelete={() => toggleEdit(row.original.id)}
+            onSave={() => toggleEdit(row.original.id)}
           />
         ) : (
           <div
