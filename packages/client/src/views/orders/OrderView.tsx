@@ -170,13 +170,9 @@ const OrderView = () => {
             />
           </>
         </TopLeftRightAndMiddle>
-<<<<<<< Updated upstream
       ) : (
         <div></div>
       )}
-=======
-      ) : null}
->>>>>>> Stashed changes
     </>
   );
 };

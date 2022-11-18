@@ -46,11 +46,7 @@ const OrderItemActions = ({
         color="blue"
         style="secondary"
         onClick={(e) => {
-<<<<<<< Updated upstream
           onSave(e);
-=======
-          if (onSave) onSave(e);
->>>>>>> Stashed changes
         }}
       />
       <Button
@@ -59,10 +55,7 @@ const OrderItemActions = ({
         color="red"
         style="secondary"
         onClick={(e) => {
-<<<<<<< Updated upstream
           onDelete(e);
-=======
->>>>>>> Stashed changes
           deleteMutation.mutate();
           if (onDelete) onDelete(e);
         }}
