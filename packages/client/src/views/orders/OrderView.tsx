@@ -125,14 +125,16 @@ const OrderView = () => {
                   hideButtons
                   emptyType="text"
                   componentStyle=" "
-                  validatorFn={(val) => val.length > 0}
+                  validatorFn={(val) => (val ? val.length > 0 : false)}
                   onSave={(value) => {
-                    const newOrder: PopulatedOrder = {
-                      ...order,
-                      vendor: value,
-                    };
-                    orderState.order = newOrder;
-                    orderEditMutation.mutate(newOrder);
+                    if (value) {
+                      const newOrder: PopulatedOrder = {
+                        ...order,
+                        vendor: value,
+                      };
+                      orderState.order = newOrder;
+                      orderEditMutation.mutate(newOrder);
+                    }
                   }}
                 />
               </div>

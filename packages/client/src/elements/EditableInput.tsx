@@ -23,25 +23,27 @@ const EditableInput = <T extends string | number>({
   aggregationFn,
   validatorFn,
 }: IProps & {
-  value: T;
-  onSave?: (val: T) => void;
-  aggregationFn?: (val: T) => string | number;
-  validatorFn?: (val: T) => boolean;
+  value: T | undefined;
+  onSave?: (val: T | undefined) => void;
+  aggregationFn?: (val: T | undefined) => string | number | undefined;
+  validatorFn?: (val: T | undefined) => boolean;
 }) => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [input, setInput] = useState<{
-    originalValue: T;
-    currentValue: T;
+    originalValue: T | undefined;
+    currentValue: T | undefined;
   }>({ originalValue: value, currentValue: value });
   const [isValid, setIsValid] = useState<boolean>(false);
 
   const save = () => {
     setShowInput(false);
+    console.log("saving");
     if (!(input.originalValue === input.currentValue)) {
       setInput({ ...input, originalValue: input.currentValue });
       if (onSave) onSave(input.currentValue);
     }
   };
+
   const cancel = () => {
     setShowInput(false);
     setInput({ ...input, currentValue: input.originalValue });
@@ -73,7 +75,6 @@ const EditableInput = <T extends string | number>({
           return "";
       }
     };
-
     return (
       <div
         className={`h-full w-full ${
@@ -81,11 +82,11 @@ const EditableInput = <T extends string | number>({
         } px-2 py-1 rounded-lg  ${getStyle()} `}
         onClick={!notEditable ? () => setShowInput(true) : () => null}
       >
-        {input.originalValue === "" ? (
+        {input.originalValue === "" || !input.originalValue ? (
           <span className="text-gray-300">
             {!notEditable ? placeholder : null}
           </span>
-        ) : aggregationFn ? (
+        ) : aggregationFn && input.originalValue ? (
           aggregationFn(input.originalValue)
         ) : (
           input.originalValue
@@ -140,7 +141,6 @@ const EditableInput = <T extends string | number>({
           )}
         </>
       ) : emptyType === "none" && input.originalValue === "" ? null : (
-        // Handles cases where input is empty but emptyType is not none
         <NotInputState />
       )}
     </div>

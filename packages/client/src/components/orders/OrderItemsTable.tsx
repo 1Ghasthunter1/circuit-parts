@@ -25,13 +25,15 @@ const OrderItemCell = <T extends string | number>({
   placeholder,
   notEditable,
   aggregationFn,
+  validatorFn,
   orderItem,
   oItemProperty,
 }: {
   initialValue: T;
   placeholder: string;
   notEditable: boolean;
-  aggregationFn?: (val: T) => string | number;
+  aggregationFn?: (val: T | undefined) => string | number | undefined;
+  validatorFn?: (val: T | undefined) => boolean;
   orderItem: OrderItem;
   oItemProperty: keyof OrderItem;
 }) => {
@@ -39,28 +41,30 @@ const OrderItemCell = <T extends string | number>({
   const editOISnap = useSnapshot(editOIState).orderItems;
   const foundItem = editOISnap[orderItem.id] as OrderItem | undefined;
 
-  if (foundItem) {
-    console.log(oItemProperty + " " + foundItem[oItemProperty]);
-  }
-
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
+  const foundProp = foundItem
+    ? (foundItem[oItemProperty] as T | undefined)
+    : undefined;
+
   return (
     <div className="table-cell whitespace-nowrap  text-sm text-gray-500 ">
       <EditableInput
-        value={foundItem ? (foundItem[oItemProperty] as T) : value}
-        onChangeFunc={
+        value={foundItem ? foundProp : value}
+        onSave={
           foundItem
-            ? (e) => {
-                const val = e.target.value as unknown as T;
-                editOIState.orderItems[orderItem.id][oItemProperty] = val as never;
+            ? (value) => {
+                const val = value as T;
+                editOIState.orderItems[orderItem.id][oItemProperty] =
+                  val as never;
               }
-            : (e) => setValue(e.target.value as unknown as T)
+            : (value) => setValue(value as T)
         }
         placeholder={placeholder}
         aggregationFn={aggregationFn || undefined}
+        validatorFn={validatorFn || undefined}
         hideButtons
         notEditable={notEditable}
         emptyType="text"
@@ -129,6 +133,10 @@ const OrderItemsTable = ({
             orderItem={info.row.original}
             oItemProperty="quantity"
             initialValue={info.cell.getValue()}
+            validatorFn={(val) => {
+              console.log(val);
+              return val ? !isNaN(val) : false;
+            }}
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
           />
@@ -145,6 +153,10 @@ const OrderItemsTable = ({
             initialValue={info.cell.getValue() || ""}
             orderItem={info.row.original}
             oItemProperty="description"
+            validatorFn={(val) => {
+              if (val) return val.length < 250;
+              else return true;
+            }}
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
           />
@@ -161,7 +173,7 @@ const OrderItemsTable = ({
             oItemProperty="unitCost"
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
-            aggregationFn={(val) => `${formatter.format(val)}`}
+            aggregationFn={(val) => (val ? `${formatter.format(val)}` : val)}
           />
         );
       },
@@ -210,6 +222,10 @@ const OrderItemsTable = ({
             initialValue={info.cell.getValue() || ""}
             orderItem={info.row.original}
             oItemProperty="notes"
+            validatorFn={(val) => {
+              if (val) return val.length < 250;
+              else return true;
+            }}
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
           />
