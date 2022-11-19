@@ -83,8 +83,8 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
       type={type || "button"}
-      className={`transition duration-50 inline-flex items-center rounded-md border border-transparent font-medium leading-4 ${getSize()} shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ring-offset-inherit ${getStyle()} ${
-        customStyle || ""
+      className={`whitespace-nowrap transition duration-50 inline-flex items-center rounded-md border border-transparent font-medium leading-4 ${getSize()} shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ring-offset-inherit  ${
+        customStyle || getStyle()
       } disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed ${
         isLoading && "cursor-not-allowed"
       }`}

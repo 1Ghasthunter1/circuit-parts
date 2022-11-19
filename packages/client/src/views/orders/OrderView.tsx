@@ -22,6 +22,7 @@ import {
   orderSave,
   orderSaved,
 } from "~/utils/orders/orderSaveStatus";
+import BackButton from "~/components/navigation/BackButton";
 
 const OrderView = () => {
   const [newItems, setNewItems] = useState<string[]>([]);
@@ -67,6 +68,9 @@ const OrderView = () => {
         <TopLeftRightAndMiddle
           topLeftContent={
             <div className="w-full">
+              <div>
+                <BackButton />
+              </div>
               <div className="mb-1">
                 <EditableInput2
                   value={order.orderNumber}

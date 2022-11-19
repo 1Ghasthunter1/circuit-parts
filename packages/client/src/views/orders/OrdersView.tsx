@@ -54,10 +54,9 @@ const OrderView = () => {
             <DashboardSkeleton rowCount={4} />
           ) : (
             <div className="flex flex-col">
-              <div className="w-full ">
+              <div className="ml-auto">
                 <Button
                   color="green"
-                  customStyle="float-right"
                   iconName="file-invoice"
                   onClick={() => setCreateModalVis(true)}
                 >
