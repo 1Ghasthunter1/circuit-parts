@@ -3,6 +3,7 @@ import {
   createColumnHelper,
   getCoreRowModel,
   flexRender,
+  RowSelection,
 } from "@tanstack/react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OrderItem, OrderItemToServer } from "~/types/orderTypes";
@@ -22,6 +23,7 @@ import {
   orderSaved,
 } from "~/utils/orders/orderSaveStatus";
 import Button from "~/elements/Button";
+import OrderItemPartNumberModal from "./OrderItemPartNumberModal";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
@@ -142,14 +144,21 @@ const OrderItemsTable = ({
     columnHelper.accessor("partNumber", {
       header: "Part Number",
       cell: (info) => {
+        const [showModal, setShowModal] = useState<boolean>(false);
         const orderItem = info.row.original;
+        const foundItem = editOISnap[orderItem.id] as OrderItem | undefined;
+        const isRowSelected = isSelected(orderItem);
 
         return (
-          <div>
-            {orderItem.vendorUrl ? (
+          <div className="flex">
+            {(
+              isRowSelected ? !!foundItem?.vendorUrl : !!orderItem.vendorUrl
+            ) ? (
               <div className="flex items-center -mb-0.5">
                 <a
-                  href={orderItem.vendorUrl}
+                  href={
+                    isRowSelected ? foundItem?.vendorUrl : orderItem.vendorUrl
+                  }
                   target="_blank"
                   className="underline"
                 >
@@ -165,15 +174,31 @@ const OrderItemsTable = ({
               <span>{info.cell.getValue()}</span>
             )}
             {isSelected(orderItem) ? (
-              <span className="pl-2">
+              <span className="pl-2 ml-auto">
                 <Button
                   iconName="pencil"
                   size="sm"
                   color="gray"
                   style="secondary"
+                  onClick={() => setShowModal(true)}
                 />
               </span>
             ) : null}
+            <OrderItemPartNumberModal
+              modalVisibility={showModal}
+              setModalVisibility={setShowModal}
+              orderItem={foundItem || orderItem}
+              onSubmit={({ partNumber, vendorUrl }) => {
+                if (foundItem)
+                  editOIState.orderItems[orderItem.id] = {
+                    ...foundItem,
+                    vendorUrl,
+                    partNumber,
+                  };
+
+                setShowModal(false);
+              }}
+            />
           </div>
         );
       },
