@@ -47,8 +47,27 @@ orderRouter.post("/:id/items", (0, express_validator_1.param)("id").custom((valu
     const savedOrderItem = yield new orderItem_1.default(orderItemObj).save();
     return res.status(200).json(savedOrderItem);
 })));
+orderRouter.delete("/:id", ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const orderId = req.params.id;
+    const response = yield order_1.default.findByIdAndDelete(orderId);
+    if (!response)
+        return res.status(404).json("order not found");
+    return res.status(204).end();
+})));
+orderRouter.delete("/items/:itemId", ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const itemId = req.params.itemId;
+    const response = yield orderItem_1.default.findByIdAndDelete(itemId);
+    if (!response)
+        return res.status(404).json("order item not found");
+    return res.status(204).end();
+})));
 orderRouter.put("/:id", (0, express_validator_1.checkSchema)(orderValidation_1.newOrderSchema), schemaValidation_1.handleSchemaErrors, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newOrder = Object.assign(Object.assign({}, (0, schemaValidation_1.parseValidated)(req)), { creationDate: new Date() });
+    var _a, _b, _c, _d;
+    const newOrder = Object.assign({}, (0, schemaValidation_1.parseValidated)(req));
+    if (((_a = newOrder.tracking) === null || _a === void 0 ? void 0 : _a.carrier) || ((_b = newOrder.tracking) === null || _b === void 0 ? void 0 : _b.trackingNumber)) {
+        if (!(((_c = newOrder.tracking) === null || _c === void 0 ? void 0 : _c.carrier) && ((_d = newOrder.tracking) === null || _d === void 0 ? void 0 : _d.trackingNumber)))
+            return res.status(400).json("bad tracking request");
+    }
     const orderId = req.params.id;
     const order = yield order_1.default.findByIdAndUpdate(orderId, newOrder, {
         new: true,
@@ -56,6 +75,16 @@ orderRouter.put("/:id", (0, express_validator_1.checkSchema)(orderValidation_1.n
     if (!order)
         return res.status(404).json({ errors: [{ error: "order not found" }] });
     return res.status(200).json(order);
+})));
+orderRouter.put("/items/:id", (0, express_validator_1.checkSchema)(orderValidation_1.newOrderItemSchema), schemaValidation_1.handleSchemaErrors, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const modifiedOrderItem = Object.assign({}, (0, schemaValidation_1.parseValidated)(req));
+    const orderItemId = req.params.id;
+    const orderItem = yield orderItem_1.default.findByIdAndUpdate(orderItemId, modifiedOrderItem, {
+        new: true,
+    });
+    if (!orderItem)
+        return res.status(404).json({ errors: [{ error: "order not found" }] });
+    return res.status(200).json(orderItem);
 })));
 exports.default = orderRouter;
 //# sourceMappingURL=orderRouter.js.map
