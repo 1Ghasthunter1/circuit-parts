@@ -2,6 +2,7 @@ import express, { RequestHandler } from "express";
 import Order from "../models/order/order";
 import {
   IValidatedOrder,
+  IValidatedOrderItem,
   OrderItemToDB,
   OrderItemValidated,
   OrderToDB,
@@ -105,6 +106,31 @@ orderRouter.put(
       return res.status(404).json({ errors: [{ error: "order not found" }] });
 
     return res.status(200).json(order);
+  }) as RequestHandler
+);
+
+orderRouter.put(
+  "/items/:id",
+  checkSchema(newOrderItemSchema),
+  handleSchemaErrors,
+  (async (req, res) => {
+    const modifiedOrderItem: IValidatedOrderItem = {
+      ...parseValidated<IValidatedOrderItem>(req),
+    };
+
+    const orderItemId = req.params.id as unknown as mongoose.Types.ObjectId;
+    const orderItem = await OrderItem.findByIdAndUpdate(
+      orderItemId,
+      modifiedOrderItem,
+      {
+        new: true,
+      }
+    );
+
+    if (!orderItem)
+      return res.status(404).json({ errors: [{ error: "order not found" }] });
+
+    return res.status(200).json(orderItem);
   }) as RequestHandler
 );
 

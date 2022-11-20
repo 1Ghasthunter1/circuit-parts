@@ -38,6 +38,11 @@ export type OrderToDB = Omit<DatabaseOrder, "id">;
 
 export type IValidatedOrder = Omit<DatabaseOrder, "id" | "creationDate">;
 
+export type IValidatedOrderItem = Omit<
+  DatabaseOrderItem,
+  "id" | "creationDate"
+>;
+
 export type OrderItemToDB = Omit<DatabaseOrderItem, "id">;
 
 export type OrderItemValidated = Omit<OrderItemToDB, "order">;
