@@ -17,6 +17,11 @@ import { useSnapshot } from "valtio";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import { orderItemSchema } from "~/utils/orders/orderItemSchema";
+import {
+  orderError,
+  orderSave,
+  orderSaved,
+} from "~/utils/orders/orderSaveStatus";
 
 const NewItemRow = ({
   id,
@@ -67,6 +72,7 @@ const NewItemRow = ({
             order: orderSnapshot.id,
           });
           setNewItems(newItems.filter((itemId) => itemId !== id));
+          orderSave();
         }
       },
       onSuccess: async (response) => {
@@ -78,18 +84,14 @@ const NewItemRow = ({
             </span>
           );
         }
+        orderSaved();
       },
       onError: async () => {
         toast.error("Couldn't add order item");
         setNewItems(newItems);
-        if (orderState.order && orderSnapshot) {
-          // orderState.order.items = orderSnapshot.items.filter(
-          //   (oItem) => oItem.id !== newItemTempId
-          // );
-        }
+        orderError();
       },
       onSettled: async () => {},
-      //queryClient.invalidateQueries(["order", orderSnapshot?.id]),
     }
   );
 

@@ -10,9 +10,17 @@ import NewItemRow from "./NewItemRow";
 import { useEffect, useState } from "react";
 import EditableInput from "~/elements/EditableInput";
 import OrderItemActions from "./OrderItemActions";
-import { editOIState } from "~/state/state";
+import { editOIState, orderState } from "~/state/state";
 import { useSnapshot } from "valtio";
 import { orderItemSchema } from "~/utils/orders/orderItemSchema";
+import { useMutation } from "react-query";
+import { udpateOrderItem } from "~/services/ordersService";
+import toast from "react-hot-toast";
+import {
+  orderError,
+  orderSave,
+  orderSaved,
+} from "~/utils/orders/orderSaveStatus";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
@@ -86,6 +94,7 @@ const OrderItemsTable = ({
   };
 }) => {
   const editOISnap = useSnapshot(editOIState).orderItems;
+  const orderSnap = useSnapshot(orderState).order;
 
   const toggleEdit = (orderItem: OrderItem) => {
     const newOI = { ...editOISnap };
@@ -96,6 +105,34 @@ const OrderItemsTable = ({
     }
     editOIState.orderItems[orderItem.id] = orderItem;
   };
+
+  const orderItemEditMutation = useMutation(
+    ({
+      mOrderItem,
+      mItems,
+    }: {
+      mOrderItem: OrderItem;
+      mItems: OrderItem[];
+    }) => {
+      return udpateOrderItem(mOrderItem);
+    },
+    {
+      onMutate: async ({ mOrderItem, mItems }) => {
+        orderSave();
+        if (orderSnap) {
+          const newOrderItems = mItems.map((oItem) => {
+            if (oItem.id === mOrderItem.id) {
+              return { ...oItem, ...mOrderItem };
+            }
+            return oItem;
+          });
+          if (orderState.order) orderState.order.items = newOrderItems;
+        }
+      },
+      onSuccess: async () => orderSaved(),
+      onError: async () => orderError(),
+    }
+  );
 
   const isSelected = (orderItem: OrderItem) =>
     Object.keys(editOISnap).includes(orderItem.id);
@@ -251,14 +288,24 @@ const OrderItemsTable = ({
                 });
             thing();
           }, [editedRow]);
-          console.log(cleanState);
         }
+
+        const currentOrderItems = orderSnap?.items;
 
         return isSelected(row.original) ? (
           <OrderItemActions
             orderItem={row.original}
             onDelete={() => toggleEdit(row.original)}
-            onSave={() => toggleEdit(row.original)}
+            onSave={() => {
+              toggleEdit(row.original);
+              if (editedRow && currentOrderItems) {
+                const mOrderItem: OrderItem = { ...editedRow };
+                orderItemEditMutation.mutate({
+                  mOrderItem,
+                  mItems: currentOrderItems,
+                });
+              }
+            }}
             disableSave={!cleanState}
           />
         ) : (

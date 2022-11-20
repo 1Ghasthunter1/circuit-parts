@@ -68,6 +68,15 @@ export const updateOrder = async (order: Order) => {
   return updatedOrder;
 };
 
+export const udpateOrderItem = async (orderItem: OrderItem) => {
+  const { data } = await axios.put<OrderItem>(
+    `${apiBaseUrl}/orders/items/${orderItem.id}`,
+    orderItem
+  );
+
+  return data;
+};
+
 export const createOrderItem = async (
   orderId: string,
   orderItem: OrderItemToServer

@@ -37,7 +37,6 @@ const EditableInput = <T extends string | number>({
 
   const save = () => {
     setShowInput(false);
-    console.log("saving");
     if (!(input.originalValue === input.currentValue)) {
       setInput({ ...input, originalValue: input.currentValue });
       if (onSave) onSave(input.currentValue);

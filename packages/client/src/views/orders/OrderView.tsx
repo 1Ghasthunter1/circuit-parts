@@ -40,7 +40,7 @@ const OrderView = () => {
         orderSave();
         orderState.order = { ...newOrder, items: order?.items || [] };
       },
-      onSuccess: (newOrder) => {
+      onSuccess: () => {
         orderSaved();
       },
       onError: () => {
@@ -54,13 +54,7 @@ const OrderView = () => {
 
   useEffect(() => {
     orderState.order = apiOrder || null;
-    return undefined;
   }, [apiOrder]);
-
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
 
   return (
     <>
