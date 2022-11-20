@@ -10,10 +10,14 @@ const OrderItemActions = ({
   orderItem,
   onDelete,
   onSave,
+  disableSave,
+  disableDelete,
 }: {
   orderItem: OrderItem;
   onDelete: (event: unknown) => void;
   onSave: (event: unknown) => void;
+  disableSave?: boolean;
+  disableDelete?: boolean;
 }) => {
   const order = orderState.order;
   const orderSnap = useSnapshot(orderState).order;
@@ -45,6 +49,7 @@ const OrderItemActions = ({
         size="sm"
         color="blue"
         style="secondary"
+        disabled={disableSave}
         onClick={(e) => {
           onSave(e);
         }}
@@ -54,6 +59,7 @@ const OrderItemActions = ({
         size="sm"
         color="red"
         style="secondary"
+        disabled={disableDelete}
         onClick={(e) => {
           onDelete(e);
           deleteMutation.mutate();

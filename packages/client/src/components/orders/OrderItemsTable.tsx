@@ -5,13 +5,14 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { OrderItem } from "~/types/orderTypes";
+import { OrderItem, OrderItemToServer } from "~/types/orderTypes";
 import NewItemRow from "./NewItemRow";
 import { useEffect, useState } from "react";
 import EditableInput from "~/elements/EditableInput";
 import OrderItemActions from "./OrderItemActions";
 import { editOIState } from "~/state/state";
 import { useSnapshot } from "valtio";
+import { orderItemSchema } from "~/utils/orders/orderItemSchema";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
@@ -134,7 +135,6 @@ const OrderItemsTable = ({
             oItemProperty="quantity"
             initialValue={info.cell.getValue()}
             validatorFn={(val) => {
-              console.log(val);
               return val ? !isNaN(val) : false;
             }}
             placeholder={String(info.column.columnDef.header) || ""}
@@ -235,11 +235,31 @@ const OrderItemsTable = ({
     columnHelper.display({
       header: "Edit",
       cell: ({ row }) => {
+        const editedRow = editOISnap[row.original.id] as OrderItem | undefined;
+        const [cleanState, setCleanState] =
+          useState<OrderItemToServer | null>();
+        if (editedRow) {
+          useEffect(() => {
+            const thing = async () =>
+              await orderItemSchema
+                .validate(editedRow, { abortEarly: false })
+                .then((cleanState: OrderItemToServer) => {
+                  setCleanState(cleanState);
+                })
+                .catch(() => {
+                  setCleanState(null);
+                });
+            thing();
+          }, [editedRow]);
+          console.log(cleanState);
+        }
+
         return isSelected(row.original) ? (
           <OrderItemActions
             orderItem={row.original}
             onDelete={() => toggleEdit(row.original)}
             onSave={() => toggleEdit(row.original)}
+            disableSave={!cleanState}
           />
         ) : (
           <div
