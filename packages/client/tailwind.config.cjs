@@ -5,8 +5,9 @@ module.exports = {
   ],
   plugins: [
     require('@tailwindcss/forms'),
-
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
+
   darkMode: 'class',
   theme: {
     extend: {

@@ -62,7 +62,7 @@ const OrderItemCell = <T extends string | number>({
     : undefined;
 
   return (
-    <div className="table-cell whitespace-nowrap  text-sm text-gray-500 ">
+    <div className="table-cell whitespace-nowrap text-sm text-gray-500 ">
       <EditableInput
         value={foundItem ? foundProp : value}
         onSave={
@@ -150,7 +150,7 @@ const OrderItemsTable = ({
         const isRowSelected = isSelected(orderItem);
 
         return (
-          <div className="flex">
+          <div className="flex whitespace-nowrap">
             {(
               isRowSelected ? !!foundItem?.vendorUrl : !!orderItem.vendorUrl
             ) ? (
@@ -178,7 +178,7 @@ const OrderItemsTable = ({
                 <Button
                   iconName="pencil"
                   size="sm"
-                  color="gray"
+                  color="blue"
                   style="secondary"
                   onClick={() => setShowModal(true)}
                 />
@@ -372,10 +372,10 @@ const OrderItemsTable = ({
 
   return (
     <div>
-      <div className="flex flex-col">
+      <div className="flex flex-col ">
         <div className="inline-block w-full py-2 align-middle">
-          <div className="overflow-hidden shadow ring-1 ring-opacity-5 rounded ring-black  md:rounded-lg">
-            <div className="table w-full">
+          <div className="overflow-hidden shadow ring-1 ring-opacity-5 rounded ring-black md:rounded-lg overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-300 scrollbar-thumb-rounded scrollbar-track-rounded">
+            <div className="table w-full ">
               <div className="bg-white table-header-group">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <div key={headerGroup.id} className="table-row">
@@ -401,7 +401,7 @@ const OrderItemsTable = ({
                   </div>
                 ))}
               </div>
-              <div className="transition delay-100 table-row-group">
+              <div className="transition delay-100 table-row-group ">
                 <>
                   {table.getRowModel().rows.map((row) => {
                     return (
