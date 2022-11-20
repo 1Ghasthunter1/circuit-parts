@@ -53,7 +53,7 @@ const EditableInput = <T extends string | number>({
       cancel();
       setShowInput(false);
     } else if (e.key === "Enter") {
-      save();
+      isValid ? save() : cancel();
       setShowInput(false);
     }
   };

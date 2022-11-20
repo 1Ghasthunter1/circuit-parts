@@ -21,6 +21,7 @@ import {
   orderSave,
   orderSaved,
 } from "~/utils/orders/orderSaveStatus";
+import Button from "~/elements/Button";
 
 const columnHelper = createColumnHelper<OrderItem>();
 
@@ -143,24 +144,38 @@ const OrderItemsTable = ({
       cell: (info) => {
         const orderItem = info.row.original;
 
-        if (orderItem.vendorUrl)
-          return (
-            <div className="flex items-center -mb-0.5">
-              <a
-                href={orderItem.vendorUrl}
-                target="_blank"
-                className="underline"
-              >
-                {info.cell.getValue()}
-              </a>
-              <FontAwesomeIcon
-                className="pl-1.5"
-                size="sm"
-                icon="arrow-up-right-from-square"
-              />
-            </div>
-          );
-        return <span>{info.cell.getValue()}</span>;
+        return (
+          <div>
+            {orderItem.vendorUrl ? (
+              <div className="flex items-center -mb-0.5">
+                <a
+                  href={orderItem.vendorUrl}
+                  target="_blank"
+                  className="underline"
+                >
+                  {info.cell.getValue()}
+                </a>
+                <FontAwesomeIcon
+                  className="pl-1.5"
+                  size="sm"
+                  icon="arrow-up-right-from-square"
+                />
+              </div>
+            ) : (
+              <span>{info.cell.getValue()}</span>
+            )}
+            {isSelected(orderItem) ? (
+              <span className="pl-2">
+                <Button
+                  iconName="pencil"
+                  size="sm"
+                  color="gray"
+                  style="secondary"
+                />
+              </span>
+            ) : null}
+          </div>
+        );
       },
     }),
     columnHelper.accessor("quantity", {
@@ -208,6 +223,9 @@ const OrderItemsTable = ({
             initialValue={info.cell.getValue()}
             orderItem={info.row.original}
             oItemProperty="unitCost"
+            validatorFn={(val) => {
+              return val ? !isNaN(val) : false;
+            }}
             placeholder={String(info.column.columnDef.header) || ""}
             notEditable={!isSelected(info.row.original)}
             aggregationFn={(val) => (val ? `${formatter.format(val)}` : val)}
@@ -310,10 +328,10 @@ const OrderItemsTable = ({
           />
         ) : (
           <div
-            className="text-blue-600 underline justify-center cursor-pointer"
+            className="text-blue-600 underline justify-center "
             onClick={() => toggleEdit(row.original)}
           >
-            Edit
+            <span className="select-none cursor-pointer">Edit</span>
           </div>
         );
       },

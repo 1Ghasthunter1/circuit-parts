@@ -7,7 +7,7 @@ interface ButtonPropsTypes {
   children?: JSX.Element | string;
   style?: "primary" | "secondary";
   customStyle?: string;
-  color?: "red" | "blue" | "green";
+  color?: "red" | "blue" | "green" | "gray";
   size?: "sm" | "md" | "lg";
   iconName?: IconProp;
   disabled?: boolean;
@@ -44,6 +44,11 @@ const Button = ({
       primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
       secondary:
         "bg-blue-200 text-blue-600 hover:bg-blue-300 focus:ring-blue-400",
+    },
+    gray: {
+      primary: "bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500",
+      secondary:
+        "bg-gray-200 text-gray-500 hover:bg-gray-300 focus:ring-gray-400",
     },
     default: {
       primary:
