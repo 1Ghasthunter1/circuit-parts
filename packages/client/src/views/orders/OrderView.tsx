@@ -163,7 +163,7 @@ const OrderView = () => {
           }
         >
           <>
-            <div className="flex  my-6 space-x-12 w-full ">
+            <div className="flex  my-6 space-x-10 w-full ">
               <div className="w-full self-stretch">
                 <TrackingCard />
               </div>
