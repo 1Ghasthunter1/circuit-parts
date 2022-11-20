@@ -16,6 +16,7 @@ import { userState } from "~/state/state";
 import { useMutation, UseQueryResult } from "react-query";
 import { deleteOrderById } from "~/services/ordersService";
 import toast from "react-hot-toast";
+import TrackingNumber from "./TrackingNumber";
 
 const OrdersTable = ({
   orders,
@@ -50,26 +51,12 @@ const OrdersTable = ({
       header: "Tracking",
       cell: (info) => {
         const tracking = info.cell.getValue();
-        if (!tracking) return <div></div>;
-        return (
-          <a
-            href={
-              "https://tools.usps.com/go/TrackConfirmAction?tLabels=" +
-              tracking.trackingNumber
-            }
-            target="_blank"
-          >
-            <div className="w-min cursor-pointer">
-              <div className="flex items-center -mb-0.5">
-                {tracking.carrier}
-                <FontAwesomeIcon
-                  className="pl-1.5"
-                  size="sm"
-                  icon="arrow-up-right-from-square"
-                />
-              </div>
-            </div>
-          </a>
+        if (!tracking) return null;
+
+        return tracking.carrier && tracking.trackingNumber ? (
+          <TrackingNumber {...tracking} />
+        ) : (
+          "No tracking number specified"
         );
       },
       footer: (info) => info.column.id,
