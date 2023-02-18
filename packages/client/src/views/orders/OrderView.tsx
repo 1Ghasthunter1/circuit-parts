@@ -116,7 +116,7 @@ const OrderView = () => {
                 </div>
               </div>
               <div className="text-gray-400 font-bold flex items-center">
-                Vendor:
+                Vendor Goofy:
                 <EditableInput<string>
                   value={order.vendor}
                   placeholder="Add vendor"
