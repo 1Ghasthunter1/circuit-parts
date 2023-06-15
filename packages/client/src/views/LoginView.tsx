@@ -8,6 +8,7 @@ import { useSnapshot } from "valtio";
 import { Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import toast from "react-hot-toast";
+import Button from "~/elements/Button";
 const LoginView = () => {
   const [loginStatus, setLoginStatus] = useState<string>("");
 
@@ -66,6 +67,43 @@ const LoginView = () => {
                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   Sign in to 696 PMS
                 </h1>
+                <div className="flex">
+                  <div className="bg-gray-100 rounded-lg px-3 py-2 text-sm shadow-lg  hover:scale-105  transition-all">
+                    <div className="flex">
+                      <p className="font-semibold select-none mb-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-2 py-1 text-white rounded">
+                        Demo Login
+                      </p>
+                    </div>
+                    <div className="flex items-center">
+                      <p className="mr-3">user@circuit-parts.com</p>
+                      <Button
+                        onClick={() =>
+                          navigator.clipboard.writeText(
+                            "user@circuit-parts.com"
+                          )
+                        }
+                        iconName="copy"
+                        size="sm"
+                        style="secondary"
+                        color="blue"
+                      />
+                    </div>
+                    <div className="flex items-center mt-2">
+                      <p className="mr-3">demopass123</p>
+                      <span className="ml-auto">
+                        <Button
+                          onClick={() =>
+                            navigator.clipboard.writeText("demopass123")
+                          }
+                          iconName="copy"
+                          size="sm"
+                          style="secondary"
+                          color="blue"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
                 <Formik
                   initialValues={{ email: "", password: "" }}
                   validate={(values) => {
