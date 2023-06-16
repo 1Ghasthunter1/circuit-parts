@@ -13,6 +13,7 @@
     "lint": "eslint --ext .ts .",
     "start": "node ./build/index.js",
     "build:local": "rm -rf build && npm run tsc && npm run build:ui",
+    "build": "npm run build:local",
     "deploy": "npm run build:local && git add . && git commit -m herokuBuild && cd ../.. && git push heroku `git subtree split --prefix packages/server master`:master --force"
   },
   "author": "",
