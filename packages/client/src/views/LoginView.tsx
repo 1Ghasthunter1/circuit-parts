@@ -75,11 +75,11 @@ const LoginView = () => {
                       </p>
                     </div>
                     <div className="flex items-center">
-                      <p className="mr-3">user@circuit-parts.com</p>
+                      <p className="mr-3">demo@circuit-parts.com</p>
                       <Button
                         onClick={() =>
                           navigator.clipboard.writeText(
-                            "user@circuit-parts.com"
+                            "demo@circuit-parts.com"
                           )
                         }
                         iconName="copy"
